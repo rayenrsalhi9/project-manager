@@ -38,15 +38,29 @@ export default function Signin():JSX.Element {
           <form 
             action={handleSubmit}
             className="border-muted flex flex-col gap-6 rounded-lg border p-8 shadow-sm"
+            aria-label="sign in form"
+            aria-describedby="form-description"
           >
             <div className="text-center">
               <h1 className="text-2xl font-semibold">Welcome back!</h1>
               <p className="text-muted-foreground text-sm mt-2">Sign in and continue where you left off</p>
             </div>
+
+            <div 
+              id="form-description" 
+              className="absolute w-[1px] h-[1px] p-0 -m-[1px] overflow-hidden whitespace-nowrap border-0"
+              aria-hidden="false"
+            >
+              Use this form to sign in to your account. Enter your email and password.
+            </div>
             
             {
               error ? 
-              <p className="text-destructive text-sm text-center">
+              <p 
+                className="text-destructive text-sm text-center" 
+                id="signin-error"
+                role="alert"
+              >
                 {error}
               </p> 
               : null
@@ -62,6 +76,10 @@ export default function Signin():JSX.Element {
                   placeholder="name@example.com"
                   className={`mt-1.5 ${error ? 'border-red-500' : ''}`}
                   required
+                  aria-required="true"
+                  aria-invalid={error ? 'true' : 'false'}
+                  aria-describedby={error ? 'signin-error' : undefined}
+                  disabled={isPending}
                 />
               </div>
               <div>
@@ -73,12 +91,17 @@ export default function Signin():JSX.Element {
                   placeholder="********"
                   className={`mt-1.5 ${error ? 'border-red-500' : ''}`}
                   required
+                  aria-required="true"
+                  aria-invalid={error ? 'true' : 'false'}
+                  aria-describedby={error ? 'signin-error' : undefined}
+                  disabled={isPending}
                 />
               </div>
             </div>
             <Button 
               type="submit" 
               className={`w-full ${isPending ? 'opacity-80 cursor-not-allowed' : ''}`}
+              aria-busy={isPending}
             >
               {isPending ? 'Signing in...' : 'Sign in'}
             </Button>
