@@ -1,30 +1,53 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import {supabase} from '../supabase'
+import { supabase } from '../supabase'
+import type { JSX } from "react";
+import type { Session } from '@supabase/supabase-js';
 
-const AuthContext = createContext({session: null})
+type AuthContextProviderProps = {
+    children: JSX.Element
+}
 
-export const AuthContextProvider = ({children}) => {
-    const [session, setSession] = useState(undefined)
+type AuthContextType = {
+    session: Session | null | undefined;
+    loading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType>({
+    session: null,
+    loading: true
+})
+
+export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
+    const [session, setSession] = useState<Session | null | undefined>(undefined)
+    const [loading, setLoading] = useState(true)
 
     async function getInitialState() {
         try {
-            const {data, error} = await supabase.auth.getSession()
+            const { data, error } = await supabase.auth.getSession()
             if (error) throw error.message
             setSession(data.session)
-        } catch(err) {
-            console.log(`An error occured: ${err}`)
+        } catch (err) {
+            console.error('Auth initialization error:', err)
+            setSession(null)
+        } finally {
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         getInitialState()
-        supabase.auth.onAuthStateChange((_event, session) => {
+        
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session)
         })
+
+        return () => {
+            subscription.unsubscribe()
+        }
     }, [])
 
-    return(
-        <AuthContext.Provider value={{session}}>
+    return (
+        <AuthContext.Provider value={{ session, loading }}>
             {children}
         </AuthContext.Provider>
     )
@@ -32,5 +55,9 @@ export const AuthContextProvider = ({children}) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
-    return useContext(AuthContext)
+    const context = useContext(AuthContext)
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthContextProvider')
+    }
+    return context
 }
