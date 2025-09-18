@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import type { JSX } from "react";
 
-export default function Signin() {
+export default function Signin():JSX.Element {
   return (
     <section className="h-screen bg-background">
       <div className="flex h-full items-center justify-center px-4">

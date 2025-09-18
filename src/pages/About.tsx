@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import type { JSX } from "react";
 
-export default function About3() {
+export default function About():JSX.Element {
   return (
     <section className="py-8">
       <div className="container">

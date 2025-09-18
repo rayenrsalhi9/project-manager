@@ -1,8 +1,9 @@
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import type { JSX } from "react";
 
-export default function Hero() {
+export default function Hero():JSX.Element {
   return (
     <section className="relative overflow-hidden py-32 min-h-dvh">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
