@@ -16,6 +16,7 @@ type AuthResult = {
 type AuthContextType = {
     session: Session | null | undefined
     signUserIn: (email: string, password: string) => Promise<AuthResult>
+    signUserOut: () => Promise<AuthResult>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -51,6 +52,20 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
     }
 
+    async function signUserOut(): Promise<AuthResult> {
+        try {
+            const {error} = await supabase.auth.signOut()
+            if (error) {
+                console.log(`An error occured: ${error.message}`)
+                return {success: false, error: error.message}
+            }
+            return {success: true}
+        } catch (err) {
+            console.log(`An error occured: ${(err as Error).message}`)
+            return {success: false, error: (err as Error).message}
+        }
+    }
+
     useEffect(() => {
 
         getInitialState()
@@ -65,7 +80,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ session,signUserIn}}>
+        <AuthContext.Provider value={{ session,signUserIn, signUserOut}}>
             {children}
         </AuthContext.Provider>
     )

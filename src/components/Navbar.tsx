@@ -24,7 +24,31 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 export default function Navbar() {
+
+  const {signUserOut} = useAuth()
+  const navigate = useNavigate()
+
+  async function handleSignOut() {
+    const {success, error: signoutError} = await signUserOut()
+    if (!success && signoutError) {
+      toast.error(signoutError, {
+        duration: 5000,
+        style: {
+          background: '#FEE2E2',
+          border: '1px solid #EF4444',
+          color: '#991B1B',
+        },
+      })
+    } else if (success) {
+      navigate("/signin")
+    }
+  }
+
   const features = [
     {
       title: "Dashboard",
@@ -130,6 +154,7 @@ export default function Navbar() {
             <Button 
                 variant="outline" 
                 className="w-full flex items-center gap-2 cursor-pointer"
+                onClick={handleSignOut}
             >
                 <LogOut className="h-4 w-4" />
                 Sign out
@@ -202,6 +227,7 @@ export default function Navbar() {
                   <Button 
                     variant="outline" 
                     className="w-full flex items-center gap-2 cursor-pointer"
+                    onClick={handleSignOut}
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out
