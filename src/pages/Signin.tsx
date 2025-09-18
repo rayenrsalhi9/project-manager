@@ -100,7 +100,8 @@ export default function Signin():JSX.Element {
             </div>
             <Button 
               type="submit" 
-              className={`w-full ${isPending ? 'opacity-80 cursor-not-allowed' : ''}`}
+              className={`w-full cursor-pointer ${isPending ? 'opacity-80 cursor-not-allowed' : ''}`}
+              disabled={isPending}
               aria-busy={isPending}
             >
               {isPending ? 'Signing in...' : 'Sign in'}
