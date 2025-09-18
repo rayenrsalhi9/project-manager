@@ -31,11 +31,11 @@ export default function Hero() {
               </p>
             </div>
             <div className="mt-6 flex justify-center gap-3">
-              <Button className="shadow-sm transition-shadow hover:shadow">
+              <Button asChild className="shadow-sm transition-shadow hover:shadow">
                 <Link to='/signin'>Get Started</Link>
               </Button>
-              <Button variant="outline" className="group">
-                <Link to="/about" className="flex align-center justify-center">
+              <Button variant="outline" asChild className="group">
+                <Link to="/about" className="flex items-center justify-center">
                   See How It Works{" "}
                   <ExternalLink className="ml-2 h-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>

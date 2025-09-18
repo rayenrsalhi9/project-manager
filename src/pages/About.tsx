@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-export default function About() {
+export default function About3() {
   return (
-    <section className="py-32">
+    <section className="py-8">
       <div className="container">
-        <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4">
+        <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
             <svg 
               className="w-5 h-5" 
               fill="none" 
@@ -21,7 +21,7 @@ export default function About() {
             </svg>
             <span>Return to Home</span>
           </Link>
-        <div className="mb-14 grid gap-5 text-center md:grid-cols-2 md:text-left">
+        <div className="mb-10 grid gap-5 text-center md:grid-cols-2 md:text-left">
           <h1 className="text-5xl font-semibold">About Our Platform</h1>
           <p className="text-muted-foreground">
             A collaborative platform for teams, students, and startups to organize projects, assign and track tasks, share resources, and communicate effectively.
@@ -61,7 +61,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden rounded-xl bg-muted p-4 my-4 md:p-16">
+        <div className="relative overflow-hidden rounded-xl bg-muted p-8 my-8 md:p-16">
           <div className="flex flex-col gap-4 text-center md:text-left">
             <h2 className="text-4xl font-semibold">Why Choose Our Platform</h2>
             <p className="max-w-xl text-muted-foreground">
