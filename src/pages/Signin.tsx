@@ -73,8 +73,8 @@ export default function Signin():JSX.Element {
                   name="email"
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
-                  className={`mt-1.5 ${error ? 'border-red-500' : ''}`}
+                  placeholder="e.g. name@example.com"
+                  className={`mt-2 ${error ? 'border-red-500' : ''}`}
                   required
                   aria-required="true"
                   aria-invalid={error ? 'true' : 'false'}
@@ -89,7 +89,7 @@ export default function Signin():JSX.Element {
                   id="password"
                   type="password"
                   placeholder="********"
-                  className={`mt-1.5 ${error ? 'border-red-500' : ''}`}
+                  className={`mt-2 ${error ? 'border-red-500' : ''}`}
                   required
                   aria-required="true"
                   aria-invalid={error ? 'true' : 'false'}

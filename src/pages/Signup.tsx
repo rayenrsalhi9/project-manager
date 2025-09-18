@@ -16,13 +16,24 @@ export default function Signup():JSX.Element {
             </div>
             <div className="space-y-4">
               <div>
+                <Label htmlFor="full-name">Full name</Label>
+                <Input
+                    name="full-name"
+                    id="full-name"
+                    type="text"
+                    placeholder="e.g. John Doe"
+                    className="mt-2"
+                    required
+                />
+              </div>
+              <div>
                 <Label htmlFor="email">Email</Label>
                 <Input
                     name="email"
                     id="email"
                     type="email"
-                    placeholder="name@example.com"
-                    className="mt-1.5"
+                    placeholder="e.g. name@example.com"
+                    className="mt-2"
                     required
                 />
               </div>
@@ -33,7 +44,7 @@ export default function Signup():JSX.Element {
                     id="password"
                     type="password"
                     placeholder="********"
-                    className="mt-1.5"
+                    className="mt-2"
                     required
                 />
               </div>
