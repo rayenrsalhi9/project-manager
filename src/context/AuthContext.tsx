@@ -1,60 +1,78 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from '../supabase'
+import type { AuthError, Session, User} from '@supabase/supabase-js';
 import type { JSX } from "react";
-import type { Session } from '@supabase/supabase-js';
 
 type AuthContextProviderProps = {
     children: JSX.Element
 }
 
-type AuthContextType = {
-    session: Session | null | undefined;
-    loading: boolean;
+type AuthResult = {
+  success: boolean;
+  error?: string;
+  data?: { user: User | null; session: Session | null };
 }
 
-const AuthContext = createContext<AuthContextType>({
-    session: null,
-    loading: true
-})
+type AuthContextType = {
+    session: Session | null | undefined
+    signUserIn: (email: string, password: string) => Promise<AuthResult>
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
+    // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
-    const [loading, setLoading] = useState(true)
 
-    async function getInitialState() {
+    // initial session state
+    async function getInitialState(): Promise<void> {
         try {
             const { data, error } = await supabase.auth.getSession()
-            if (error) throw error.message
+            if (error) throw error
             setSession(data.session)
         } catch (err) {
-            console.error('Auth initialization error:', err)
+            console.error('Auth initialization error: ', (err as AuthError).message)
             setSession(null)
-        } finally {
-            setLoading(false)
+        }
+    }
+
+    // auth functions (login, signup, signout)
+    async function signUserIn(email: string, password: string): Promise<AuthResult> {
+        try {
+            const {data, error} = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            })
+            if (error) return {success: false, error: error.message}
+            return {success: true, data}
+        } catch(err) {
+            console.log(`An error occured: ${(err as Error).message}`)
+            return {success: false, error: 'An unexpected error occured, try again later'}
         }
     }
 
     useEffect(() => {
+
         getInitialState()
         
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
             setSession(session)
         })
 
-        return () => {
-            subscription.unsubscribe()
-        }
+        return () => subscription.unsubscribe()
+        
     }, [])
 
     return (
-        <AuthContext.Provider value={{ session, loading }}>
+        <AuthContext.Provider value={{ session,signUserIn}}>
             {children}
         </AuthContext.Provider>
     )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext)
     if (context === undefined) {
         throw new Error('useAuth must be used within an AuthContextProvider')
