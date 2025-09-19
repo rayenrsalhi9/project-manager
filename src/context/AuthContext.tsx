@@ -96,12 +96,15 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         try {
             const { data, error } = await supabase
                 .from('user_profiles')
-                .select('id, *')
+                .select('id, full_name, created_at')
                 .eq('id', userId)
+                .single()
+                
             if (error) throw error
+        
             if (data) setUser({
-                fullName: data[0].full_name, 
-                email: session?.user?.email || ''
+                email: session?.user?.email || '', 
+                fullName: data.full_name
             })
         } catch(err) {
             console.error(`Error fetching user: ${(err as Error).message}`)
