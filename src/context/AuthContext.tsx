@@ -13,11 +13,17 @@ type AuthResult = {
   data?: { user: User | null; session: Session | null };
 }
 
+type UserType = {
+    fullName: string
+    email: string
+}
+
 type AuthContextType = {
     session: Session | null | undefined
     signUserIn: (email: string, password: string) => Promise<AuthResult>
     signUserOut: () => Promise<AuthResult>
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
+    user: UserType | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -25,16 +31,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
+    const [user, setUser] = useState<UserType | null>(null)
 
     // initial session state
     async function getInitialState(): Promise<void> {
         try {
-            const { data, error } = await supabase.auth.getSession()
+            const { error } = await supabase.auth.getSession()
             if (error) throw error
-            setSession(data.session)
         } catch (err) {
             console.error('Auth initialization error: ', (err as AuthError).message)
-            setSession(null)
         }
     }
 
@@ -86,6 +91,22 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
     }
 
+    async function getUserDetails(userId: string) {
+        try {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('id, *')
+                .eq('id', userId)
+            if (error) throw error
+            if (data) setUser({
+                fullName: data[0].full_name, 
+                email: session?.user?.email || ''
+            })
+        } catch(err) {
+            console.log(`Error fetching user: ${(err as Error).message}`)
+        }          
+    }
+
     useEffect(() => {
 
         getInitialState()
@@ -99,8 +120,13 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         
     }, [])
 
+    useEffect(() => {
+        if (!session) return
+        getUserDetails(session.user.id)
+    }, [session])
+
     return (
-        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp}}>
+        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user}}>
             {children}
         </AuthContext.Provider>
     )

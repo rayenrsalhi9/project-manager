@@ -106,7 +106,7 @@ export default function Navbar() {
               alt="Shadcn UI Navbar"
             />
             <span className="text-lg font-semibold tracking-tighter">
-              Shadcnblocks.com
+              ProjectRoom
             </span>
           </a>
           <NavigationMenu className="hidden lg:block">
@@ -189,7 +189,7 @@ export default function Navbar() {
                       alt="Shadcn UI Navbar"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
-                      Shadcnblocks.com
+                      ProjectRoom
                     </span>
                   </a>
                 </SheetTitle>
