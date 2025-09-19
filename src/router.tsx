@@ -13,11 +13,13 @@ import Root from "./components/Root";
 import Protected from "./components/Protected";
 
 import NotFound from "./components/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />
+        element: <Root />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/home",
@@ -29,17 +31,22 @@ export const router = createBrowserRouter([
     },
     {
         path: '/signin',
-        element: <Signin />
+        element: <Signin />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: '/signup',
-        element: <Signup />
+        element: <Signup />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: '/dashboard',
-        element: <Protected>
-            <DashboardLayout />
-        </Protected>,
+        element: (
+            <Protected>
+                <DashboardLayout />
+            </Protected>
+        ),
+        errorElement: <ErrorBoundary />,
         children: [
             {
                 index: true,
