@@ -29,7 +29,7 @@ export default function Signin():JSX.Element {
       const {success, data, error: loginError} = await signUserIn(email, password)
       if (loginError) return loginError
       if (success && data) {
-        navigate(redirectTo)
+        navigate(redirectTo, {replace: true})
         return null
       }
       return 'Sign in failed, please try again.'
