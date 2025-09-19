@@ -36,8 +36,9 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // initial session state
     async function getInitialState(): Promise<void> {
         try {
-            const { error } = await supabase.auth.getSession()
+            const { data, error } = await supabase.auth.getSession()
             if (error) throw error
+            if (data?.session) setSession(data.session)
         } catch (err) {
             console.error('Auth initialization error: ', (err as AuthError).message)
         }
