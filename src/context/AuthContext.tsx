@@ -54,7 +54,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             if (error) return {success: false, error: error.message}
             return {success: true, data}
         } catch(err) {
-            console.log(`An error occured: ${(err as Error).message}`)
+            console.error(`An error occured: ${(err as Error).message}`)
             return {success: false, error: 'An unexpected error occured, try again later'}
         }
     }
@@ -63,12 +63,12 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         try {
             const {error} = await supabase.auth.signOut()
             if (error) {
-                console.log(`An error occured: ${error.message}`)
+                console.error(`An error occured: ${error.message}`)
                 return {success: false, error: error.message}
             }
             return {success: true}
         } catch (err) {
-            console.log(`An error occured: ${(err as Error).message}`)
+            console.error(`An error occured: ${(err as Error).message}`)
             return {success: false, error: (err as Error).message}
         }
     }
@@ -87,7 +87,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             if (error) return {success: false, error: error.message}
             return {success: true, data}
         } catch(err) {
-            console.log(`An error occured: ${(err as Error).message}`)
+            console.error(`An error occured: ${(err as Error).message}`)
             return {success: false, error: 'An unexpected error occured, try again later'}
         }
     }
@@ -104,7 +104,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
                 email: session?.user?.email || ''
             })
         } catch(err) {
-            console.log(`Error fetching user: ${(err as Error).message}`)
+            console.error(`Error fetching user: ${(err as Error).message}`)
         }          
     }
 
