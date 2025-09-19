@@ -15,7 +15,7 @@ export default function Signin():JSX.Element {
   const navigate = useNavigate()
   const location = useLocation()
   const state = location.state
-  const {redirectTo, message} = state || {redirectTo: '/dashboard', message: null}
+  const {redirectTo} = state || {redirectTo: '/dashboard'}
 
   const [error, handleSubmit, isPending] = useActionState(
     async(_prevState: string | null, formData: FormData): Promise<string | null> => {
@@ -66,17 +66,8 @@ export default function Signin():JSX.Element {
               >
                 {error}
               </p> 
-              : message ?
-              <p 
-                className="text-destructive text-sm text-center" 
-                id="signin-error"
-                role="alert"
-              >
-                {message}
-              </p> 
               : null
             }
-
             <div className="space-y-4">
               <div>
                 <Label htmlFor="email">Email</Label>
