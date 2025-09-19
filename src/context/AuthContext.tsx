@@ -17,6 +17,7 @@ type AuthContextType = {
     session: Session | null | undefined
     signUserIn: (email: string, password: string) => Promise<AuthResult>
     signUserOut: () => Promise<AuthResult>
+    signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -66,6 +67,25 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
     }
 
+    async function signUserUp(fullName: string, email: string, password: string): Promise<AuthResult> {
+        try {
+            const {data, error} = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: fullName
+                    }
+                }
+            })
+            if (error) return {success: false, error: error.message}
+            return {success: true, data}
+        } catch(err) {
+            console.log(`An error occured: ${(err as Error).message}`)
+            return {success: false, error: 'An unexpected error occured, try again later'}
+        }
+    }
+
     useEffect(() => {
 
         getInitialState()
@@ -80,7 +100,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ session,signUserIn, signUserOut}}>
+        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp}}>
             {children}
         </AuthContext.Provider>
     )

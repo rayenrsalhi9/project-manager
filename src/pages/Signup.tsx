@@ -1,6 +1,8 @@
 import { useActionState } from "react";
 import { Link } from "react-router-dom";
 import type { JSX } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +10,16 @@ import { Label } from "@/components/ui/label";
 
 export default function Signup():JSX.Element {
 
+  const {signUserUp} = useAuth()
+  const navigate = useNavigate()
+
   const [error, handleSubmit, isPending] = useActionState(
     async(_prevState: string | null, formData: FormData): Promise<string | null> => {
-      const fullName = formData.get('full-name')
-      const email = formData.get('email')
-      const password = formData.get('password')
-      const confirmPassword = formData.get('confirm-password')
+      
+      const fullName = formData.get('full-name') as string
+      const email = formData.get('email') as string
+      const password = formData.get('password') as string
+      const confirmPassword = formData.get('confirm-password') as string
       
       if (!fullName || !email || !password || !confirmPassword) {
         return 'All fields are required'
@@ -21,7 +27,13 @@ export default function Signup():JSX.Element {
       if (password !== confirmPassword) {
         return 'Passwords do not match'
       }
-      return 'An error occured, try again.'
+
+      const {success, data, error} = await signUserUp(fullName, email, password)
+
+      if (error) return error
+      if (success && data) navigate('/dashboard')
+
+      return 'An error occured, please try again.'
     }, null
   )
 
