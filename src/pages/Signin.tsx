@@ -23,7 +23,10 @@ export default function Signin():JSX.Element {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      const validationError = validateFields({email, password})
+      const validationError = validateFields({email, password}, {
+        requireName: false,
+        requirePasswordConfirmation: false
+      })
       if (validationError) return validationError
 
       const {success, data, error: loginError} = await signUserIn(email, password)
