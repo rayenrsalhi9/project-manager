@@ -10,11 +10,10 @@ interface SupabaseError {
 }
 
 export default function ErrorBoundary() {
-    const error = useRouteError() as Error & SupabaseError;
+
+    const error = useRouteError() as SupabaseError;
     
-    // Map technical errors to user-friendly messages
-    const getUserFriendlyMessage = (error: Error & SupabaseError) => {
-        // Handle specific Supabase error codes
+    const getUserFriendlyMessage = (error: SupabaseError) => {
         if (error.code) {
             switch (error.code) {
                 case 'PGRST116':
@@ -31,7 +30,6 @@ export default function ErrorBoundary() {
             }
         }
         
-        // Handle HTTP status codes
         if (error.status) {
             switch (error.status) {
                 case 404:
@@ -47,7 +45,6 @@ export default function ErrorBoundary() {
             }
         }
         
-        // Fallback to original message if it's user-safe, otherwise use generic message
         const message = error.message || "";
         const isSafeMessage = !message.toLowerCase().includes('sql') && 
                              !message.toLowerCase().includes('database') &&
@@ -81,7 +78,7 @@ export default function ErrorBoundary() {
 
                 <div className="space-y-3">
                     <Button asChild className="w-full">
-                        <Link to="/home">Return Home</Link>
+                        <Link to="/home">Return to home page</Link>
                     </Button>
                 </div>
             </div>
