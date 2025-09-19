@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ export default function Signin():JSX.Element {
 
   const {signUserIn} = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const message = searchParams.get('message')
 
   const [error, handleSubmit, isPending] = useActionState(
     async(_prevState: string | null, formData: FormData): Promise<string | null> => {
@@ -62,6 +64,14 @@ export default function Signin():JSX.Element {
                 role="alert"
               >
                 {error}
+              </p> 
+              : message ?
+              <p 
+                className="text-destructive text-sm text-center" 
+                id="signin-error"
+                role="alert"
+              >
+                {message}
               </p> 
               : null
             }

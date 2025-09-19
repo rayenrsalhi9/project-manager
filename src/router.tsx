@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 
 import DashboardLayout from "./layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
+import Protected from "./components/Protected";
 
 import NotFound from "./components/NotFound";
 
@@ -30,7 +31,9 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout />,
+        element: <Protected>
+            <DashboardLayout />
+        </Protected>,
         children: [
             {
                 index: true,
