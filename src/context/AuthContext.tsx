@@ -121,7 +121,10 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     }, [])
 
     useEffect(() => {
-        if (!session) return
+        if (!session) {
+            setUser(null)
+            return
+        }
         getUserDetails(session.user.id)
     }, [session])
 
