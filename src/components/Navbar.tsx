@@ -19,6 +19,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -183,6 +184,9 @@ export default function Navbar() {
                     </span>
                   </a>
                 </SheetTitle>
+                <SheetDescription className="sr-only">
+                  Navigation menu for mobile devices
+                </SheetDescription>
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <Accordion type="single" collapsible className="mt-4 mb-2">
