@@ -122,12 +122,12 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     }, [])
 
     useEffect(() => {
-        if (!session) {
+        if (!session?.user?.id) {
             setUser(null)
             return
         }
         getUserDetails(session.user.id)
-    }, [session])
+    }, [session?.user?.id])
 
     return (
         <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user}}>
