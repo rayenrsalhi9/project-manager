@@ -47,6 +47,15 @@ export default function Navbar() {
       })
     } else if (success) {
       navigate("/signin")
+    } else {
+      toast.error('Unexpected error occured', {
+        duration: 5000,
+        style: {
+          background: '#FEE2E2',
+          border: '1px solid #EF4444',
+          color: '#991B1B',
+        },
+      })
     }
   }
 

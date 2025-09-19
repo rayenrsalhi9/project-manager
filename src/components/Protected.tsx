@@ -15,7 +15,7 @@ export default function Protected({children}: ProtectedProps) {
     return session 
     ? children 
     : <Navigate 
-        to='/signin?message=You must be signed in to access this page.' 
+        to='/signin' 
         state={{redirectTo: location.pathname}} 
     />
 
