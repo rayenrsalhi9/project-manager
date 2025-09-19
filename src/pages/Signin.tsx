@@ -1,6 +1,7 @@
 import { useActionState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { validateFields } from "@/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,8 @@ export default function Signin():JSX.Element {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      if (!email || !password) return 'All fields must be filled'
+      const validationError = validateFields({email, password})
+      if (validationError) return validationError
 
       const {success, data, error: loginError} = await signUserIn(email, password)
       if (loginError) return loginError

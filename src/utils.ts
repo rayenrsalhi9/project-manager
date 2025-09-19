@@ -1,7 +1,7 @@
 import DOMPurify from 'dompurify'
 
 type ValidationFields = {
-    name?: string;
+    fullName?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
@@ -36,13 +36,13 @@ export function validateFields(
     } = options
 
     const sanitizedFields: ValidationFields = {
-        name: fields.name ? sanitizeField(fields.name) : fields.name,
+        fullName: fields.fullName ? sanitizeField(fields.fullName) : fields.fullName,
         email: fields.email ? sanitizeField(fields.email) : fields.email,
         password: fields.password,
         confirmPassword: fields.confirmPassword
     }
 
-    const { email, password, confirmPassword, name } = sanitizedFields;
+    const { email, password, confirmPassword, fullName } = sanitizedFields;
 
     // checking required fields
     if (requireEmail && !email?.trim()) {
@@ -57,7 +57,7 @@ export function validateFields(
         return 'Password confirmation is required';
     }
 
-    if (requireName && !name?.trim()) {
+    if (requireName && !fullName?.trim()) {
         return 'Name is required';
     }
 

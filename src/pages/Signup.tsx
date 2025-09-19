@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { JSX } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { validateFields } from "@/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,12 +22,8 @@ export default function Signup():JSX.Element {
       const password = formData.get('password') as string
       const confirmPassword = formData.get('confirm-password') as string
       
-      if (!fullName || !email || !password || !confirmPassword) {
-        return 'All fields are required'
-      }
-      if (password !== confirmPassword) {
-        return 'Passwords do not match'
-      }
+      const validationError = validateFields({fullName , email, password, confirmPassword})
+      if (validationError) return validationError
 
       const {success, data, error} = await signUserUp(fullName, email, password)
 
