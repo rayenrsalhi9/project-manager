@@ -11,11 +11,8 @@ export default function Dashboard() {
     <section className="min-h-screen pt-4">
       <div className="max-w-2xl rounded-lg">
         <h1 className="text-3xl font-bold mb-2">
-          Welcome, <span className="text-blue-500"> {user?.fullName} </span>
+          Welcome, <span className="text-gray-500"> {user?.fullName} </span>
         </h1>
-        <p className="text-gray-600">
-          {user?.email}
-        </p>
       </div>
     </section>
   )
