@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,9 @@ export default function Signin():JSX.Element {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const message = searchParams.get('message')
+  const location = useLocation()
+  const state = location.state
+  const {redirectTo} = state || {redirectTo: '/dashboard'}
 
   const [error, handleSubmit, isPending] = useActionState(
     async(_prevState: string | null, formData: FormData): Promise<string | null> => {
@@ -26,7 +29,7 @@ export default function Signin():JSX.Element {
       const {success, data, error: loginError} = await signUserIn(email, password)
       if (loginError) return loginError
       if (success && data) {
-        navigate('/dashboard')
+        navigate(redirectTo)
         return null
       }
       return 'Sign in failed, please try again.'
