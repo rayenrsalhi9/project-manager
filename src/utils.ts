@@ -149,12 +149,12 @@ export async function createNewProject(
         if (error) return {success: false, error: error.message}
         return {success: true, message: 'Project created successfully'}
     } catch(err) {
-        console.error(`An error occured creating project: ${(err as Error).message}`)
+        console.error(`Error creating project: ${(err as Error).message}`)
         return {success: false, error: 'Unexpected error occured, please try again later.'}
     }
 }
 
-export async function getMatchingProject(inviteCode: string) {
+export async function getMatchingProject(inviteCode: string): Promise<{success: boolean, error?: string, message?: string}> {
     try {
         const {error} = await supabase.from('projects')
             .select('invite_code')

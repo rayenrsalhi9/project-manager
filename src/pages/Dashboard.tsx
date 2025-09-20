@@ -37,29 +37,38 @@ export default function Dashboard() {
   const [createState, createAction, createPending] = useActionState(
     async (_prevState: PrevState | null, formData: FormData) => {
       try {
+
         const name = formData.get('project-name') as string
         const description = formData.get('project-description') as string
         
-        const result = await createNewProject(
+        const {success, error, message} = await createNewProject(
           {name, description},
           session?.user?.id
         )
         
-        if (!result.success && result.error) {
-          console.error(result.error)
-          return {success: result.success, error: result.error}
+        if (!success && error) {
+          console.error(error)
+          return {success, error}
         }
 
-        toast.success('Project created successfully', {
-          style: {
-            background: '#E8F5E9',
-            border: '1px solid #81C784',
-            color: '#2E7D32'
-          }
-        })
-        return { success: result.success, message: result.message }
+        if (success) {
+          toast.success('Project created successfully', {
+            style: {
+              background: '#E8F5E9',
+              border: '1px solid #81C784',
+              color: '#2E7D32'
+            }
+          })
+          return { success, message }
+        }
+
+        return {
+          success: false, 
+          error: 'Unexpected error occured, please try again later.'
+        }
+
       } catch (err) {
-        console.error(`An error occured creating a project:${err}`)
+        console.error(`Error creating a project:${err}`)
         return { success: false, error: 'Failed to create project. Please try again.' }
       }
     }, null
@@ -88,7 +97,11 @@ export default function Dashboard() {
           return {success, message: 'Project found'}
         }
 
-        return {success: false, error: 'Unexpected error occured, please try again later.'}
+        return {
+          success: false, 
+          error: 'Unexpected error occured, please try again later.'
+        }
+
       } catch (err) {
         console.error(`An error occured creating a project:${err}`)
         return { success: false, error: 'Failed to join project. Please try again.'}
