@@ -46,6 +46,7 @@ export default function Dashboard() {
         )
         
         if (!result.success && result.error) {
+          console.error(result.error)
           return {success: result.success, error: result.error}
         }
 
