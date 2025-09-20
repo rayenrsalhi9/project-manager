@@ -124,7 +124,12 @@ export async function createNewProject(
     userId: string
 ): Promise<{success: boolean, error?: string, message?: string}> {
 
-    const {name, description} = projectData
+    const sanitizedFields = {
+        name: projectData.name ? sanitizeField(projectData.name) : projectData.name,
+        description: projectData.description ? sanitizeField(projectData.description) : projectData.description
+    }
+
+    const {name, description} = sanitizedFields
 
     const projectObj = {
         name, description,
