@@ -18,6 +18,13 @@ type ValidationOptions = {
     minPasswordLength?: number;
 }
 
+type ProjectFunctionResponse = {
+    success: boolean
+    error?: string
+    message?: string
+    data?: {id: string} 
+}
+
 export function validateFields(
     fields: ValidationFields,
     options: ValidationOptions = {}
@@ -122,7 +129,7 @@ function generateInviteCode(): string {
 export async function createNewProject(
     projectData: {name: string, description: string}, 
     userId: string
-): Promise<{success: boolean, error?: string, message?: string}> {
+): Promise<ProjectFunctionResponse> {
 
     const sanitizedFields = {
         name: projectData.name ? sanitizeField(projectData.name) : projectData.name,
@@ -154,10 +161,12 @@ export async function createNewProject(
     }
 }
 
-export async function getMatchingProject(inviteCode: string): Promise<{success: boolean, error?: string, message?: string}> {
+export async function getMatchingProject(
+    inviteCode: string
+): Promise<ProjectFunctionResponse> {
     try {
-        const {error} = await supabase.from('projects')
-            .select('invite_code')
+        const {data, error} = await supabase.from('projects')
+            .select('id')
             .eq('invite_code', inviteCode)
             .single()
 
@@ -168,7 +177,7 @@ export async function getMatchingProject(inviteCode: string): Promise<{success: 
             }
         }
 
-        return {success: true}
+        return {success: true, data}
 
     } catch(err) {
         console.error(`Error getting project code: ${(err as Error).message}`)
