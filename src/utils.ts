@@ -1,4 +1,5 @@
 import DOMPurify from 'dompurify'
+import { supabase } from './supabase';
 
 type ValidationFields = {
     fullName?: string;
@@ -102,7 +103,7 @@ function sanitizeField(field: string): string {
     })
 }
 
-export function generateInviteCode(): string {
+function generateInviteCode(): string {
   const letters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
   let firstPart = '';
   for (let i = 0; i < 3; i++) {
@@ -116,4 +117,30 @@ export function generateInviteCode(): string {
   }
 
   return `${firstPart}-${secondPart}`;
+}
+
+export async function createNewProject(
+    projectData: {name: string, description: string}, 
+    userId: string
+): Promise<{success: boolean, error?: string, message?: string}> {
+
+    const {name, description} = projectData
+
+    const projectObj = {
+        name, description,
+        invite_code: generateInviteCode(),
+        created_by: userId
+    }
+
+    try {
+        const {error} = await supabase
+            .from('projects')
+            .insert(projectObj)
+
+        if (error) return {success: false, error: error.message}
+        return {success: true, message: 'Project created successfully'}
+    } catch(err) {
+        console.error(`An error occured creating project: ${(err as Error).message}`)
+        return {success: false, error: 'Unexpected error occured, please try again later.'}
+    }
 }
