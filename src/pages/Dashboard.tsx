@@ -1,7 +1,7 @@
 import { useActionState, useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { Plus, Users } from "lucide-react"
-import { createNewProject } from "@/utils"
+import { createNewProject, getMatchingProject } from "@/utils"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 
@@ -68,30 +68,30 @@ export default function Dashboard() {
   const [joinState, joinAction, joinPending] = useActionState(
     async (_prevState: PrevState | null, formData: FormData) => {
       try {
+
         const secretCode = formData.get('secret-code') as string
         
-        console.log('Joining project with code:', secretCode)
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Simulate error for testing
-        if (secretCode === 'error') {
-          return { success: false, error: 'Invalid secret code' }
+        const {success, error} = await getMatchingProject(secretCode)
+
+        if (!success && error) {
+          return {success, error}
         }
-        
-        // Return success state
-        toast.success('Project found successfully!', {
-          style: {
-            background: '#E8F5E9',
-            border: '1px solid #81C784',
-            color: '#2E7D32'
-          }
-        })
-        return { success: true, message: 'Project joined successfully!' }
+
+        if (success) {
+          toast.success('Project found successfully!', {
+            style: {
+              background: '#E8F5E9',
+              border: '1px solid #81C784',
+              color: '#2E7D32'
+            }
+          })
+          return {success, message: 'Project found'}
+        }
+
+        return {success: false, error: 'Unexpected error occured, please try again later.'}
       } catch (err) {
         console.error(`An error occured creating a project:${err}`)
-        return { success: false, error: 'Failed to join project. Please try again.' }
+        return { success: false, error: 'Failed to join project. Please try again.'}
       }
     },
     null
