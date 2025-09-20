@@ -53,7 +53,7 @@ export default function Navbar() {
   }
 
   return (
-    <section className="py-4">
+    <section className="py-4 px-8 w-full mx-auto">
       <div className="container">
         <nav className="flex items-center justify-between">
           <a

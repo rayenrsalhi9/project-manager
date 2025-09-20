@@ -6,13 +6,6 @@
   font-family: 'Manrope', sans-serif;
 }
 
-body {
-  width: 100%;
-  max-width: 1000px;
-  padding: 0 1em;
-  margin: 0 auto;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
