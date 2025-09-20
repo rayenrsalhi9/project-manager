@@ -101,3 +101,19 @@ function sanitizeField(field: string): string {
         KEEP_CONTENT: true
     })
 }
+
+export function generateInviteCode(): string {
+  const letters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+  let firstPart = '';
+  for (let i = 0; i < 3; i++) {
+    firstPart += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  const alphanumeric = 'ABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
+  let secondPart = '';
+  for (let i = 0; i < 4; i++) {
+    secondPart += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+  }
+
+  return `${firstPart}-${secondPart}`;
+}
