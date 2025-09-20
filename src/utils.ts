@@ -153,3 +153,24 @@ export async function createNewProject(
         return {success: false, error: 'Unexpected error occured, please try again later.'}
     }
 }
+
+export async function getMatchingProject(inviteCode: string) {
+    try {
+        const {error} = await supabase.from('projects')
+            .select('invite_code')
+            .eq('invite_code', inviteCode)
+            .single()
+
+        if(error) return {
+            success: false, 
+            error: {
+                message: error.message, 
+                code: error.code
+            }
+        }
+        return {success: true}
+    } catch(err) {
+        console.error(`Error getting project code: ${(err as Error).message}`)
+        return {success: false, error: 'Unexpected error, please try again.'}
+    }
+}
