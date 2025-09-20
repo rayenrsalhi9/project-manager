@@ -131,6 +131,10 @@ export async function createNewProject(
 
     const {name, description} = sanitizedFields
 
+    if (!name || !description) {
+        return {success: false, error: 'All fields are required'}
+    }
+
     const projectObj = {
         name, description,
         invite_code: generateInviteCode(),

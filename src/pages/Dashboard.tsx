@@ -1,6 +1,7 @@
 import { useActionState, useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { Plus, Users } from "lucide-react"
+import { createNewProject } from "@/utils"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 
@@ -26,7 +27,9 @@ type PrevState = {
 
 export default function Dashboard() {
 
-  const { user } = useAuth()
+  const { user, session } = useAuth()
+
+  if(!session) throw new Error('No active session found. Please login to continue.')
 
   const [createOpen, setCreateOpen] = useState(false)
   const [joinOpen, setJoinOpen] = useState(false)
@@ -34,20 +37,18 @@ export default function Dashboard() {
   const [createState, createAction, createPending] = useActionState(
     async (_prevState: PrevState | null, formData: FormData) => {
       try {
-        const projectName = formData.get('project-name') as string
-        const projectDescription = formData.get('project-description') as string
+        const name = formData.get('project-name') as string
+        const description = formData.get('project-description') as string
         
-        console.log('Creating project:', { projectName, projectDescription })
+        const result = await createNewProject(
+          {name, description},
+          session?.user?.id
+        )
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Simulate error for testing
-        if (projectName === 'error') {
-          return { success: false, error: 'Project name cannot be "error"' }
+        if (!result.success && result.error) {
+          return {success: result.success, error: result.error}
         }
-        
-        // Return success state
+
         toast.success('Project created successfully', {
           style: {
             background: '#E8F5E9',
@@ -55,7 +56,7 @@ export default function Dashboard() {
             color: '#2E7D32'
           }
         })
-        return { success: true, message: 'Project created successfully!' }
+        return { success: result.success, message: result.message }
       } catch (err) {
         console.error(`An error occured creating a project:${err}`)
         return { success: false, error: 'Failed to create project. Please try again.' }
