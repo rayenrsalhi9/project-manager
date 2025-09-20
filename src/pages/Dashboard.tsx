@@ -1,7 +1,7 @@
 import { useActionState, useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { Plus, Users } from "lucide-react"
-import { createNewProject, getMatchingProject } from "@/utils"
+import { createNewProject, getMatchingProject, addUserToMembers } from "@/utils"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
           return {success, error}
         }
 
-        if (success) {
+        if (success && message) {
           toast.success('Project created successfully', {
             style: {
               background: '#E8F5E9',
@@ -80,21 +80,47 @@ export default function Dashboard() {
 
         const secretCode = formData.get('secret-code') as string
         
-        const {success, error} = await getMatchingProject(secretCode)
+        const {success, error, data} = await getMatchingProject(secretCode)
 
         if (!success && error) {
           return {success, error}
         }
 
-        if (success) {
-          toast.success('Project found successfully!', {
-            style: {
-              background: '#E8F5E9',
-              border: '1px solid #81C784',
-              color: '#2E7D32'
+        if (success && data) {
+
+          const {id: projectId} = data
+          const userId = session.user.id
+
+          const {
+            success: addMemberSuccess,
+            error: addMemberError,
+            message: addMemberMessage
+          } = await addUserToMembers(projectId, userId)
+
+          if (!addMemberSuccess && addMemberError) {
+            console.error(addMemberError)
+            return {success: addMemberSuccess, error: addMemberError}
+          }
+
+          if (addMemberSuccess && addMemberMessage) {
+            toast.success('Project found successfully!', {
+              style: {
+                background: '#E8F5E9',
+                border: '1px solid #81C784',
+                color: '#2E7D32'
+              }
+            })
+            return {
+              success: addMemberSuccess, 
+              message: addMemberMessage
             }
-          })
-          return {success, message: 'Project found'}
+          }
+
+          return {
+            success: false, 
+            error: 'Unexpected error occured, please try again later.'
+          }
+        
         }
 
         return {

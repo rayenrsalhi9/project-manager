@@ -22,7 +22,7 @@ type ProjectFunctionResponse = {
     success: boolean
     error?: string
     message?: string
-    data?: {id: string} 
+    data?: {id: number} 
 }
 
 export function validateFields(
@@ -183,4 +183,30 @@ export async function getMatchingProject(
         console.error(`Error getting project code: ${(err as Error).message}`)
         return {success: false, error: 'Unexpected error, please try again.'}
     }
+}
+
+export async function addUserToMembers(projectId: number, userId: string) {
+
+    if (!projectId || !userId) {
+        return {success: false, message: 'Could not join project, please try again.'}
+    }
+
+    const memberObj = {
+        project_id: projectId,
+        user_id: userId,
+        role: 'member'
+    }
+
+    try {
+        const {error} = await supabase
+            .from('project_members')
+            .insert(memberObj)
+
+        if (error) return {success: false, error: error.message}
+        return {success: true, message: 'Successfully joined project'}
+    } catch(err) {
+        console.error(`Error joining project: ${(err as Error).message}`)
+        return {success: false, error: 'Unexpected error occured, please try again later.'}
+    }
+
 }
