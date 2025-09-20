@@ -157,7 +157,7 @@ export async function createNewProject(
 export async function getMatchingProject(inviteCode: string) {
     try {
         const {error} = await supabase.from('projects')
-            .select('*')
+            .select('invite_code')
             .eq('invite_code', inviteCode)
             .single()
 
@@ -169,7 +169,7 @@ export async function getMatchingProject(inviteCode: string) {
         }
 
         return {success: true}
-        
+
     } catch(err) {
         console.error(`Error getting project code: ${(err as Error).message}`)
         return {success: false, error: 'Unexpected error, please try again.'}
