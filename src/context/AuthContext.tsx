@@ -28,6 +28,7 @@ type AuthContextType = {
 }
 
 type UserProject = {
+    id: number,
     name: string,
     description: string,
     role: string[]
@@ -125,6 +126,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
                 .from('projects')
                 .select(
                     `
+                    id,
                     name,
                     description,
                     ...project_members!inner(

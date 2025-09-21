@@ -69,7 +69,7 @@ export default function Dashboard() {
                       asChild 
                       className="bg-foreground text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:bg-black"
                     >
-                      <Link to=".">Open Project</Link>
+                      <Link to={`./projects/${project.id}`}>Open Project</Link>
                     </Button>
                   </div>
                 </CardContent>

@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 
 import DashboardLayout from "./layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
+import Project from "./pages/Project";
 
 import Root from "./components/Root";
 import Protected from "./components/Protected";
@@ -51,6 +52,9 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Dashboard />
+            }, {
+                path: 'projects/:projectId',
+                element: <Project />
             }
         ]
     },
