@@ -30,7 +30,7 @@ type AuthContextType = {
 type UserProject = {
     name: string,
     description: string,
-    role: string
+    role: string[]
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -137,7 +137,6 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
                     userId
                 )
             if (error) throw error
-            console.log(data)
             if (data) setUserProjects(data)
         } catch(err) {
             console.error(`Error fetching projects: ${(err as Error).message}`)
