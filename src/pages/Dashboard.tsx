@@ -1,7 +1,7 @@
 import { useAuth } from "@/context/AuthContext"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
-import CreateProjectDialog from "@/components/dashboard/CreateProjectDialog"
-import JoinProjectDialog from "@/components/dashboard/JoinProjectDialog"
+import CreateProjectDialog from "@/components/dialogs/CreateProjectDialog"
+import JoinProjectDialog from "@/components/dialogs/JoinProjectDialog"
 import {
   Card,
   CardHeader,
