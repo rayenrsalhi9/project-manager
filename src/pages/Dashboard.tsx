@@ -80,7 +80,10 @@ export default function Dashboard() {
 
         const secretCode = formData.get('secret-code') as string
         
-        const {success, error, data} = await getMatchingProject(secretCode)
+        const {success, error, data} = await getMatchingProject(
+          secretCode, 
+          session.user.id
+        )
 
         if (!success && error) {
           return {success, error}

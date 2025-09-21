@@ -162,11 +162,12 @@ export async function createNewProject(
 }
 
 export async function getMatchingProject(
-    inviteCode: string
+    inviteCode: string,
+    userId: string
 ): Promise<ProjectFunctionResponse> {
     try {
         const {data, error} = await supabase.from('projects')
-            .select('id')
+            .select('id, created_by')
             .eq('invite_code', inviteCode)
             .single()
 
@@ -174,6 +175,13 @@ export async function getMatchingProject(
             return {
                 success: false, 
                 error: error.code === 'PGRST116' ? 'Project not found' : error.message
+            }
+        }
+
+        if (data.created_by === userId) {
+            return {
+                success: false,
+                error: 'You cannot join a project you created.'
             }
         }
 
