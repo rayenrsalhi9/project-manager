@@ -24,6 +24,13 @@ type AuthContextType = {
     signUserOut: () => Promise<AuthResult>
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
     user: UserType | null
+    userProjects: UserProject[]
+}
+
+type UserProject = {
+    name: string,
+    description: string,
+    role: string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -32,6 +39,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [user, setUser] = useState<UserType | null>(null)
+    const [userProjects, setUserProjects] = useState<UserProject[]>([])
 
     // initial session state
     async function getInitialState(): Promise<void> {
@@ -111,6 +119,31 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }          
     }
 
+    async function getUserProjects(userId: string) {
+        try {
+            const { data, error } = await supabase
+                .from('projects')
+                .select(
+                    `
+                    name,
+                    description,
+                    ...project_members!inner(
+                    role
+                    )
+                    `,
+                )
+                .eq(
+                    'project_members.user_id',
+                    userId
+                )
+            if (error) throw error
+            console.log(data)
+            if (data) setUserProjects(data)
+        } catch(err) {
+            console.error(`Error fetching projects: ${(err as Error).message}`)
+        }
+    } 
+
     useEffect(() => {
 
         getInitialState()
@@ -127,13 +160,15 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     useEffect(() => {
         if (!session?.user?.id) {
             setUser(null)
+            setUserProjects([])
             return
         }
         getUserDetails(session.user.id)
+        getUserProjects(session.user.id)
     }, [session?.user?.id])
 
     return (
-        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user}}>
+        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user, userProjects}}>
             {children}
         </AuthContext.Provider>
     )
