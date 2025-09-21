@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
+import EmptyState from "@/components/EmptyState"
 import CreateProjectDialog from "@/components/dialogs/CreateProjectDialog"
 import JoinProjectDialog from "@/components/dialogs/JoinProjectDialog"
 import {
@@ -37,9 +38,7 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {userProjects.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg">No projects yet. Create your first project to get started!</p>
-            </div>
+            <EmptyState />
           ) : (
             userProjects.map((project, index) => (
               <Card key={index} className="hover:shadow-xl transition-all duration-300 relative group border-gray-200">
