@@ -10,7 +10,7 @@ import DashboardLayout from "./layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 
 import ProjectLayout from "./layout/ProjectLayout";
-import TimeLine from "./pages/project/TimeLine";
+import Timeline from "./pages/project/Timeline";
 
 import Root from "./components/Root";
 import Protected from "./components/Protected";
@@ -60,7 +60,7 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <TimeLine />
+                        element: <Timeline />
                     }
                 ]
             }
