@@ -193,6 +193,45 @@ export async function getMatchingProject(
     }
 }
 
+export async function userNotAlreadyMember(
+    projectId: number, 
+    userId: string
+): Promise<ProjectFunctionResponse> {
+
+    if (!projectId || !userId) {
+        return {
+            success: false,
+            error: 'An error occured, please try again.'
+        }
+    }
+
+    try {
+        const {data, error} = await supabase
+            .from('project_members')
+            .select('user_id')
+            .eq('user_id', userId)
+            .eq('project_id', projectId)
+            .maybeSingle()
+
+        if (error) {
+            return {success: false, error: 'Database error occurred'}
+        }
+
+        if (data) {
+            return {
+                success: false, 
+                error: 'You are already a member of this project.'
+            }
+        }
+
+        return {success: true}
+
+    } catch(err) {
+        console.error(`Error checking member existance: ${(err as Error).message}`)
+        return {success: false, error: 'Unexpected error, please try again.'}
+    }
+}
+
 export async function addUserToMembers(projectId: number, userId: string) {
 
     if (!projectId || !userId) {

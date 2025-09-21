@@ -1,7 +1,7 @@
 import { useActionState, useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { Plus, Users } from "lucide-react"
-import { createNewProject, getMatchingProject, addUserToMembers } from "@/utils"
+import { createNewProject, getMatchingProject, userNotAlreadyMember, addUserToMembers } from "@/utils"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 
@@ -80,45 +80,75 @@ export default function Dashboard() {
 
         const secretCode = formData.get('secret-code') as string
         
+        // checking project existance
         const {success, error, data} = await getMatchingProject(
           secretCode, 
           session.user.id
         )
 
+        // project does not exist, exit
         if (!success && error) {
           return {success, error}
         }
 
+        // project existing, check if user already member
         if (success && data) {
 
           const {id: projectId} = data
           const userId = session.user.id
 
+          // check user already a member
           const {
-            success: addMemberSuccess,
-            error: addMemberError,
-            message: addMemberMessage
-          } = await addUserToMembers(projectId, userId)
+            success: userNotMemberSuccess, 
+            error: userNotMemberError
+          } = await userNotAlreadyMember(projectId, userId)
 
-          if (!addMemberSuccess && addMemberError) {
-            console.error(addMemberError)
-            return {success: addMemberSuccess, error: addMemberError}
+          // user already a member, exit
+          if (!userNotMemberSuccess && userNotMemberError) return {
+            success: userNotMemberSuccess,
+            error: userNotMemberError
           }
 
-          if (addMemberSuccess && addMemberMessage) {
-            toast.success('Project found successfully!', {
-              style: {
-                background: '#E8F5E9',
-                border: '1px solid #81C784',
-                color: '#2E7D32'
-              }
-            })
-            return {
-              success: addMemberSuccess, 
+          // user not found in members list, add him
+          if(userNotMemberSuccess) {
+
+            // add user to members list
+            const {
+              success: addMemberSuccess,
+              error: addMemberError,
               message: addMemberMessage
+            } = await addUserToMembers(projectId, userId)
+
+            // error occured, return
+            if (!addMemberSuccess && addMemberError) {
+              console.error(addMemberError)
+              return {success: addMemberSuccess, error: addMemberError}
             }
+
+            // success, alert operation success
+            if (addMemberSuccess && addMemberMessage) {
+              toast.success('Project found successfully!', {
+                style: {
+                  background: '#E8F5E9',
+                  border: '1px solid #81C784',
+                  color: '#2E7D32'
+                }
+              })
+              return {
+                success: addMemberSuccess, 
+                message: addMemberMessage
+              }
+            }
+
+            // unexpected error handling
+            return {
+              success: false, 
+              error: 'Unexpected error occured, please try again later.'
+            }
+
           }
 
+          // unexpected error handling
           return {
             success: false, 
             error: 'Unexpected error occured, please try again later.'
@@ -126,6 +156,7 @@ export default function Dashboard() {
         
         }
 
+        // unexpected error handling
         return {
           success: false, 
           error: 'Unexpected error occured, please try again later.'
