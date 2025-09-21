@@ -8,7 +8,9 @@ import Signup from "./pages/Signup";
 
 import DashboardLayout from "./layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
-import Project from "./pages/Project";
+
+import ProjectLayout from "./layout/ProjectLayout";
+import TimeLine from "./pages/project/TimeLine";
 
 import Root from "./components/Root";
 import Protected from "./components/Protected";
@@ -54,7 +56,13 @@ export const router = createBrowserRouter([
                 element: <Dashboard />
             }, {
                 path: 'projects/:projectId',
-                element: <Project />
+                element: <ProjectLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <TimeLine />
+                    }
+                ]
             }
         ]
     },
