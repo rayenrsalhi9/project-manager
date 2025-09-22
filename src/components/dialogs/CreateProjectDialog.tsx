@@ -1,4 +1,5 @@
 import { useActionState, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/AuthContext"
 import { Plus } from "lucide-react"
 import { createNewProject } from "@/utils"
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 
 import { Button } from "@/components/ui/button"
+import { supabase } from "@/supabase"
 
 type PrevState = {
   success: boolean
@@ -24,7 +26,9 @@ type PrevState = {
 }
 
 export default function CreateProjectDialog() {
+
   const { session } = useAuth()
+  const navigate = useNavigate()
   const [createOpen, setCreateOpen] = useState(false)
 
   if (!session) throw new Error('No active session found. Please login to continue.')
@@ -46,14 +50,36 @@ export default function CreateProjectDialog() {
         }
 
         if (success && message) {
-          toast.success('Project created successfully', {
-            style: {
-              background: '#E8F5E9',
-              border: '1px solid #81C784',
-              color: '#2E7D32'
-            }
-          })
-          return { success, message }
+
+          const {data: project, error} = await supabase
+          .from('projects')
+          .select('id')
+          .eq('created_by', session?.user?.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+
+          if (error) {
+            console.error(error)
+            return { success: false, error: 'Failed to access project. Please try again.' }
+          }
+          
+
+          if (project?.length) {
+            toast.success('Project created successfully', {
+              style: {
+                background: '#E8F5E9',
+                border: '1px solid #81C784',
+                color: '#2E7D32'
+              }
+            })
+            navigate(`/dashboard/projects/${project[0].id}`)
+            return { success, message }
+          }
+
+          return {
+            success: false,
+            error: 'Failed to create project. Please try again.'
+          }
         }
 
         return {
