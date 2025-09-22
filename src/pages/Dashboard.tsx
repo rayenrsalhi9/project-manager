@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge"
 
 export default function Dashboard() {
   const { user, session, userProjects } = useAuth()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   
   const filter = searchParams.get('filter') || 'all'
   
@@ -54,27 +54,36 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-2 mt-12 mb-12 justify-center">
-          <Button
-            variant={filter === 'all' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSearchParams({ filter: 'all' })}
+          <Link
+            to="?filter=all"
+            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
+              filter === 'all' 
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'border border-input hover:bg-accent hover:text-accent-foreground'
+            }`}
           >
             All projects ({userProjects.length})
-          </Button>
-          <Button
-            variant={filter === 'created' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSearchParams({ filter: 'created' })}
+          </Link>
+          <Link
+            to="?filter=created"
+            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
+              filter === 'created' 
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'border border-input hover:bg-accent hover:text-accent-foreground'
+            }`}
           >
             Created projects ({createdProjectCount})
-          </Button>
-          <Button
-            variant={filter === 'joined' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSearchParams({ filter: 'joined' })}
+          </Link>
+          <Link
+            to="?filter=joined"
+            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
+              filter === 'joined' 
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'border border-input hover:bg-accent hover:text-accent-foreground'
+            }`}
           >
             Joined projects ({joinedProjectCount})
-          </Button>
+          </Link>
         </div>
 
         
