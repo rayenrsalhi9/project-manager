@@ -69,7 +69,7 @@ export default function TimeLine() {
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
     
     if (diffInSeconds < 60) {
-      return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`
+      return `Just now`
     }
     
     const diffInMinutes = Math.floor(diffInSeconds / 60)
