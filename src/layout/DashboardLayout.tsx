@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/sonner"
 
 export default function DashboardLayout() {
   return (
-    <section className="min-h-dvh">
+    <section className="max-w-4xl mx-auto">
         <Navbar />
         <Outlet />
         <Toaster />

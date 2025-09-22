@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 export default function Project() {
   return (
-    <section className="w-full pt-4 px-8">
+    <section className="py-8 max-w-4xl mx-auto">
         <Link to=".." className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
             <svg 
               className="w-5 h-5" 

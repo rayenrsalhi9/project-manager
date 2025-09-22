@@ -9,7 +9,7 @@ export default function Home():JSX.Element {
   const {session} = useAuth()
 
   return (
-    <section className="relative overflow-hidden py-32 min-h-dvh">
+    <section className="relative overflow-hidden py-6 min-h-dvh max-w-4xl mx-auto">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
         <img
           alt="background"
@@ -28,8 +28,8 @@ export default function Home():JSX.Element {
               />
             </div>
             <div>
-              <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl">
-                Simplify Teamwork. Empower Your Projects.
+              <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl leading-normal">
+                Simplify teamwork. Empower your projects.
               </h1>
               <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
                 Organize tasks, share resources, and track progress — all in one simple platform built for teams, students, and startups.

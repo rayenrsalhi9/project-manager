@@ -8,9 +8,9 @@ export default function About():JSX.Element {
   const {session} = useAuth()
 
   return (
-    <section className="py-8">
+    <section className="py-8 max-w-4xl mx-auto">
       <div className="container">
-        <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
+        <Link to="/home" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
             <svg 
               className="w-5 h-5" 
               fill="none" 
@@ -24,7 +24,7 @@ export default function About():JSX.Element {
                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
               />
             </svg>
-            <span>Return to Home</span>
+            <span>Return to home page</span>
           </Link>
         <div className="mb-10 grid gap-5 text-center md:grid-cols-2 md:text-left">
           <h1 className="text-5xl font-semibold">About Our Platform</h1>

@@ -40,7 +40,7 @@ export default function Dashboard() {
   if (!user) return <DashboardSkeleton />
 
   return (
-    <section className="w-full pt-4 px-8">
+    <section className="py-8 max-w-4xl mx-auto">
       
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-2xl font-semibold">
