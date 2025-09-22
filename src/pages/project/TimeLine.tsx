@@ -8,7 +8,7 @@ import { Users, UserPlus, FolderPlus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 
-type TimeLine = {
+type TimelineType = {
     id: number,
     posted_by: string
     project_id: number
@@ -69,39 +69,44 @@ function TimelineSkeleton() {
 
 export default function TimeLine() {
 
-    const [projectTimeline, setProjectTimeline] = useState<TimeLine[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
+  const [projectTimeline, setProjectTimeline] = useState<TimelineType[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
-    const params = useParams()
-    if (!params.projectId) throw {message: 'Cannot find any project'}
+  const params = useParams()
+  if (!params.projectId) throw {message: 'Cannot find any project'}
 
-    const projectId = parseInt(params.projectId)
-    if(!projectId) throw {message: 'Cannot find any project'}
+  const projectId = parseInt(params.projectId)
+  if(!projectId) throw {message: 'Cannot find any project'}
 
-    useEffect(() => {
-        const fetchUpdates = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('project_updates')
-                    .select('*')
-                    .eq('project_id', projectId)
-                    .order('created_at', {
-                        ascending: false,
-                    })
+  useEffect(() => {
+    let isMounted = true
+    const fetchUpdates = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('project_updates')
+                .select('*')
+                .eq('project_id', projectId)
+                .order('created_at', {
+                    ascending: false,
+                })
 
-                if (error) throw error
-                
-                setProjectTimeline(data)
-            } catch(err) {
-                console.log(`Error fetching timeline: ${(err as Error).message}`)
-            } finally {
-                setLoading(false)
-            }
+            if (error) throw error
+            
+            if (isMounted) setProjectTimeline(data)
+        } catch(err) {
+            console.log(`Error fetching timeline: ${(err as Error).message}`)
+        } finally {
+            if(isMounted) setLoading(false)
         }
-        fetchUpdates()
-    }, [projectId])
+    }
 
-    if(loading) return <TimelineSkeleton />
+    fetchUpdates()
+
+    return () => { isMounted = false }
+
+  }, [projectId])
+
+  if(loading) return <TimelineSkeleton />
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -141,7 +146,7 @@ export default function TimeLine() {
     return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`
   }
 
-  const getIcon = (type: TimeLine["type"]) => {
+  const getIcon = (type: TimelineType["type"]) => {
     switch (type) {
       case "member_joined":
         return <UserPlus className="h-4 w-4" />
@@ -152,7 +157,7 @@ export default function TimeLine() {
     }
   }
 
-  const highlightUsername = (content: TimeLine['content']) => {
+  const highlightUsername = (content: TimelineType['content']) => {
     const pattern = /^"?([^"]+?)\s+((?:joined|created|left|updated|modified)\s+(?:the\s+)?project[^"]*)/i;
   
     const match = content.trim().match(pattern);
