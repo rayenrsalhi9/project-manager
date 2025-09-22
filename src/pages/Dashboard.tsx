@@ -1,7 +1,10 @@
 import { useAuth } from "@/context/AuthContext"
 import { Link, useSearchParams } from "react-router-dom"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
+import { supabase } from "@/supabase"
+import type { UserProject } from "@/utils"
 
+import { Button } from "@/components/ui/button"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 import EmptyState from "@/components/EmptyState"
 import CreateProjectDialog from "@/components/dialogs/CreateProjectDialog"
@@ -16,10 +19,73 @@ import {
 import { Badge } from "@/components/ui/badge"
 
 export default function Dashboard() {
-  const { user, session, userProjects } = useAuth()
+
+  const { user, session } = useAuth()
   const [searchParams] = useSearchParams()
+
+  const [userProjects, setUserProjects] = useState<UserProject[]>([])
+  const [loadingProjects, setLoadingProjects] = useState(true)
   
   const filter = searchParams.get('filter') || 'all'
+
+  // Fetch user projects
+  async function getUserProjects(userId: string) {
+    try {
+      setLoadingProjects(true)
+      
+      const { data, error } = await supabase
+        .from('projects')
+        .select(
+          `
+          id,
+          name,
+          description,
+          ...project_members!inner(
+          role
+          )
+          `,
+        )
+        .eq(
+          'project_members.user_id',
+          userId
+        )
+      
+      if (error) throw error
+      if (data) setUserProjects(data)
+    } catch(err) {
+      console.error(`Error fetching projects: ${(err as Error).message}`)
+    } finally {
+      setLoadingProjects(false)
+    }
+  }
+
+  // Set up real-time subscription for project changes
+  useEffect(() => {
+    if (!session?.user?.id) return
+
+    getUserProjects(session.user.id)
+
+    const userProjectsSubscription = supabase
+      .channel('user-projects-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'project_members',
+          filter: `user_id=eq.${session.user.id}`
+        },
+        (payload) => {
+          console.log('Project update: ', payload)
+          getUserProjects(session.user.id)
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(userProjectsSubscription)
+    }
+  }, [session?.user?.id])
   
   const filteredProjects = userProjects.filter(project => {
     switch (filter) {
@@ -36,8 +102,8 @@ export default function Dashboard() {
   const joinedProjectCount = userProjects.filter(project => project.role[0] !== 'admin').length
 
   if (!session) throw new Error('No active session found. Please login to continue.')
-
   if (!user) return <DashboardSkeleton />
+  if (loadingProjects) return <DashboardSkeleton />
 
   return (
     <section className="py-8 max-w-4xl mx-auto">

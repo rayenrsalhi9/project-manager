@@ -25,6 +25,13 @@ type ProjectFunctionResponse = {
     data?: {id: number} 
 }
 
+export type UserProject = {
+    id: number,
+    name: string,
+    description: string,
+    role: string[]
+}
+
 export function validateFields(
     fields: ValidationFields,
     options: ValidationOptions = {}

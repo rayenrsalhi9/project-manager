@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { supabase } from '../supabase'
 import type { AuthError, Session, User} from '@supabase/supabase-js';
 import type { JSX } from "react";
@@ -24,14 +24,6 @@ type AuthContextType = {
     signUserOut: () => Promise<AuthResult>
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
     user: UserType | null
-    userProjects: UserProject[]
-}
-
-type UserProject = {
-    id: number,
-    name: string,
-    description: string,
-    role: string[]
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -40,7 +32,6 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [user, setUser] = useState<UserType | null>(null)
-    const [userProjects, setUserProjects] = useState<UserProject[]>([])
 
     // initial session state
     async function getInitialState(): Promise<void> {
@@ -101,7 +92,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
     }
 
-    async function getUserDetails(userId: string) {
+    const getUserDetails = useCallback(async (userId: string) => {
         try {
             const { data, error } = await supabase
                 .from('user_profiles')
@@ -118,32 +109,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         } catch(err) {
             console.error(`Error fetching user: ${(err as Error).message}`)
         }          
-    }
-
-    async function getUserProjects(userId: string) {
-        try {
-            const { data, error } = await supabase
-                .from('projects')
-                .select(
-                    `
-                    id,
-                    name,
-                    description,
-                    ...project_members!inner(
-                    role
-                    )
-                    `,
-                )
-                .eq(
-                    'project_members.user_id',
-                    userId
-                )
-            if (error) throw error
-            if (data) setUserProjects(data)
-        } catch(err) {
-            console.error(`Error fetching projects: ${(err as Error).message}`)
-        }
-    } 
+    }, [session?.user?.email])
 
     useEffect(() => {
 
@@ -161,36 +127,13 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     useEffect(() => {
         if (!session?.user?.id) {
             setUser(null)
-            setUserProjects([])
             return
         }
         getUserDetails(session.user.id)
-        getUserProjects(session.user.id)
-
-        const userProjectsSubscription = supabase
-            .channel('user-projects-realtime')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'public',
-                    table: 'project_members',
-                    filter: `user_id=eq.${session.user.id}`
-                },
-                (payload) => {
-                    console.log(`Project update: ${payload}`)
-                    getUserProjects(session.user.id)
-                }
-            )
-            .subscribe()
-
-        return () => {
-            supabase.removeChannel(userProjectsSubscription)
-        }
-    }, [session?.user?.id])
+    }, [session?.user?.id, getUserDetails])
 
     return (
-        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user, userProjects}}>
+        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user}}>
             {children}
         </AuthContext.Provider>
     )
