@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 
 import DashboardSkeleton from "@/components/DashboardSkeleton"
@@ -17,6 +17,23 @@ import { Badge } from "@/components/ui/badge"
 
 export default function Dashboard() {
   const { user, session, userProjects } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  const filter = searchParams.get('filter') || 'all'
+  
+  const filteredProjects = userProjects.filter(project => {
+    switch (filter) {
+      case 'created':
+        return project.role[0] === 'admin'
+      case 'joined':
+        return project.role[0] !== 'admin'
+      default:
+        return true
+    }
+  })
+
+  const createdProjectCount = userProjects.filter(project => project.role[0] === 'admin').length
+  const joinedProjectCount = userProjects.filter(project => project.role[0] !== 'admin').length
 
   if (!session) throw new Error('No active session found. Please login to continue.')
 
@@ -36,11 +53,37 @@ export default function Dashboard() {
           </div>
         </div>
 
+        <div className="flex gap-2 mt-12 mb-12 justify-center">
+          <Button
+            variant={filter === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSearchParams({ filter: 'all' })}
+          >
+            All projects ({userProjects.length})
+          </Button>
+          <Button
+            variant={filter === 'created' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSearchParams({ filter: 'created' })}
+          >
+            Created projects ({createdProjectCount})
+          </Button>
+          <Button
+            variant={filter === 'joined' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSearchParams({ filter: 'joined' })}
+          >
+            Joined projects ({joinedProjectCount})
+          </Button>
+        </div>
+
+        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {userProjects.length === 0 ? (
+          {filteredProjects.length === 0 ? (
             <EmptyState />
           ) : (
-            userProjects.map((project, index) => (
+            filteredProjects.map((project, index) => (
               <Card key={index} className="hover:shadow-xl transition-all duration-300 relative group border-gray-200">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-3">
