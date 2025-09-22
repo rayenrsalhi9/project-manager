@@ -59,33 +59,10 @@ export default function Dashboard() {
     }
   }
 
-  // Set up real-time subscription for project changes
   useEffect(() => {
     if (!session?.user?.id) return
-
     getUserProjects(session.user.id)
-
-    const userProjectsSubscription = supabase
-      .channel('user-projects-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'project_members',
-          filter: `user_id=eq.${session.user.id}`
-        },
-        (payload) => {
-          console.log('Project update: ', payload)
-          getUserProjects(session.user.id)
-        }
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(userProjectsSubscription)
-    }
-  }, [session?.user?.id])
+  }, [session?.user.id])
   
   const filteredProjects = userProjects.filter(project => {
     switch (filter) {
