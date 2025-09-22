@@ -1,4 +1,5 @@
 import { useActionState, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/AuthContext"
 import { Users } from "lucide-react"
 import { getMatchingProject, userNotAlreadyMember, addUserToMembers } from "@/utils"
@@ -24,7 +25,9 @@ type PrevState = {
 }
 
 export default function JoinProjectDialog() {
+
   const { session } = useAuth()
+  const navigate = useNavigate()
   const [joinOpen, setJoinOpen] = useState(false)
 
   if (!session) throw new Error('No active session found. Please login to continue.')
@@ -86,6 +89,7 @@ export default function JoinProjectDialog() {
                   color: '#2E7D32'
                 }
               })
+              navigate(`/dashboard/projects/${projectId}`)
               return {
                 success: addMemberSuccess,
                 message: addMemberMessage
