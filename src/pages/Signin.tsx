@@ -40,7 +40,7 @@ export default function Signin():JSX.Element {
   )
 
   return (
-    <section className="h-screen bg-background">
+    <section className="h-screen bg-background my-2">
       <div className="flex h-full items-center justify-center px-4">
         <div className="w-full max-w-sm">
           <form 

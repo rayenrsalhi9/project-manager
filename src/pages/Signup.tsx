@@ -35,7 +35,7 @@ export default function Signup():JSX.Element {
   )
 
   return (
-    <section className="bg-background h-screen">
+    <section className="bg-background h-screen my-12">
       <div className="flex h-full items-center justify-center px-4">
         <div className="w-full max-w-sm">
           <form 
