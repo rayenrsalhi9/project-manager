@@ -9,7 +9,7 @@ export default function Home():JSX.Element {
   const {session} = useAuth()
 
   return (
-    <section className="relative overflow-hidden py-6 min-h-dvh max-w-4xl mx-auto">
+    <section className="relative overflow-hidden py-6 min-h-dvh max-w-4xl mx-auto px-4">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
         <img
           alt="background"

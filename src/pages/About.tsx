@@ -8,7 +8,7 @@ export default function About():JSX.Element {
   const {session} = useAuth()
 
   return (
-    <section className="py-8 max-w-4xl mx-auto">
+    <section className="py-8 max-w-4xl mx-auto px-4">
       <div className="container">
         <Link to="/home" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
             <svg 
