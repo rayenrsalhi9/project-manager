@@ -166,6 +166,27 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }
         getUserDetails(session.user.id)
         getUserProjects(session.user.id)
+
+        const userProjectsSubscription = supabase
+            .channel('user-projects-realtime')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'project_members',
+                    filter: `user_id=eq.${session.user.id}`
+                },
+                (payload) => {
+                    console.log(`Project update: ${payload}`)
+                    getUserProjects(session.user.id)
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(userProjectsSubscription)
+        }
     }, [session?.user?.id])
 
     return (
