@@ -2,8 +2,12 @@ import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import type { JSX } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Home():JSX.Element {
+
+  const {session} = useAuth()
+
   return (
     <section className="relative overflow-hidden py-32 min-h-dvh">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
@@ -33,7 +37,7 @@ export default function Home():JSX.Element {
             </div>
             <div className="mt-6 flex justify-center gap-3">
               <Button asChild className="shadow-sm transition-shadow hover:shadow">
-                <Link to='/signin'>Get Started</Link>
+                <Link to={session ? '/dashboard' : '/signin'}>Get Started</Link>
               </Button>
               <Button variant="outline" asChild className="group">
                 <Link to="/about" className="flex items-center justify-center">

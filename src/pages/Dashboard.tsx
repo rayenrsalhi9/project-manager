@@ -43,7 +43,7 @@ export default function Dashboard() {
     <section className="w-full pt-4 px-8">
       
         <div className="flex justify-between items-center mb-2">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-semibold">
             Welcome, <span className="text-gray-500"> {user?.fullName} </span>
           </h1>
           

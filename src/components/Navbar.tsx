@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Navbar() {
@@ -56,8 +56,8 @@ export default function Navbar() {
     <section className="py-4 px-8 w-full mx-auto">
       <div className="container">
         <nav className="flex items-center justify-between">
-          <a
-            href="https://www.shadcnblocks.com"
+          <Link
+            to='../home'
             className="flex items-center gap-2"
           >
             <img
@@ -68,7 +68,7 @@ export default function Navbar() {
             <span className="text-lg font-semibold tracking-tighter">
               ProjectRoom
             </span>
-          </a>
+          </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>

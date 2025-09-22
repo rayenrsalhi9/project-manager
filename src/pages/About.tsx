@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import type { JSX } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function About():JSX.Element {
+
+  const {session} = useAuth()
+
   return (
     <section className="py-8">
       <div className="container">
@@ -50,7 +54,7 @@ export default function About():JSX.Element {
                 </p>
               </div>
               <Button variant="outline" className="mr-auto" asChild>
-                <Link to="/signin">Get Started</Link>
+                <Link to={session ? '/dashboard' : '/signin'}>Get Started</Link>
               </Button>
             </div>
             
