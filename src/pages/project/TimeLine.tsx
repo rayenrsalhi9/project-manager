@@ -5,6 +5,7 @@ import { supabase } from "@/supabase"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, UserPlus, FolderPlus } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 
 type TimeLine = {
@@ -14,6 +15,56 @@ type TimeLine = {
     content: string
     created_at: string
     type: string
+}
+
+type SkeletonProps = React.HTMLAttributes<HTMLDivElement>
+
+function Skeleton({ className, ...props }: SkeletonProps) {
+  return (
+    <div
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
+    />
+  )
+}
+
+function TimelineSkeleton() {
+  return (
+    <div className="w-full max-w-2xl mx-auto space-y-4">
+      {/* Header skeleton */}
+      <div className="flex items-center gap-2 mb-6">
+        <Skeleton className="h-5 w-5" />
+        <Skeleton className="h-6 w-32" />
+      </div>
+
+      {/* Timeline items skeleton */}
+      <div className="space-y-3">
+        {[...Array(2)].map((_, index) => (
+          <Card key={index} className="border border-border bg-card">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                {/* Avatar skeleton */}
+                <Skeleton className="h-10 w-10 rounded-full" />
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Skeleton className="h-4 w-4 rounded-full" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                  
+                  {/* Content skeleton */}
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default function TimeLine() {
@@ -50,7 +101,7 @@ export default function TimeLine() {
         fetchUpdates()
     }, [projectId])
 
-    if(loading) return <h1>Loading...</h1>
+    if(loading) return <TimelineSkeleton />
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -116,7 +167,7 @@ export default function TimeLine() {
 
     return(
       <>
-        <span className="font-bold">{username}</span>{" "}
+        <span className="font-semibold">{username}</span>{" "}
         <span className="text-muted-foreground">{actionPart}</span>
       </>
     )
