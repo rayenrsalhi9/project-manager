@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Outlet, Link, useParams } from "react-router-dom"
+import { Outlet, Link, NavLink, useParams } from "react-router-dom"
 import { Home } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { supabase } from "@/supabase"
@@ -73,6 +73,34 @@ export default function ProjectLayout() {
                 <Home className="w-5 h-5" />
                 <span className="text-sm">Return to Dashboard</span>
             </Link>
+            
+            <nav className="flex space-x-6 border-b border-gray-200 mb-6">
+                <NavLink
+                    to="."
+                    end
+                    className={({ isActive }) =>
+                        `pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                            isActive
+                                ? "border-blue-500 text-blue-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`
+                    }
+                >
+                    Overview
+                </NavLink>
+                <NavLink
+                    to="members"
+                    className={({ isActive }) =>
+                        `pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                            isActive
+                                ? "border-blue-500 text-blue-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`
+                    }
+                >
+                    Members
+                </NavLink>
+            </nav>
         </header>
         <Outlet context={{members}} />
     </section>
