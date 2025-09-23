@@ -58,9 +58,8 @@ function TimelineSkeleton() {
 
 export default function TimeLine() {
 
-  const {projectTimeline, loading, error} = useTimeline()
+  const {projectTimeline, loading} = useTimeline()
 
-  if (error) throw error
   if(loading) return <TimelineSkeleton />
 
   const formatDate = (dateString: string) => {

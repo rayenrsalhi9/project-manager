@@ -1,7 +1,37 @@
-import { Outlet, Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Outlet, Link, useParams } from "react-router-dom"
 import { Home } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
+import { supabase } from "@/supabase"
 
 export default function ProjectLayout() {
+
+  const {session} = useAuth()
+  const {projectId} = useParams()
+  const [error, setError] = useState<Error | null>(null)
+
+  if(!session) throw new Error("No session available")
+  if(!projectId) throw new Error("No project available")
+  if(error) throw error
+
+  useEffect(() => {
+    async function isUserAMember() {
+      try {
+        const {error} = await supabase
+          .from("project_members")
+          .select("*")
+          .eq("project_id", projectId)
+          .eq("user_id", session?.user?.id)
+          .single()
+        if(error) throw new Error("You do not have access to this project.")
+      } catch (err) {
+        console.error("Error checking project membership:", (err as Error).message)
+        setError(err as Error)
+      }
+    }
+    isUserAMember()
+  }, [projectId, session])
+
   return (
     <section className="max-w-4xl mx-auto">
         <header>
