@@ -16,11 +16,8 @@ export default function Team() {
     }
 
     return (
-        <div className="w-full">
-            <div className="space-y-12">
-                <div>
-                    <h2 className="text-xl font-bold text-foreground mb-2">Our team</h2>
-                </div>
+        <div className="w-full max-w-2xl mx-auto space-y-4">
+            <div className="space-y-12 pt-4">
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
                 {
@@ -42,7 +39,7 @@ export default function Team() {
                                 {member.full_name}
                             </h3>
                             <div className="space-y-1">
-                                <Badge variant={member.role === "admin" ? "default" : "secondary"} className="text-xs font-medium">
+                                <Badge variant={member.role === "admin" ? "default" : "secondary"} className="text-xs font-medium mb-2">
                                     {member.role}
                                 </Badge>
                                 <p className="text-sm text-muted-foreground">
