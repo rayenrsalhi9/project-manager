@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 
 import ProjectLayout from "./layout/ProjectLayout";
 import Timeline from "./pages/project/Timeline";
+import Team from "./pages/project/Team";
 
 import Root from "./components/Root";
 import Protected from "./components/Protected";
@@ -61,6 +62,9 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         element: <Timeline />
+                    }, {
+                        path: 'team',
+                        element: <Team />
                     }
                 ]
             }
