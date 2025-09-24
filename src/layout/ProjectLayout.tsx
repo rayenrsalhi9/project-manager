@@ -18,6 +18,7 @@ export default function ProjectLayout() {
   const [error, setError] = useState<Error | null>(null)
 
   const[members, setMembers] = useState<Member[]>([])
+  const [code, setCode] = useState<string>('')
 
   if(!session) throw new Error("No session available")
   if(!projectId) throw new Error("No project available")
@@ -63,8 +64,24 @@ export default function ProjectLayout() {
       }
     }
 
+    async function getProjectCode() {
+      try {
+        const {data, error} = await supabase
+          .from('projects')
+          .select('invite_code')
+          .eq('id', projectId)
+          .single()
+        if(error) throw error
+        setCode(data.invite_code)
+      } catch(err) {
+        console.error(`An error occured: ${(err as Error).message}`)
+        setError(err as Error)
+      }
+    }
+
     isUserAMember()
     getProjectMembers()
+    getProjectCode()
 
   }, [projectId, session])
 
@@ -116,7 +133,7 @@ export default function ProjectLayout() {
                 </NavLink>
             </nav>
         </header>
-        <Outlet context={{members}} />
+        <Outlet context={{members, code}} />
     </section>
   )
 }
