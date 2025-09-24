@@ -1,13 +1,15 @@
-import { MenuIcon, LogOut } from "lucide-react";
+import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Sheet,
@@ -69,54 +71,65 @@ export default function Navbar() {
               ProjectRoom
             </span>
           </Link>
-          <NavigationMenu className="hidden lg:block">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Features
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Products
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Resources
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Contact
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
           
           {
             user ?
             <div className="hidden items-center gap-4 lg:flex">
-              <Button 
-                  variant="outline" 
-                  className="w-full flex items-center gap-2 cursor-pointer"
-                  onClick={handleSignOut}
-              >
-                  <LogOut className="h-4 w-4" />
-                  Sign out
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName || user.email}`} alt={user.fullName || user.email} />
+                      <AvatarFallback>{user.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/billing" className="flex items-center">
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Billing
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/help" className="flex items-center">
+                        <HelpCircle className="mr-2 h-4 w-4" />
+                        Help & Support
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div> : null
           }
 
@@ -147,37 +160,49 @@ export default function Navbar() {
                   Navigation menu for mobile devices
                 </SheetDescription>
               </SheetHeader>
-              <div className="flex flex-col p-4">
-                <div className="flex flex-col gap-6">
-                  <a href="#" className="font-medium">
-                    Features
-                  </a>
-                  <a href="#" className="font-medium">
-                    Templates
-                  </a>
-                  <a href="#" className="font-medium">
-                    Blog
-                  </a>
-                  <a href="#" className="font-medium">
-                    Pricing
-                  </a>
-                </div>
                 
                 {
                   user ?
-                  <div className="mt-6">
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center gap-2 cursor-pointer"
-                      onClick={handleSignOut}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Sign out
-                    </Button>
-                  </div> : null
+                  <>
+                    <div className="flex items-center gap-3 p-2 bg-accent">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName || user.email}`} alt={user.fullName || user.email} />
+                        <AvatarFallback>{user.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium">{user.fullName || 'User'}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Link to="/profile" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors">
+                        <User className="h-4 w-4" />
+                        Profile
+                      </Link>
+                      <Link to="/settings" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors">
+                        <Settings className="h-4 w-4" />
+                        Settings
+                      </Link>
+                      <Link to="/billing" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors">
+                        <CreditCard className="h-4 w-4" />
+                        Billing
+                      </Link>
+                      <Link to="/help" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors">
+                        <HelpCircle className="h-4 w-4" />
+                        Help & Support
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        className="w-full flex items-center gap-2 cursor-pointer"
+                        onClick={handleSignOut}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign out
+                      </Button>
+                    </div>
+                  </> : null
                 }
 
-              </div>
             </SheetContent>
           </Sheet>
         </nav>
