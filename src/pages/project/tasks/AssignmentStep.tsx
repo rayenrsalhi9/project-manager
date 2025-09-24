@@ -1,0 +1,139 @@
+import type { AssignmentStepProps } from "./types"
+
+import { ChevronLeft, Users, CalendarIcon } from 'lucide-react'
+
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+import { format } from "date-fns"
+
+export default function AssignmentStep({tasks, setTasks, setCurrentStep}: AssignmentStepProps) {
+
+  const teamMembers = ["Alice", "Bob", "Charlie", "Diana", "Eve"]
+  const unassignedTasks = tasks.filter((task) => !task.assignedMember)
+  const assignedTasks = tasks.filter((task) => task.assignedMember)
+
+  const handleBackToTasks = () => {
+    setCurrentStep(1)
+  }
+
+  const handleAssignTask = (taskId: string, member: string) => {
+    setTasks(tasks.map((task) => (
+      task.id === taskId 
+        ? { ...task, assignedMember: member || undefined } 
+        : task
+    )))
+  }
+
+  const handleCompleteSetup = () => {
+    console.log("Final tasks with assignments:", tasks)
+  }
+
+  return (
+    <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">
+      <div className="flex items-center justify-between">
+        <>
+          <h2 className="text-xl font-bold text-foreground">Assign Tasks to Team Members</h2>
+          <p className="text-muted-foreground">Step 2: Assign each task to a project member</p>
+        </>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleBackToTasks} className="rounded-xl bg-transparent">
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back to Tasks
+          </Button>
+          <Button onClick={handleCompleteSetup} disabled={unassignedTasks.length > 0} className="rounded-xl">
+            Complete Setup
+          </Button>
+        </div>
+      </div>
+
+      {unassignedTasks.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground">Unassigned Tasks ({unassignedTasks.length})</h3>
+          <div className="grid gap-4">
+            {unassignedTasks.map((task) => (
+              <Card key={task.id} className="rounded-2xl border-2 border-dashed border-muted-foreground/30">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-foreground">{task.title}</h4>
+                      {task.description && <p className="text-sm text-muted-foreground mt-1">{task.description}</p>}
+                      {task.deadline && (
+                        <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                          <CalendarIcon className="h-3 w-3" />
+                          <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
+                        </div>
+                      )}
+                    </div>
+                    <Select onValueChange={(value) => handleAssignTask(task.id, value)}>
+                      <SelectTrigger className="w-48 rounded-xl">
+                        <SelectValue placeholder="Assign to..." />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        {teamMembers.map((member) => (
+                          <SelectItem key={member} value={member}>
+                            {member}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {assignedTasks.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground">Assigned Tasks ({assignedTasks.length})</h3>
+          <div className="grid gap-4">
+            {assignedTasks.map((task) => (
+              <Card key={task.id} className="rounded-2xl border-2 border-green-200 bg-green-50/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-foreground">{task.title}</h4>
+                      {task.description && <p className="text-sm text-muted-foreground mt-1">{task.description}</p>}
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                            {task.assignedMember}
+                          </span>
+                        </div>
+                        {task.deadline && (
+                          <div className="flex items-center gap-1">
+                            <CalendarIcon className="h-3 w-3" />
+                            <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAssignTask(task.id, "")}
+                      className="rounded-xl text-xs"
+                    >
+                      Reassign
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
