@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -85,10 +85,10 @@ function SortableTaskItem({
 
   return (
     <div ref={setNodeRef} style={style} className={cn("group relative", isDragging && "opacity-50")}>
-      <div className="flex items-center">
+      <div className="flex items-center mt-4">
         {/* Task Node */}
         <Card className="w-64 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border-2">
-          <CardContent className="p-4">
+          <CardContent className="p-2">
             <div className="flex items-start gap-3">
               <button
                 className="mt-1 p-1 rounded hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
@@ -182,10 +182,10 @@ function AssignmentStep({
   const assignedTasks = tasks.filter((task) => task.assignedMember)
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Assign Tasks to Team Members</h2>
+          <h2 className="text-xl font-bold text-foreground">Assign Tasks to Team Members</h2>
           <p className="text-muted-foreground">Step 2: Assign each task to a project member</p>
         </div>
         <div className="flex gap-2">
@@ -284,7 +284,7 @@ function AssignmentStep({
 
 export default function TaskManager() {
   const [tasks, setTasks] = useState<Task[]>([])
-  const [currentStep, setCurrentStep] = useState<1 | 2>(1) // Added step state
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1) // form step 1 or 2
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
@@ -441,6 +441,7 @@ export default function TaskManager() {
           <DialogContent className="sm:max-w-md rounded-2xl">
             <DialogHeader>
               <DialogTitle>Create New Task</DialogTitle>
+              <DialogDescription>Add a new task to your project</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
