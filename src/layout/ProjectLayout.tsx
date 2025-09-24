@@ -11,6 +11,13 @@ export type Member = {
   created_at: string
 }
 
+export type Project = {
+  name: string
+  description: string
+  invite_code: string
+  created_at: string
+}
+
 export default function ProjectLayout() {
 
   const {session} = useAuth()
@@ -18,7 +25,7 @@ export default function ProjectLayout() {
   const [error, setError] = useState<Error | null>(null)
 
   const[members, setMembers] = useState<Member[]>([])
-  const [code, setCode] = useState<string>('')
+  const [projectInfo, setProjectInfo] = useState<Project | null>(null)
 
   if(!session) throw new Error("No session available")
   if(!projectId) throw new Error("No project available")
@@ -64,15 +71,15 @@ export default function ProjectLayout() {
       }
     }
 
-    async function getProjectCode() {
+    async function getProjectInfo() {
       try {
         const {data, error} = await supabase
           .from('projects')
-          .select('invite_code')
+          .select('invite_code, name, description, created_at')
           .eq('id', projectId)
           .single()
         if(error) throw error
-        setCode(data.invite_code)
+        setProjectInfo(data)
       } catch(err) {
         console.error(`An error occured: ${(err as Error).message}`)
         setError(err as Error)
@@ -81,7 +88,7 @@ export default function ProjectLayout() {
 
     isUserAMember()
     getProjectMembers()
-    getProjectCode()
+    getProjectInfo()
 
   }, [projectId, session])
 
@@ -131,9 +138,21 @@ export default function ProjectLayout() {
                 >
                     Assign task
                 </NavLink>
+                <NavLink
+                    to="info"
+                    className={({ isActive }) =>
+                        `pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                            isActive
+                                ? "border-blue-500 text-blue-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`
+                    }
+                >
+                    Project details
+                </NavLink>
             </nav>
         </header>
-        <Outlet context={{members, code}} />
+        <Outlet context={{members, projectInfo}} />
     </section>
   )
 }
