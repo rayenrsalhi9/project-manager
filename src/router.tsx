@@ -12,7 +12,6 @@ import Dashboard from "./pages/Dashboard";
 import ProjectLayout from "./layout/ProjectLayout";
 import Timeline from "./pages/project/Timeline";
 import Members from "./pages/project/Members";
-import TaskAssign from "./pages/project/TaskAssign";
 import ProjectInfo from "./pages/project/ProjectInfo";
 
 import Root from "./components/Root";
@@ -67,9 +66,6 @@ export const router = createBrowserRouter([
                     }, {
                         path: 'members',
                         element: <Members />
-                    }, {
-                        path: 'taskAssign',
-                        element: <TaskAssign />
                     }, {
                         path: 'info',
                         element: <ProjectInfo />
