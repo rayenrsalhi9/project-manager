@@ -127,7 +127,7 @@ export default function ProjectLayout() {
                     Members
                 </NavLink>
                 <NavLink
-                    to="taskAssign"
+                    to="tasks"
                     className={({ isActive }) =>
                         `pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                             isActive
@@ -136,7 +136,7 @@ export default function ProjectLayout() {
                         }`
                     }
                 >
-                    Assign task
+                    Tasks
                 </NavLink>
                 <NavLink
                     to="info"
