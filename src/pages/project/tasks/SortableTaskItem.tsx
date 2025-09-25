@@ -91,11 +91,11 @@ export default function SortableTaskItem({
                     </div>
                   )}
                   
-                  {task.assignedMember?.full_name && (
+                  {task.assigned_to?.full_name && (
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <span className="font-medium">Assigned to:</span>
                       <span className="px-2 py-1 bg-secondary rounded-full text-secondary-foreground">
-                        {task.assignedMember.full_name}
+                        {task.assigned_to.full_name}
                       </span>
                     </div>
                   )}
