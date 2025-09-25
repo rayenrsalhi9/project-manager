@@ -1,4 +1,5 @@
 import type { AssignmentStepProps } from "./types"
+import { useMemo } from "react"
 
 import { ChevronLeft, Users, CalendarIcon } from 'lucide-react'
 
@@ -15,11 +16,19 @@ import { Card, CardContent } from "@/components/ui/card"
 
 import { format } from "date-fns"
 
-export default function AssignmentStep({tasks, setTasks, setCurrentStep}: AssignmentStepProps) {
+export default function AssignmentStep({
+  tasks, 
+  setTasks, 
+  setCurrentStep
+}: AssignmentStepProps) {
 
   const teamMembers = ["Alice", "Bob", "Charlie", "Diana", "Eve"]
-  const unassignedTasks = tasks.filter((task) => !task.assignedMember)
-  const assignedTasks = tasks.filter((task) => task.assignedMember)
+
+  const {unassignedTasks, assignedTasks} = useMemo(() => {
+    const unassigned = tasks.filter((task) => !task.assignedMember)
+    const assigned = tasks.filter((task) => task.assignedMember)
+    return {unassignedTasks: unassigned, assignedTasks: assigned}
+  }, [tasks])
 
   const handleBackToTasks = () => {
     setCurrentStep(1)
