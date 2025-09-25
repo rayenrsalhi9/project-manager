@@ -49,10 +49,17 @@ export default function CreateTasksStep({
     currentStep, setCurrentStep
 }: CreateTasksStepProps) {
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
     const [editingTask, setEditingTask] = useState<Task | null>(null)
-    const [formData, setFormData] = useState({
+
+    const [addFormData, setAddFormData] = useState<Omit<Task, 'id'>>({
+        title: "",
+        description: "",
+        deadline: undefined as Date | undefined,
+    })
+    const [editFormData, setEditFormData] = useState<Omit<Task, 'id'>>({
         title: "",
         description: "",
         deadline: undefined as Date | undefined,
@@ -82,27 +89,27 @@ export default function CreateTasksStep({
 
     const handleAddTask = () => {
 
-        if (!formData.title.trim()) return
+        if (!addFormData.title.trim()) return
 
         const newTask: Task = {
             id: generateUniqueId(),
-            title: formData.title,
-            description: formData.description,
-            deadline: formData.deadline,
+            title: addFormData.title,
+            description: addFormData.description,
+            deadline: addFormData.deadline,
         }
 
         setTasks([...tasks, newTask])
-        setFormData({
+        setAddFormData({
             title: "",
             description: "",
             deadline: undefined,
         })
-        setIsDialogOpen(false)
+        setIsAddDialogOpen(false)
     }
 
     const handleEditTask = (task: Task) => {
         setEditingTask(task)
-        setFormData({
+        setEditFormData({
             title: task.title,
             description: task.description,
             deadline: task.deadline,
@@ -111,22 +118,22 @@ export default function CreateTasksStep({
     }
 
     const handleUpdateTask = () => {
-        if (!formData.title.trim() || !editingTask) return
+        if (!editFormData.title.trim() || !editingTask) return
 
         setTasks(
             tasks.map((task: Task) =>
                 task.id === editingTask.id
                 ? {
                     ...task,
-                    title: formData.title,
-                    description: formData.description,
-                    deadline: formData.deadline,
+                    title: editFormData.title,
+                    description: editFormData.description,
+                    deadline: editFormData.deadline,
                     }
                 : task,
             ),
         )
 
-        setFormData({
+        setEditFormData({
             title: "",
             description: "",
             deadline: undefined,
@@ -174,7 +181,7 @@ export default function CreateTasksStep({
             </p>
             </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                     <Button className="rounded-2xl">
                     <Plus className="h-4 w-4 mr-2" />
@@ -192,8 +199,8 @@ export default function CreateTasksStep({
                             <Label htmlFor="title">Task Title</Label>
                             <Input
                                 id="title"
-                                value={formData.title}
-                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                value={addFormData.title}
+                                onChange={(e) => setAddFormData({ ...addFormData, title: e.target.value })}
                                 placeholder="Enter task title"
                                 className="rounded-xl"
                             />
@@ -203,8 +210,8 @@ export default function CreateTasksStep({
                             <Label htmlFor="description">Description</Label>
                             <Textarea
                             id="description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            value={addFormData.description}
+                            onChange={(e) => setAddFormData({ ...addFormData, description: e.target.value })}
                             placeholder="Enter task description"
                             className="rounded-xl resize-none"
                             rows={3}
@@ -219,28 +226,28 @@ export default function CreateTasksStep({
                                 variant="outline"
                                 className={cn(
                                     "w-full justify-start text-left font-normal rounded-xl",
-                                    !formData.deadline && "text-muted-foreground",
+                                    !addFormData.deadline && "text-muted-foreground",
                                 )}
                                 >
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
+                                {addFormData.deadline ? format(addFormData.deadline, "PPP") : "Pick a date"}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0 rounded-xl" align="start">
                                 <Calendar
                                 mode="single"
-                                selected={formData.deadline}
-                                onSelect={(date) => setFormData({ ...formData, deadline: date })}
+                                selected={addFormData.deadline}
+                                onSelect={(date) => setAddFormData({ ...addFormData, deadline: date })}
                                 />
                             </PopoverContent>
                             </Popover>
                         </div>
 
                         <div className="flex gap-2 pt-4">
-                            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-xl">
+                            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="flex-1 rounded-xl">
                                 Cancel
                             </Button>
-                            <Button onClick={handleAddTask} disabled={!formData.title.trim()} className="flex-1 rounded-xl">
+                            <Button onClick={handleAddTask} disabled={!addFormData.title.trim()} className="flex-1 rounded-xl">
                                 Add Task
                             </Button>
                         </div>
@@ -261,8 +268,8 @@ export default function CreateTasksStep({
                     <Label htmlFor="edit-title">Task Title</Label>
                     <Input
                         id="edit-title"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        value={editFormData.title}
+                        onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
                         placeholder="Enter task title"
                         className="rounded-xl"
                     />
@@ -272,8 +279,8 @@ export default function CreateTasksStep({
                     <Label htmlFor="edit-description">Description</Label>
                     <Textarea
                         id="edit-description"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        value={editFormData.description}
+                        onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                         placeholder="Enter task description"
                         className="rounded-xl resize-none"
                         rows={3}
@@ -288,18 +295,18 @@ export default function CreateTasksStep({
                                 variant="outline"
                                 className={cn(
                                 "w-full justify-start text-left font-normal rounded-xl",
-                                !formData.deadline && "text-muted-foreground",
+                                !editFormData.deadline && "text-muted-foreground",
                                 )}
                             >
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
+                                {editFormData.deadline ? format(editFormData.deadline, "PPP") : "Pick a date"}
                             </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0 rounded-xl" align="start">
                             <Calendar
                                 mode="single"
-                                selected={formData.deadline}
-                                onSelect={(date) => setFormData({ ...formData, deadline: date })}
+                                selected={editFormData.deadline}
+                                onSelect={(date) => setEditFormData({ ...editFormData, deadline: date })}
                             />
                             </PopoverContent>
                         </Popover>
@@ -309,7 +316,7 @@ export default function CreateTasksStep({
                         <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="flex-1 rounded-xl">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdateTask} disabled={!formData.title.trim()} className="flex-1 rounded-xl">
+                        <Button onClick={handleUpdateTask} disabled={!editFormData.title.trim()} className="flex-1 rounded-xl">
                             Update Task
                         </Button>
                     </div>
