@@ -16,8 +16,6 @@ export type SortableTaskItemProps = {
   tasksPerRow: number
   onEditTask: (task: Task) => void
   onDeleteTask: (taskId: string) => void
-  showAssignment?: boolean 
-  // Added prop to control assignment display
 }
 
 export type CreateTasksStepProps = {
