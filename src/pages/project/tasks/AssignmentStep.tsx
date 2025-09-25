@@ -58,7 +58,7 @@ export default function AssignmentStep({
 
     setTasks(tasks.map((task) => (
       task.id === taskId 
-        ? { ...task, assignedMember: {full_name: memberName, assigned_to: member}} 
+        ? { ...task, assignedMember: {full_name: memberName, user_id: member}} 
         : task
     )))
   }
