@@ -1,6 +1,6 @@
 import type { Task, CreateTasksStepProps } from "./types"
 import { useState, useMemo } from "react"
-import { generateUniqueId } from "./utils"
+import { generateUniqueId, validateTask } from "./utils"
 
 import SortableTaskItem from "../tasks/SortableTaskItem"
 
@@ -65,6 +65,9 @@ export default function CreateTasksStep({
         deadline: undefined as Date | undefined,
     })
 
+    const {title: addTitle, description: addDescription, deadline: addDeadline} = validateTask(addFormData)
+    const {title: editTitle, description: editDescription, deadline: editDeadline} = validateTask(editFormData)
+
     const tasksPerRow = 2
 
     const sensors = useSensors(
@@ -91,7 +94,8 @@ export default function CreateTasksStep({
 
     const handleAddTask = () => {
 
-        if (!addFormData.title.trim()) return
+        const errors = validateTask(addFormData)
+        if (Object.keys(errors).length > 0) return
 
         const newTask: Task = {
             id: generateUniqueId(),
@@ -121,6 +125,9 @@ export default function CreateTasksStep({
 
     const handleUpdateTask = () => {
         if (!editFormData.title.trim() || !editingTask) return
+
+        const errors = validateTask(editFormData)
+        if (Object.keys(errors).length > 0) return
 
         setTasks(
             tasks.map((task: Task) =>
@@ -206,6 +213,13 @@ export default function CreateTasksStep({
                                 placeholder="Enter task title"
                                 className="rounded-xl"
                             />
+                            {
+                                addTitle && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {addTitle}
+                                    </p>
+                                )
+                            }
                         </div>
 
                         <div className="space-y-2">
@@ -218,6 +232,13 @@ export default function CreateTasksStep({
                             className="rounded-xl resize-none"
                             rows={3}
                             />
+                            {
+                                addDescription && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {addDescription}
+                                    </p>
+                                )
+                            }
                         </div>
 
                         <div className="space-y-2">
@@ -243,13 +264,20 @@ export default function CreateTasksStep({
                                 />
                             </PopoverContent>
                             </Popover>
+                            {
+                                addDeadline && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {addDeadline}
+                                    </p>
+                                )
+                            }
                         </div>
 
                         <div className="flex gap-2 pt-4">
                             <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="flex-1 rounded-xl">
                                 Cancel
                             </Button>
-                            <Button onClick={handleAddTask} disabled={!addFormData.title.trim()} className="flex-1 rounded-xl">
+                            <Button onClick={handleAddTask} disabled={Object.keys(validateTask(addFormData)).length > 0} className="flex-1 rounded-xl">
                                 Add Task
                             </Button>
                         </div>
@@ -275,6 +303,13 @@ export default function CreateTasksStep({
                         placeholder="Enter task title"
                         className="rounded-xl"
                     />
+                    {
+                        editTitle && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {editTitle}
+                            </p>
+                        )
+                    }
                     </div>
 
                     <div className="space-y-2">
@@ -287,6 +322,13 @@ export default function CreateTasksStep({
                         className="rounded-xl resize-none"
                         rows={3}
                     />
+                    {
+                        editDescription && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {editDescription}
+                            </p>
+                        )
+                    }
                     </div>
 
                     <div className="space-y-2">
@@ -312,13 +354,20 @@ export default function CreateTasksStep({
                             />
                             </PopoverContent>
                         </Popover>
+                        {
+                            editDeadline && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {editDeadline}
+                                </p>
+                            )
+                        }
                     </div>
 
                     <div className="flex gap-2 pt-4">
                         <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="flex-1 rounded-xl">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdateTask} disabled={!editFormData.title.trim()} className="flex-1 rounded-xl">
+                        <Button onClick={handleUpdateTask} disabled={Object.keys(validateTask(editFormData)).length > 0} className="flex-1 rounded-xl">
                             Update Task
                         </Button>
                     </div>
