@@ -1,8 +1,9 @@
 import type { AssignmentStepProps } from "./types"
 import { useMemo } from "react"
-
+import { useOutletContext } from "react-router-dom"
+import type { Member } from "@/layout/ProjectLayout"
+import { format } from "date-fns"
 import { ChevronLeft, Users, CalendarIcon } from 'lucide-react'
-
 import { 
   Select, 
   SelectContent, 
@@ -10,11 +11,8 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-
-import { format } from "date-fns"
 
 export default function AssignmentStep({
   tasks, 
@@ -22,7 +20,13 @@ export default function AssignmentStep({
   setCurrentStep
 }: AssignmentStepProps) {
 
-  const teamMembers = ["Alice", "Bob", "Charlie", "Diana", "Eve"]
+  const {members} = useOutletContext<{members: Member[]}>()
+  const teamMembers = members.map(member => (
+    {
+      value: member.user_id,
+      label: member.full_name
+    }
+  ))
 
   const {unassignedTasks, assignedTasks} = useMemo(() => {
     const unassigned = tasks.filter((task) => !task.assignedMember)
@@ -35,9 +39,12 @@ export default function AssignmentStep({
   }
 
   const handleAssignTask = (taskId: string, member: string) => {
+
+    const memberName = members.find(el => el.user_id === member)?.full_name
+
     setTasks(tasks.map((task) => (
       task.id === taskId 
-        ? { ...task, assignedMember: member || undefined } 
+        ? { ...task, assignedMember: {full_name: memberName, assigned_to: member}} 
         : task
     )))
   }
@@ -49,10 +56,10 @@ export default function AssignmentStep({
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">
       <div className="flex items-center justify-between">
-        <>
+        <div>
           <h2 className="text-xl font-bold text-foreground">Assign Tasks to Team Members</h2>
           <p className="text-muted-foreground">Step 2: Assign each task to a project member</p>
-        </>
+        </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleBackToTasks} className="rounded-xl bg-transparent">
             <ChevronLeft className="h-4 w-4 mr-2" />
@@ -88,8 +95,8 @@ export default function AssignmentStep({
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
                         {teamMembers.map((member) => (
-                          <SelectItem key={member} value={member}>
-                            {member}
+                          <SelectItem key={member.value} value={member.value}>
+                            {member.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -117,7 +124,7 @@ export default function AssignmentStep({
                         <div className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
                           <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
-                            {task.assignedMember}
+                            {task.assignedMember?.full_name}
                           </span>
                         </div>
                         {task.deadline && (
