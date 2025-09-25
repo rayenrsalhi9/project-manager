@@ -75,15 +75,17 @@ export default function CreateTasksStep({
     )
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event
-
-        if (over && active.id !== over.id) {
-        setTasks((tasks: Task[]) => {
-            const oldIndex = tasks.findIndex((task) => task.id === active.id)
-            const newIndex = tasks.findIndex((task) => task.id === over.id)
-
-            return arrayMove(tasks, oldIndex, newIndex)
-        })
+        try {
+            const { active, over } = event
+            if (over && active.id !== over.id) {
+                setTasks((tasks: Task[]) => {
+                    const oldIndex = tasks.findIndex((task) => task.id === active.id)
+                    const newIndex = tasks.findIndex((task) => task.id === over.id)
+                    return arrayMove(tasks, oldIndex, newIndex)
+                })
+            }
+        } catch (error) {
+            console.error("Error in handleDragEnd:", error)
         }
     }
 
