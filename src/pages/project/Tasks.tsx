@@ -1,5 +1,7 @@
 import type { Task } from "./tasks/types"
+import type { Member } from "@/layout/ProjectLayout"
 import { useState } from "react"
+import { useOutletContext } from "react-router-dom"
 
 import AssignmentStep from "./tasks/AssignmentStep"
 import CreateTasksStep from "./tasks/CreateTasksStep"
@@ -7,26 +9,20 @@ import CreateTasksStep from "./tasks/CreateTasksStep"
 export default function TaskManager() {
 
   const [currentStep, setCurrentStep] = useState<1 | 2>(1)
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      title: 'Design User Interface',
-      description: 'Create wireframes and mockups for the main dashboard',
-      deadline: new Date()
-    },
-    {
-      id: '2',
-      title: 'Implement Authentication', 
-      description: 'Set up user login and registration system',
-      deadline: new Date()
-    },
-    {
-      id: '3',
-      title: 'Database Setup',
-      description: 'Configure and initialize the database schema',
-      deadline: new Date()
-    }
-  ])
+  const {projectTasks, members} = useOutletContext<{projectTasks: Task[], members: Member[]}>()
+  const [tasks, setTasks] = useState<Task[]>(setUpTasks)
+  console.log(tasks)
+
+  function setUpTasks(): Task[] {
+    return projectTasks.map(task => {
+      const fullName = members.find(member => member.user_id === task.assigned_to)?.full_name
+      const userId = task.assigned_to
+      return {
+        ...task, 
+        assigned_to: {full_name: fullName, user_id: userId}
+      }
+    })
+  }
 
   if (currentStep === 2) {
     return (

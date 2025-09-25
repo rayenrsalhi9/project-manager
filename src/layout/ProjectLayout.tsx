@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import type { Task } from "@/pages/project/tasks/types"
 import { Outlet, Link, NavLink, useParams } from "react-router-dom"
 import { Home } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
@@ -25,7 +26,8 @@ export default function ProjectLayout() {
   const [error, setError] = useState<Error | null>(null)
 
   const[members, setMembers] = useState<Member[]>([])
-  const [projectInfo, setProjectInfo] = useState<Project | null>(null)
+  const[projectInfo, setProjectInfo] = useState<Project | null>(null)
+  const[projectTasks, setProjectTasks] = useState<Task[]>([])
 
   if(!session) throw new Error("No session available")
   if(!projectId) throw new Error("No project available")
@@ -86,9 +88,24 @@ export default function ProjectLayout() {
       }
     }
 
+    async function getProjectTasks() {
+      try {
+        const { data, error } = await supabase
+          .from("tasks")
+          .select('*')
+          .eq("project_id", projectId);
+        if (error) throw error
+        setProjectTasks(data)
+      } catch (err) {
+        console.error("Error fetching project tasks:", (err as Error).message)
+        setError(err as Error)
+      }
+    }
+
     isUserAMember()
     getProjectMembers()
     getProjectInfo()
+    getProjectTasks()
 
   }, [projectId, session])
 
@@ -152,7 +169,7 @@ export default function ProjectLayout() {
                 </NavLink>
             </nav>
         </header>
-        <Outlet context={{members, projectInfo}} />
+        <Outlet context={{members, projectInfo, projectTasks}} />
     </section>
   )
 }

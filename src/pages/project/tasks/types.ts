@@ -1,11 +1,9 @@
-import type { Member } from "@/layout/ProjectLayout"
-
 export type Task = {
   id: string
   title: string
   description: string
   deadline: Date | undefined
-  assignedMember?: Partial<Member>
+  assigned_to?: {full_name: string, user_id: string} | undefined
   // Made optional since it's assigned in step 2 of task form
 }
 

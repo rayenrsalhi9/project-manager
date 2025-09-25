@@ -43,8 +43,8 @@ export default function AssignmentStep({
   ))
 
   const {unassignedTasks, assignedTasks} = useMemo(() => {
-    const unassigned = tasks.filter((task) => !task.assignedMember)
-    const assigned = tasks.filter((task) => task.assignedMember)
+    const unassigned = tasks.filter((task) => !task.assigned_to)
+    const assigned = tasks.filter((task) => task.assigned_to)
     return {unassignedTasks: unassigned, assignedTasks: assigned}
   }, [tasks])
 
@@ -58,7 +58,7 @@ export default function AssignmentStep({
 
     setTasks(tasks.map((task) => (
       task.id === taskId 
-        ? { ...task, assignedMember: {full_name: memberName, user_id: member}} 
+        ? { ...task, assigned_to: {full_name: memberName, user_id: member}} 
         : task
     )))
   }
@@ -163,7 +163,7 @@ export default function AssignmentStep({
                         <div className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
                           <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
-                            {task.assignedMember?.full_name}
+                            {task.assigned_to?.full_name}
                           </span>
                         </div>
                         {task.deadline && (

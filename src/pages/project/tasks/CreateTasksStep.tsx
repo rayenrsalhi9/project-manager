@@ -45,8 +45,7 @@ import {DndContext, closestCenter} from '@dnd-kit/core'
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 
 export default function CreateTasksStep({
-    tasks, setTasks, 
-    currentStep, setCurrentStep
+    tasks, setTasks, setCurrentStep
 }: CreateTasksStepProps) {
 
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -413,7 +412,6 @@ export default function CreateTasksStep({
                                         tasksPerRow={tasksPerRow}
                                         onEditTask={handleEditTask}
                                         onDeleteTask={handleDeleteTask}
-                                        showAssignment={currentStep === 2} // Show assignment only in step 2
                                     />
                                 )
                                 })}
