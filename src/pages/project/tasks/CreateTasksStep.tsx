@@ -151,7 +151,6 @@ export default function CreateTasksStep({
     }
 
     const createSnakeLayout = useMemo(() => {
-        console.log("createSnakeLayout called")
         const rows: Task[][] = []
         for (let i = 0; i < tasks.length; i += tasksPerRow) {
         const row = tasks.slice(i, i + tasksPerRow)
@@ -254,6 +253,7 @@ export default function CreateTasksStep({
             <DialogContent className="sm:max-w-md rounded-2xl">
                 <DialogHeader>
                     <DialogTitle>Edit Task</DialogTitle>
+                    <DialogDescription>Update task details</DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
