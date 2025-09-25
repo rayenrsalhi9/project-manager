@@ -1,3 +1,5 @@
+import { supabase } from "@/supabase"
+
 import type { Task } from "./types"
 
 export const generateUniqueId = () => {
@@ -20,4 +22,46 @@ export const validateTask = (task: Omit<Task, 'id'>): Record<string, string> => 
     }
 
     return errors
+}
+
+const formatDateToTimestamtz = (date: Date | undefined): string => {
+    if (!date) {
+        return ''
+    }
+    return date.toISOString();
+}
+
+export const handleTasksSubmit = async (
+    tasks: Task[], 
+    projectId: string,
+    adminId: string,
+) => {
+
+    for (const task of tasks) {
+        const errors = validateTask(task)
+        if (Object.keys(errors).length > 0) {
+            throw errors
+        }
+    }
+
+    const supabaseTasksArr = tasks.map(task => ({
+        title: task.title,
+        description: task.description,
+        deadline: formatDateToTimestamtz(task.deadline),
+        project_id: projectId,
+        created_by: adminId,
+        assigned_to: task.assignedMember?.user_id
+    }))
+
+    try {
+        const { error } = await supabase
+            .from('tasks')
+            .insert(supabaseTasksArr)
+        if (error) throw error
+        return { success: true, message: 'Tasks successfully set up'}
+    } catch (error) {
+        console.error('Error inserting tasks:', (error as Error).message)
+        return { success: false, error: (error as Error).message }
+    }
+
 }

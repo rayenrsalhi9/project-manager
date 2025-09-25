@@ -1,9 +1,13 @@
 import type { AssignmentStepProps } from "./types"
 import { useMemo } from "react"
-import { useOutletContext } from "react-router-dom"
+import { useOutletContext, useParams, useNavigate } from "react-router-dom"
+import { handleTasksSubmit } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { format } from "date-fns"
+import { useAuth } from "@/context/AuthContext"
+
 import { ChevronLeft, Users, CalendarIcon } from 'lucide-react'
+import { toast } from "sonner"
 import { 
   Select, 
   SelectContent, 
@@ -19,6 +23,16 @@ export default function AssignmentStep({
   setTasks, 
   setCurrentStep
 }: AssignmentStepProps) {
+
+  const {session} = useAuth()
+  const adminId = session?.user?.id || ""
+
+  const {projectId} = useParams()
+  if (!projectId) {
+    throw new Error("Project ID is required")
+  }
+
+  const navigate = useNavigate()
 
   const {members} = useOutletContext<{members: Member[]}>()
   const teamMembers = members.map(member => (
@@ -49,8 +63,33 @@ export default function AssignmentStep({
     )))
   }
 
-  const handleCompleteSetup = () => {
-    console.log("Final tasks with assignments:", tasks)
+  const handleCompleteSetup = async () => {
+    if (unassignedTasks.length > 0) {
+      throw new Error("All tasks must be assigned before completing setup")
+    }
+    
+    const {success, message, error} = await handleTasksSubmit(tasks, projectId, adminId)
+    if (error) {
+      toast.error(error, {
+        duration: 3000,
+        style: {
+          background: '#FEE2E2',
+          border: '1px solid #EF4444',
+          color: '#991B1B',
+        },
+      })
+      throw new Error(error)
+    }
+    if (success && message) {
+      toast.success(message, {
+        style: {
+          background: '#E8F5E9',
+          border: '1px solid #81C784',
+          color: '#2E7D32'
+        }
+      })
+      navigate(`..`)
+    }
   }
 
   return (

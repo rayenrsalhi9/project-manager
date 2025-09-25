@@ -23,7 +23,7 @@ export default function SortableTaskItem({
   tasksPerRow,
   onEditTask,
   onDeleteTask,
-  showAssignment = false,
+  showAssignment = true,
 }: SortableTaskItemProps) {
 
   const { 
@@ -85,11 +85,11 @@ export default function SortableTaskItem({
                 {task.description && <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>}
 
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  {showAssignment && task.assignedMember && (
+                  {showAssignment && task.assignedMember?.full_name && (
                     <div className="flex items-center gap-1">
                       <span className="font-medium">Assigned to:</span>
                       <span className="px-2 py-1 bg-secondary rounded-full text-secondary-foreground">
-                        {task.assignedMember}
+                        {task.assignedMember.full_name}
                       </span>
                     </div>
                   )}
