@@ -1,5 +1,6 @@
 import type { Task, CreateTasksStepProps } from "./types"
 import { useState } from "react"
+import { generateUniqueId } from "./utils"
 
 import SortableTaskItem from "../tasks/SortableTaskItem"
 
@@ -84,7 +85,7 @@ export default function CreateTasksStep({
         if (!formData.title.trim()) return
 
         const newTask: Task = {
-            id: Date.now().toString(),
+            id: generateUniqueId(),
             title: formData.title,
             description: formData.description,
             deadline: formData.deadline,
