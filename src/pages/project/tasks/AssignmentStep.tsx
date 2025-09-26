@@ -1,7 +1,7 @@
-import type { AssignmentStepProps } from "./types"
+import type { AssignmentStepProps, Task } from "./types"
 import { useMemo } from "react"
 import { useOutletContext, useParams, useNavigate } from "react-router-dom"
-import { handleTasksSubmit, getMatchingFullName } from "./utils"
+import { processTasks, getMatchingFullName } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { format } from "date-fns"
 import { useAuth } from "@/context/AuthContext"
@@ -34,7 +34,7 @@ export default function AssignmentStep({
 
   const navigate = useNavigate()
 
-  const {members} = useOutletContext<{members: Member[]}>()
+  const {members, projectTasks} = useOutletContext<{members: Member[], projectTasks: Task[]}>()
 
   const {unassignedTasks, assignedTasks} = useMemo(() => {
     const unassigned = tasks.filter((task) => !task.assigned_to)
@@ -58,30 +58,31 @@ export default function AssignmentStep({
     if (unassignedTasks.length > 0) {
       throw new Error("All tasks must be assigned before completing setup")
     }
-    
-    const {success, message, error} = await handleTasksSubmit(tasks, projectId, adminId)
-    if (error) {
-      toast.error(error, {
-        duration: 3000,
-        style: {
-          background: '#FEE2E2',
-          border: '1px solid #EF4444',
-          color: '#991B1B',
-        },
-      })
-      throw new Error(error)
-    }
-    if (success && message) {
-      toast.success(message, {
-        style: {
-          background: '#E8F5E9',
-          border: '1px solid #81C784',
-          color: '#2E7D32'
-        }
-      })
-      navigate(`..`)
-    }
-  }
+    processTasks(tasks, projectTasks)
+  }  
+  //   const {success, message, error} = await handleTasksSubmit(tasks, projectId, adminId)
+  //   if (error) {
+  //     toast.error(error, {
+  //       duration: 3000,
+  //       style: {
+  //         background: '#FEE2E2',
+  //         border: '1px solid #EF4444',
+  //         color: '#991B1B',
+  //       },
+  //     })
+  //     throw new Error(error)
+  //   }
+  //   if (success && message) {
+  //     toast.success(message, {
+  //       style: {
+  //         background: '#E8F5E9',
+  //         border: '1px solid #81C784',
+  //         color: '#2E7D32'
+  //       }
+  //     })
+  //     navigate(`..`)
+  //   }
+  // }
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">

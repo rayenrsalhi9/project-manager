@@ -18,7 +18,7 @@ export const validateTask = (task: Omit<Task, 'id'>): Record<string, string> => 
         errors['description'] = "Description is required"
     }
 
-    if (task.deadline && new Date(task.deadline.setHours(0, 0, 0, 0)) < new Date(new Date().setHours(0, 0, 0, 0))) {
+    if (task.deadline && new Date(task.deadline) < new Date(new Date())) {
         errors['deadline'] = "Deadline must be in the future"
     }
 
@@ -70,4 +70,48 @@ export const handleTasksSubmit = async (
         return { success: false, error: (error as Error).message }
     }
 
+}
+
+export const processTasks = (tasks: Task[], projectTasks: Task[]) => {
+
+    // get the list of IDs of both lists 
+    const projectTasksIDs = projectTasks.map(el => el.id)
+    const tasksIDs = tasks.map(el => el.id)
+
+    // find new tasks created
+    const newCreatedTasks = tasks.filter(el => 
+        !projectTasksIDs.includes(el.id)
+    )
+
+    // find deleted tasks
+    const deletedTasks = projectTasks.filter(el => 
+        !tasksIDs.includes(el.id)
+    )
+
+    // find updated tasks
+    const updatedTasks = tasks
+        .filter(el => 
+            projectTasksIDs.includes(el.id) && tasksIDs.includes(el.id)
+        )
+        .filter(el => 
+            hasTaskChanged(el, projectTasks)
+        )
+
+    console.log('new tasks: ', newCreatedTasks)
+    console.log('deleted tasks: ', deletedTasks)
+    console.log('updated tasks: ', updatedTasks)
+}
+
+const hasTaskChanged = (task: Task, projectsArr: Task[]) => {
+
+    const targetTask = projectsArr.find((el: Task) => el.id === task.id)
+    if (!targetTask) return 
+
+    return (
+        task.title !== targetTask.title ||
+        task.description !== targetTask.description ||
+        task.deadline !== targetTask.deadline ||
+        task.assigned_to !== targetTask.assigned_to ||
+        JSON.stringify(task) !== JSON.stringify(targetTask)
+    )
 }
