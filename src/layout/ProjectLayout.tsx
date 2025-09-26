@@ -4,6 +4,7 @@ import { Outlet, Link, NavLink, useParams } from "react-router-dom"
 import { Home } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { supabase } from "@/supabase"
+import { normalizeTaskDates } from "@/pages/project/tasks/utils"
 
 export type Member = {
   user_id: string
@@ -95,7 +96,9 @@ export default function ProjectLayout() {
           .select('*')
           .eq("project_id", projectId);
         if (error) throw error
-        setProjectTasks(data)
+        // Normalize dates to ensure consistency
+        const normalizedTasks = normalizeTaskDates(data)
+        setProjectTasks(normalizedTasks)
       } catch (err) {
         console.error("Error fetching project tasks:", (err as Error).message)
         setError(err as Error)

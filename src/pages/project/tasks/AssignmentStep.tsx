@@ -1,7 +1,7 @@
 import type { AssignmentStepProps, Task } from "./types"
 import { useMemo } from "react"
 import { useOutletContext, useParams, useNavigate } from "react-router-dom"
-import { processTasks, getMatchingFullName } from "./utils"
+import { processTasks, getMatchingFullName, processTaskChanges } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { format } from "date-fns"
 import { useAuth } from "@/context/AuthContext"
@@ -55,34 +55,33 @@ export default function AssignmentStep({
   }
 
   const handleCompleteSetup = async () => {
-    if (unassignedTasks.length > 0) {
-      throw new Error("All tasks must be assigned before completing setup")
+    try {
+      if (unassignedTasks.length > 0) {
+        throw new Error("All tasks must be assigned before completing setup")
+      }
+
+      const {newCreatedTasks, updatedTasks, deletedTasks} = processTasks(tasks, projectTasks)
+      
+      // Process all task changes (create, update, delete)
+      const result = await processTaskChanges(
+        newCreatedTasks, 
+        updatedTasks, 
+        deletedTasks, 
+        projectId, 
+        adminId
+      )
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to process task changes")
+      }
+
+      toast.success("Tasks setup completed successfully!")
+      navigate(`/dashboard/projects/${projectId}`)
+    } catch (error) {
+      console.error("Error completing setup:", error)
+      toast.error(error instanceof Error ? error.message : "Failed to complete setup")
     }
-    processTasks(tasks, projectTasks)
-  }  
-  //   const {success, message, error} = await handleTasksSubmit(tasks, projectId, adminId)
-  //   if (error) {
-  //     toast.error(error, {
-  //       duration: 3000,
-  //       style: {
-  //         background: '#FEE2E2',
-  //         border: '1px solid #EF4444',
-  //         color: '#991B1B',
-  //       },
-  //     })
-  //     throw new Error(error)
-  //   }
-  //   if (success && message) {
-  //     toast.success(message, {
-  //       style: {
-  //         background: '#E8F5E9',
-  //         border: '1px solid #81C784',
-  //         color: '#2E7D32'
-  //       }
-  //     })
-  //     navigate(`..`)
-  //   }
-  // }
+  }
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">
