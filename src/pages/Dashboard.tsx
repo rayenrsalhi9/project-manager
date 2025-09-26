@@ -87,7 +87,7 @@ export default function Dashboard() {
       
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-2xl font-semibold">
-            Welcome, <span className="text-blue-500"> {user?.fullName} </span>
+            Welcome, <span className="text-blue-500"> {user?.full_name} </span>
           </h1>
           
           <div className="flex gap-2">
