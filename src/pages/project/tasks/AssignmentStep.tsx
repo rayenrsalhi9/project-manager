@@ -1,7 +1,7 @@
 import type { AssignmentStepProps } from "./types"
 import { useMemo } from "react"
 import { useOutletContext, useParams, useNavigate } from "react-router-dom"
-import { handleTasksSubmit } from "./utils"
+import { handleTasksSubmit, getMatchingFullName } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { format } from "date-fns"
 import { useAuth } from "@/context/AuthContext"
@@ -35,12 +35,6 @@ export default function AssignmentStep({
   const navigate = useNavigate()
 
   const {members} = useOutletContext<{members: Member[]}>()
-  const teamMembers = members.map(member => (
-    {
-      value: member.user_id,
-      label: member.full_name
-    }
-  ))
 
   const {unassignedTasks, assignedTasks} = useMemo(() => {
     const unassigned = tasks.filter((task) => !task.assigned_to)
@@ -53,12 +47,9 @@ export default function AssignmentStep({
   }
 
   const handleAssignTask = (taskId: string, member: string) => {
-
-    const memberName = members.find(el => el.user_id === member)?.full_name
-
     setTasks(tasks.map((task) => (
       task.id === taskId 
-        ? { ...task, assigned_to: {full_name: memberName, user_id: member}} 
+        ? { ...task, assigned_to: member} 
         : task
     )))
   }
@@ -133,9 +124,9 @@ export default function AssignmentStep({
                         <SelectValue placeholder="Assign to..." />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
-                        {teamMembers.map((member) => (
-                          <SelectItem key={member.value} value={member.value}>
-                            {member.label}
+                        {members.map((member) => (
+                          <SelectItem key={member.user_id} value={member.user_id}>
+                            {member.full_name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -160,18 +151,24 @@ export default function AssignmentStep({
                       <h4 className="font-semibold text-foreground">{task.title}</h4>
                       {task.description && <p className="text-sm text-muted-foreground mt-1">{task.description}</p>}
                       <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Users className="h-3 w-3" />
-                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
-                            {task.assigned_to?.full_name}
-                          </span>
-                        </div>
-                        {task.deadline && (
+                          {
+                          task.assigned_to && (
+                            <div className="flex items-center gap-1">
+                              <Users className="h-3 w-3" />
+                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                                {getMatchingFullName(members, task.assigned_to)}
+                              </span>
+                            </div>
+                          )
+                          }
+                        {
+                        task.deadline && (
                           <div className="flex items-center gap-1">
                             <CalendarIcon className="h-3 w-3" />
                             <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
                           </div>
-                        )}
+                        )
+                        }
                       </div>
                     </div>
                     <Button

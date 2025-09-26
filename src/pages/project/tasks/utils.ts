@@ -1,6 +1,7 @@
 import { supabase } from "@/supabase"
 
 import type { Task } from "./types"
+import type { Member } from "@/layout/ProjectLayout"
 
 export const generateUniqueId = () => {
     return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
@@ -31,6 +32,11 @@ const formatDateToTimestamtz = (date: Date | undefined): string => {
     return date.toISOString();
 }
 
+export const getMatchingFullName = (members: Member[], memberId: string): string => {
+    const member = members.find(member => member.user_id === memberId)
+    return member?.full_name || ''
+}
+
 export const handleTasksSubmit = async (
     tasks: Task[], 
     projectId: string,
@@ -50,7 +56,7 @@ export const handleTasksSubmit = async (
         deadline: formatDateToTimestamtz(task.deadline),
         project_id: projectId,
         created_by: adminId,
-        assigned_to: task.assignedMember?.user_id
+        assigned_to: task.assigned_to
     }))
 
     try {

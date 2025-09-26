@@ -3,7 +3,7 @@ export type Task = {
   title: string
   description: string
   deadline: Date | undefined
-  assigned_to?: {full_name: string, user_id: string} | undefined
+  assigned_to?: string
   // Made optional since it's assigned in step 2 of task form
 }
 
