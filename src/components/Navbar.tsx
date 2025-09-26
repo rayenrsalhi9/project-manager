@@ -1,6 +1,6 @@
 import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,15 @@ export default function Navbar() {
 
   const {signUserOut, user} = useAuth()
   const navigate = useNavigate()
+
+  const getInitials = (name: string = 'Anonymous User') => {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   async function handleSignOut() {
     const {success, error: signoutError} = await signUserOut()
@@ -78,9 +87,10 @@ export default function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.full_name || user.email}`} alt={user.full_name || user.email} />
-                      <AvatarFallback>{user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    <Avatar className="h-8 w-8 border border-border">
+                      <AvatarFallback className="text-sm font-semibold bg-muted text-muted-foreground">
+                        {getInitials(user.full_name)}
+                      </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -165,9 +175,10 @@ export default function Navbar() {
                   user ?
                   <>
                     <div className="flex items-center gap-3 p-2 bg-accent">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.full_name || user.email}`} alt={user.full_name || user.email} />
-                        <AvatarFallback>{user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      <Avatar className="h-10 w-10 border border-border">
+                        <AvatarFallback className="text-sm font-semibold bg-muted text-muted-foreground">
+                          {getInitials(user.full_name)}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
                         <p className="text-sm font-medium">{user.full_name || 'User'}</p>
