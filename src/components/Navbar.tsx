@@ -79,15 +79,15 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName || user.email}`} alt={user.fullName || user.email} />
-                      <AvatarFallback>{user.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.full_name || user.email}`} alt={user.full_name || user.email} />
+                      <AvatarFallback>{user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
+                      <p className="text-sm font-medium leading-none">{user.full_name || 'User'}</p>
                       <p className="text-xs leading-none text-muted-foreground">
                         {user.email}
                       </p>
@@ -166,11 +166,11 @@ export default function Navbar() {
                   <>
                     <div className="flex items-center gap-3 p-2 bg-accent">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName || user.email}`} alt={user.fullName || user.email} />
-                        <AvatarFallback>{user.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.full_name || user.email}`} alt={user.full_name || user.email} />
+                        <AvatarFallback>{user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <p className="text-sm font-medium">{user.fullName || 'User'}</p>
+                        <p className="text-sm font-medium">{user.full_name || 'User'}</p>
                         <p className="text-xs text-muted-foreground">{user.email}</p>
                       </div>
                     </div>
