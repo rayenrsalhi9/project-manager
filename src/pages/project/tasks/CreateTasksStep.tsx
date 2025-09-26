@@ -1,6 +1,9 @@
 import type { Task, CreateTasksStepProps } from "./types"
 import { useState, useMemo } from "react"
 import { generateUniqueId, validateTask } from "./utils"
+import { useParams } from "react-router-dom"
+import { supabase } from "@/supabase"
+import { toast } from "sonner"
 
 import SortableTaskItem from "../tasks/SortableTaskItem"
 
@@ -48,8 +51,14 @@ export default function CreateTasksStep({
     tasks, setTasks, setCurrentStep
 }: CreateTasksStepProps) {
 
+    const { projectId } = useParams<{ projectId: string }>()
+    if (!projectId) {
+        throw new Error("Project ID is required")
+    }
+
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+    const [isClearAllDialogOpen, setIsClearAllDialogOpen] = useState(false)
 
     const [editingTask, setEditingTask] = useState<Task | null>(null)
 
@@ -157,8 +166,33 @@ export default function CreateTasksStep({
     }
 
     const handleClearAll = () => {
-        setTasks([])
-        setCurrentStep(1) // Reset to step 1 when clearing
+        setIsClearAllDialogOpen(true)
+    }
+
+    const confirmClearAll = async () => {
+        try {
+            // Clear from database first
+            const { error } = await supabase
+                .from('tasks')
+                .delete()
+                .eq('project_id', projectId)
+            
+            if (error) {
+                throw error
+            }
+            
+            // Clear local state
+            setTasks([])
+            setCurrentStep(1) // Reset to step 1 when clearing
+            
+            toast.success("All tasks have been cleared successfully")
+            
+        } catch (error) {
+            console.error("Error clearing tasks:", error)
+            toast.error("Failed to clear tasks. Please try again.")
+        } finally {
+            setIsClearAllDialogOpen(false)
+        }
     }
 
     const handleDeleteTask = (taskId: string) => {
@@ -370,6 +404,35 @@ export default function CreateTasksStep({
                             Update Task
                         </Button>
                     </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+
+        {/* Clear All Confirmation Dialog */}
+        <Dialog open={isClearAllDialogOpen} onOpenChange={setIsClearAllDialogOpen}>
+            <DialogContent className="sm:max-w-md rounded-2xl">
+                <DialogHeader>
+                    <DialogTitle>Clear All Tasks</DialogTitle>
+                    <DialogDescription>
+                        Are you sure you want to clear all tasks? This action cannot be undone and will remove all tasks from this project.
+                    </DialogDescription>
+                </DialogHeader>
+                
+                <div className="flex gap-2 pt-4">
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setIsClearAllDialogOpen(false)} 
+                        className="flex-1 rounded-xl"
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={confirmClearAll} 
+                        variant="destructive"
+                        className="flex-1 rounded-xl"
+                    >
+                        Clear All
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
