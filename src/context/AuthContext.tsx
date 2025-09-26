@@ -14,8 +14,9 @@ type AuthResult = {
 }
 
 type UserType = {
-    fullName: string
+    full_name: string
     email: string
+    created_at: string
 }
 
 type AuthContextType = {
@@ -104,7 +105,8 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         
             if (data) setUser({
                 email: session?.user?.email || '', 
-                fullName: data.full_name
+                full_name: data.full_name,
+                created_at: data.created_at
             })
         } catch(err) {
             console.error(`Error fetching user: ${(err as Error).message}`)
