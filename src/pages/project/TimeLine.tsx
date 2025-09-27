@@ -1,7 +1,6 @@
 import type { TimelineType } from "@/hooks/useTimeline"
 import { useTimeline } from "@/hooks/useTimeline"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, UserPlus, FolderPlus } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -157,14 +156,6 @@ export default function TimeLine() {
         {projectTimeline.map((item) => (
           <Card key={item.id} className="border border-border bg-card hover:bg-accent/50 transition-colors">
             <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Avatar className="h-10 w-10 border-2 border-border">
-                  <AvatarImage src="/placeholder.svg" alt="user avatar" />
-                  <AvatarFallback className="bg-muted text-muted-foreground font-medium">
-                    AU
-                  </AvatarFallback>
-                </Avatar>
-
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="p-1 rounded-full bg-muted">{getIcon(item.type)}</div>
@@ -178,7 +169,6 @@ export default function TimeLine() {
                   </div>
                   
                 </div>
-              </div>
             </CardContent>
           </Card>
         ))}
