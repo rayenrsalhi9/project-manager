@@ -65,7 +65,14 @@ export default function AssignmentStep({
 
       // Check if any changes have been made
       if (!hasChanges(tasks, projectTasks)) {
-        toast.info("No changes were made")
+        toast.info("No changes were made", {
+          duration: 3000,
+          style: {
+            background: '#3b82f6',
+            color: '#fff',
+            border: '1px solid #2563eb'
+          }
+        })
         return
       }
 
@@ -84,11 +91,25 @@ export default function AssignmentStep({
         throw new Error(result.error || "Failed to process task changes")
       }
 
-      toast.success("Tasks setup completed successfully!")
+      toast.success("Tasks setup completed successfully!", {
+        duration: 3000,
+        style: {
+          background: '#10b981',
+          color: '#fff',
+          border: '1px solid #059669'
+        }
+      })
       navigate(`/dashboard/projects/${projectId}`)
     } catch (error) {
       console.error("Error completing setup:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to complete setup")
+      toast.error(error instanceof Error ? error.message : "Failed to complete setup", {
+        duration: 5000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          border: '1px solid #dc2626'
+        }
+      })
     }
   }
 
