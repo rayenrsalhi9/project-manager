@@ -35,9 +35,10 @@ export default function ProjectInfo() {
     return (
         <section className="w-full max-w-2xl mx-auto space-y-6 pb-8">
             <div className="space-y-6">
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">Project Details</h2>
-                </div>
+                
+                <h2 className="text-xl font-semibold mb-4 text-foreground">
+                    Project Details
+                </h2>
 
                 {/* Project Name */}
                 <div className="space-y-2">

@@ -87,8 +87,12 @@ export default function AssignmentStep({
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Assign Tasks to Team Members</h2>
-          <p className="text-muted-foreground">Step 2: Assign each task to a project member</p>
+          <h2 className="text-xl font-semibold mb-1 text-foreground">
+            Assign Tasks to Team Members
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Step 2: Assign each task to a project member
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleBackToTasks} className="rounded-xl bg-transparent">

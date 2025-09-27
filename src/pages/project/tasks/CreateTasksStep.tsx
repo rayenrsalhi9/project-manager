@@ -217,8 +217,8 @@ export default function CreateTasksStep({
         <section className="w-full max-w-2xl mx-auto space-y-4">
         <div className="flex items-center justify-between">
             <div>
-            <h2 className="text-xl font-bold text-foreground">Task Manager</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-xl font-semibold mb-1 text-foreground">Task Manager</h2>
+            <p className="text-muted-foreground text-sm">
                 Step 1: Create and organize your project tasks
             </p>
             </div>
