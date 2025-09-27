@@ -316,3 +316,11 @@ const hasTaskChanged = (task: Task, projectsArr: Task[]): boolean => {
         task.assigned_to !== targetTask.assigned_to
     )
 }
+
+export const hasChanges = (tasks: Task[], projectTasks: Task[]): boolean => {
+    // Check if there are any changes between current tasks and original project tasks
+    const {newCreatedTasks, updatedTasks, deletedTasks} = processTasks(tasks, projectTasks)
+    
+    // If any of these arrays have items, changes were made
+    return newCreatedTasks.length > 0 || updatedTasks.length > 0 || deletedTasks.length > 0
+}

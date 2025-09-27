@@ -1,7 +1,7 @@
 import type { AssignmentStepProps, Task } from "./types"
 import { useMemo } from "react"
 import { useOutletContext, useParams, useNavigate } from "react-router-dom"
-import { processTasks, getMatchingFullName, processTaskChanges } from "./utils"
+import { processTasks, getMatchingFullName, processTaskChanges, hasChanges } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { format } from "date-fns"
 import { useAuth } from "@/context/AuthContext"
@@ -61,6 +61,12 @@ export default function AssignmentStep({
     try {
       if (unassignedTasks.length > 0) {
         throw new Error("All tasks must be assigned before completing setup")
+      }
+
+      // Check if any changes have been made
+      if (!hasChanges(tasks, projectTasks)) {
+        toast.info("No changes were made")
+        return
       }
 
       const {newCreatedTasks, updatedTasks, deletedTasks} = processTasks(tasks, projectTasks)
