@@ -34,7 +34,10 @@ export default function AssignmentStep({
 
   const navigate = useNavigate()
 
-  const {members, projectTasks} = useOutletContext<{members: Member[], projectTasks: Task[]}>()
+  const {members, projectTasks} = useOutletContext<
+    {members: Member[], projectTasks: Task[]}
+  >()
+  const teamMembers = members.filter(member => member.role !== 'admin')
 
   const {unassignedTasks, assignedTasks} = useMemo(() => {
     const unassigned = tasks.filter((task) => !task.assigned_to)
@@ -128,7 +131,7 @@ export default function AssignmentStep({
                         <SelectValue placeholder="Assign to..." />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
-                        {members.map((member) => (
+                        {teamMembers.map((member) => (
                           <SelectItem key={member.user_id} value={member.user_id}>
                             {member.full_name}
                           </SelectItem>
