@@ -6,7 +6,7 @@ import { useOutletContext } from "react-router-dom"
 import AssignmentStep from "./tasks/AssignmentStep"
 import CreateTasksStep from "./tasks/CreateTasksStep"
 
-export default function TaskManager() {
+export default function Tasks() {
 
   const [currentStep, setCurrentStep] = useState<1 | 2>(1)
   const {projectTasks, members} = useOutletContext<{projectTasks: Task[], members: Member[]}>()

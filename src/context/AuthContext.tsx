@@ -14,6 +14,7 @@ type AuthResult = {
 }
 
 type UserType = {
+    id: string
     full_name: string
     email: string
     created_at: string
@@ -104,6 +105,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             if (error) throw error
         
             if (data) setUser({
+                id: data.id,
                 email: session?.user?.email || '', 
                 full_name: data.full_name,
                 created_at: data.created_at

@@ -13,7 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import ProjectLayout from "./layout/ProjectLayout";
 import Timeline from "./pages/project/Timeline";
 import Members from "./pages/project/Members";
-import Tasks from "./pages/project/Tasks";
+import TasksProtected from "./components/TasksProtected";
 import ProjectInfo from "./pages/project/ProjectInfo";
 
 import Root from "./components/Root";
@@ -78,7 +78,7 @@ export const router = createBrowserRouter([
                         element: <ProjectInfo />
                     }, {
                         path: 'tasks',
-                        element: <Tasks />
+                        element: <TasksProtected />
                     }
                 ]
             }
