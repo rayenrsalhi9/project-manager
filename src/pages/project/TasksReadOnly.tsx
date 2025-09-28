@@ -1,91 +1,118 @@
 import { useOutletContext } from "react-router-dom"
 import type { Task } from "./tasks/types"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
+import { CalendarIcon, Users, Clock } from "lucide-react"
+import { format, isPast, isToday, isTomorrow } from "date-fns"
 import { cn } from "@/lib/utils"
-import { ArrowRight, ArrowLeft, ArrowDown } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import type { Member } from "@/layout/ProjectLayout"
 import { getMatchingFullName } from "./tasks/utils"
+import { Button } from "@/components/ui/button"
+
 
 interface TaskCardProps {
   task: Task
   index: number
   totalTasks: number
-  tasksPerRow: number
   members: Member[]
 }
 
-function TaskCard({ task, index, totalTasks, tasksPerRow, members }: TaskCardProps) {
-  const row = Math.floor(index / tasksPerRow)
-  const col = index % tasksPerRow
-  const isEvenRow = row % 2 === 0
-  const isLastInRow = col === tasksPerRow - 1 || index === totalTasks - 1
-  const isLastTask = index === totalTasks - 1
+function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
+  // Get deadline status and styling
+  const getDeadlineInfo = () => {
+    if (!task.deadline) return null
+    
+    const deadline = new Date(task.deadline)
+    const isOverdue = isPast(deadline) && !isToday(deadline)
+    const isDueToday = isToday(deadline)
+    const isDueTomorrow = isTomorrow(deadline)
+    
+    return {
+      isOverdue,
+      isDueToday,
+      isDueTomorrow,
+      formatted: format(deadline, "MMM d, yyyy")
+    }
+  }
 
-  // Determine connection type (-> or <-)
-  const needsRightArrow = isEvenRow && !isLastInRow && !isLastTask
-  const needsLeftArrow = !isEvenRow && col > 0
-  const needsDownConnection = isLastInRow && !isLastTask
+  const deadlineInfo = getDeadlineInfo()
+  const assignedMember = task.assigned_to ? getMatchingFullName(members, task.assigned_to) : null
+
+  // Get status color based on deadline
+  const getStatusColor = () => {
+    if (!deadlineInfo) return 'border-transparent'
+    if (deadlineInfo.isOverdue) return 'border-red-500/50 bg-red-50/30 dark:bg-red-950/20'
+    if (deadlineInfo.isDueToday) return 'border-amber-500/50 bg-amber-50/30 dark:bg-amber-950/20'
+    if (deadlineInfo.isDueTomorrow) return 'border-blue-500/50 bg-blue-50/30 dark:bg-blue-950/20'
+    return 'border-green-500/50 bg-green-50/30 dark:bg-green-950/20'
+  }
 
   return (
     <div className="group relative">
-      <div className="flex items-center mt-4">
-        {/* Task Node */}
-        <Card className="w-64 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border-2">
-          <CardContent className="p-2">
-            <div className="flex items-start gap-3">
-              <div className="flex-1 space-y-2">
-                <div className="flex items-start justify-between">
-                  <h3 className="font-semibold text-foreground leading-tight">{task.title}</h3>
-                </div>
+      <Card className={cn("w-full rounded-xl shadow-sm", getStatusColor())}>
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            {/* Task Number & Title */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">
+                  {index + 1}
+                </span>
+                <h3 className="font-semibold text-foreground leading-tight truncate">{task.title}</h3>
+              </div>
 
-                {task.description && <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>}
+              {/* Description */}
+              {task.description && (
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                  {task.description}
+                </p>
+              )}
 
-                <div className="space-y-2">
-                  {task.deadline && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <CalendarIcon className="h-3 w-3" />
-                      <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
-                    </div>
-                  )}
-                  
-                  {task.assigned_to && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <span className="font-medium">Assigned to:</span>
-                      <span className="px-2 py-1 bg-secondary rounded-full text-secondary-foreground">
-                        {getMatchingFullName(members, task.assigned_to)}
-                      </span>
-                    </div>
-                  )}
-                </div>
+              {/* Task Details */}
+              <div className="space-y-2">
+                {/* Deadline */}
+                {deadlineInfo && (
+                  <div className={cn(
+                    "flex items-center gap-2 text-xs px-2 py-1 rounded-lg w-fit",
+                    deadlineInfo.isOverdue && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+                    deadlineInfo.isDueToday && "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+                    deadlineInfo.isDueTomorrow && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                  )}>
+                    <Clock className="h-3 w-3 flex-shrink-0" />
+                    <span className="font-medium">
+                      {deadlineInfo.isOverdue ? 'Overdue' : 
+                       deadlineInfo.isDueToday ? 'Due today' :
+                       deadlineInfo.isDueTomorrow ? 'Due tomorrow' : 'Due'}
+                      {' '}{deadlineInfo.formatted}
+                    </span>
+                  </div>
+                )}
+
+                {/* Assigned Member */}
+                {assignedMember && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <Users className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                    Assigned to: 
+                    <span className="px-2 py-1 bg-secondary/80 rounded-full text-secondary-foreground font-medium">
+                      {assignedMember}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {needsRightArrow && (
-          <div className="flex items-center ml-2">
-            <div className="w-6 h-0.5 bg-border"></div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground ml-1" />
           </div>
-        )}
+        </CardContent>
+      </Card>
 
-        {needsLeftArrow && (
-          <div className="flex items-center mr-2 order-first">
-            <ArrowLeft className="h-4 w-4 text-muted-foreground mr-1" />
-            <div className="w-6 h-0.5 bg-border"></div>
-          </div>
-        )}
-      </div>
-
-      {needsDownConnection && (
-        <div className="flex justify-center mt-4 mb-4">
+      {/* Connection Arrow */}
+      {index < totalTasks - 1 && (
+        <div className="flex items-center justify-center my-4">
           <div className="flex flex-col items-center">
-            <div className="w-0.5 h-6 bg-border"></div>
-            <ArrowDown className="h-4 w-4 text-muted-foreground" />
-            <div className="w-0.5 h-6 bg-border"></div>
+            <div className="w-0.5 h-4 bg-gradient-to-b from-transparent via-border to-border"></div>
+            <ArrowRight className="h-4 w-4 text-muted-foreground/60 rotate-90" />
+            <div className="w-0.5 h-4 bg-gradient-to-b from-border via-border to-transparent"></div>
           </div>
         </div>
       )}
@@ -99,78 +126,150 @@ export default function TasksReadOnly() {
     members: Member[] 
   }>()
 
-  const TASKS_PER_ROW = 3
+  const [filter, setFilter] = useState<'all' | 'overdue' | 'today' | 'tomorrow'>('all')
 
-  const createSnakeLayout = useMemo(() => {
-    const rows: Task[][] = []
-    for (let i = 0; i < projectTasks.length; i += TASKS_PER_ROW) {
-      const row = projectTasks.slice(i, i + TASKS_PER_ROW)
-      const rowIndex = Math.floor(i / TASKS_PER_ROW)
-      // Reverse every odd row for snake pattern
-      if (rowIndex % 2 === 1) {
-        row.reverse()
+  // Filter tasks based on selected filter
+  const filteredTasks = useMemo(() => {
+    if (filter === 'all') return projectTasks
+    
+    return projectTasks.filter(task => {
+      if (!task.deadline) return false
+      
+      const deadline = new Date(task.deadline)
+      switch (filter) {
+        case 'overdue':
+          return isPast(deadline) && !isToday(deadline)
+        case 'today':
+          return isToday(deadline)
+        case 'tomorrow':
+          return isTomorrow(deadline)
+        default:
+          return true
       }
-      rows.push(row)
-    }
-    return rows
+    })
+  }, [projectTasks, filter])
+
+  // Task statistics
+  const taskStats = useMemo(() => {
+    const total = projectTasks.length
+    const withDeadlines = projectTasks.filter(t => t.deadline).length
+    const overdue = projectTasks.filter(t => t.deadline && isPast(new Date(t.deadline)) && !isToday(new Date(t.deadline))).length
+    const dueToday = projectTasks.filter(t => t.deadline && isToday(new Date(t.deadline))).length
+    
+    return { total, withDeadlines, overdue, dueToday }
   }, [projectTasks])
+
+  // This component is read-only for non-admin users
+  // No edit/delete functionality needed
 
   if (projectTasks.length === 0) {
     return (
-      <section className="w-full max-w-2xl mx-auto space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">Project Tasks</h2>
-          <p className="text-muted-foreground">No tasks have been created for this project yet.</p>
+      <section className="w-full max-w-4xl mx-auto space-y-6">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center mx-auto">
+            <CalendarIcon className="h-8 w-8 text-primary" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-foreground">No Tasks Yet</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Tasks will appear here once they are created. Start by adding your first task to get started.
+            </p>
+          </div>
         </div>
-        <Card className="rounded-2xl border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto">
-                <CalendarIcon className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-semibold text-muted-foreground">No tasks available</h3>
-              <p className="text-sm text-muted-foreground">Tasks will appear here once they are created.</p>
-            </div>
-          </CardContent>
-        </Card>
       </section>
     )
   }
 
   return (
-    <section className="w-full max-w-2xl mx-auto space-y-4">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-foreground">Project Tasks</h2>
-        <p className="text-muted-foreground text-sm">
-          View all tasks in this project
-        </p>
+    <section className="w-full max-w-2xl mx-auto space-y-4 pb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold text-foreground">Project Tasks</h2>
+          <p className="text-muted-foreground text-sm">
+            Manage and track your project tasks efficiently
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-card rounded-xl p-3 border">
+            <div className="text-2xl font-bold text-foreground">{taskStats.total}</div>
+            <div className="text-xs text-muted-foreground">Total Tasks</div>
+          </div>
+          <div className="bg-card rounded-xl p-3 border">
+            <div className="text-2xl font-bold text-foreground">{taskStats.withDeadlines}</div>
+            <div className="text-xs text-muted-foreground">With Deadlines</div>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-3 border border-red-200 dark:border-red-800">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{taskStats.overdue}</div>
+            <div className="text-xs text-red-600 dark:text-red-400">Overdue</div>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-200 dark:border-amber-800">
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{taskStats.dueToday}</div>
+            <div className="text-xs text-amber-600 dark:text-amber-400">Due Today</div>
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-0">
-        {createSnakeLayout.map((row, rowIndex) => (
-          <div 
-            key={rowIndex} 
-            className={cn(
-              "flex gap-2 justify-center items-start",
-              rowIndex % 2 === 1 && "flex-row-reverse"
-            )}
-          >
-            {row.map((task) => {
-              const originalIndex = projectTasks.findIndex((t: Task) => t.id === task.id)
-              return (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  index={originalIndex}
-                  totalTasks={projectTasks.length}
-                  tasksPerRow={TASKS_PER_ROW}
-                  members={members}
-                />
-              )
-            })}
-          </div>
-        ))}
+      {/* Filter Tabs */}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={filter === 'all' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('all')}
+          className="rounded-lg"
+        >
+          All Tasks ({projectTasks.length})
+        </Button>
+        <Button
+          variant={filter === 'overdue' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('overdue')}
+          className="rounded-lg"
+        >
+          Overdue ({taskStats.overdue})
+        </Button>
+        <Button
+          variant={filter === 'today' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('today')}
+          className="rounded-lg"
+        >
+          Due Today ({taskStats.dueToday})
+        </Button>
+        <Button
+          variant={filter === 'tomorrow' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('tomorrow')}
+          className="rounded-lg"
+        >
+          Due Tomorrow
+        </Button>
       </div>
+
+      {/* Tasks List */}
+      {filteredTasks.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <CalendarIcon className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold text-muted-foreground mb-2">No tasks found</h3>
+          <p className="text-muted-foreground">Try adjusting your filter or check back later.</p>
+        </div>
+      ) : (
+        <div className="grid gap-6">
+          {filteredTasks.map(task => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              index={projectTasks.findIndex(t => t.id === task.id)}
+              totalTasks={filteredTasks.length}
+              members={members}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
