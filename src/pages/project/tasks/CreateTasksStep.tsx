@@ -1,5 +1,5 @@
 import type { Task, CreateTasksStepProps } from "./types"
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { generateUniqueId, validateTask } from "./utils"
 import { useParams } from "react-router-dom"
 import { supabase } from "@/supabase"
@@ -75,8 +75,6 @@ export default function CreateTasksStep({
 
     const {title: addTitle, description: addDescription, deadline: addDeadline} = validateTask(addFormData)
     const {title: editTitle, description: editDescription, deadline: editDeadline} = validateTask(editFormData)
-
-    const tasksPerRow = 2
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -198,20 +196,6 @@ export default function CreateTasksStep({
     const handleDeleteTask = (taskId: string) => {
         setTasks(tasks.filter((task: Task) => task.id !== taskId))
     }
-
-    const createSnakeLayout = useMemo(() => {
-        const rows: Task[][] = []
-        for (let i = 0; i < tasks.length; i += tasksPerRow) {
-        const row = tasks.slice(i, i + tasksPerRow)
-        const rowIndex = Math.floor(i / tasksPerRow)
-        // Reverse every odd row for snake pattern
-        if (rowIndex % 2 === 1) {
-            row.reverse()
-        }
-        rows.push(row)
-        }
-        return rows
-    }, [tasks, tasksPerRow])
 
     return (
         <section className="w-full max-w-2xl mx-auto space-y-4">
@@ -458,25 +442,19 @@ export default function CreateTasksStep({
 
         {
             tasks.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-2">
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <SortableContext items={tasks.map((task: Task) => task.id)} strategy={verticalListSortingStrategy}>
-                        <div className="space-y-0">
-                            {createSnakeLayout.map((row, rowIndex) => (
-                            <div key={rowIndex} className={cn("flex gap-2", rowIndex % 2 === 1 && "flex-row-reverse")}>
-                                {row.map((task) => {
-                                const originalIndex = tasks.findIndex((t: Task) => t.id === task.id)
-                                return (
-                                    <SortableTaskItem
-                                        key={task.id}
-                                        task={task}
-                                        index={originalIndex}
-                                        onEditTask={handleEditTask}
-                                        onDeleteTask={handleDeleteTask}
-                                    />
-                                )
-                                })}
-                            </div>
+                        <div className="space-y-1">
+                            {tasks.map((task, index) => (
+                                <SortableTaskItem
+                                    key={task.id}
+                                    task={task}
+                                    index={index}
+                                    onEditTask={handleEditTask}
+                                    onDeleteTask={handleDeleteTask}
+                                    compact={true}
+                                />
                             ))}
                         </div>
                         </SortableContext>
