@@ -2,15 +2,14 @@ import type { SortableTaskItemProps } from "./types"
 import { useOutletContext } from "react-router-dom"
 import { getMatchingFullName } from "./utils"
 import type { Member } from "@/layout/ProjectLayout"
+import { cn } from "@/lib/utils"
 
 import {
     GripVertical, 
-    ArrowRight, 
-    ArrowLeft, 
-    ArrowDown, 
     Edit2,
     Trash2,
-    CalendarIcon
+    CalendarIcon,
+    Users
 } from 'lucide-react'
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -22,8 +21,6 @@ import { format } from "date-fns"
 export default function SortableTaskItem({
   task,
   index,
-  totalTasks,
-  tasksPerRow,
   onEditTask,
   onDeleteTask,
 }: SortableTaskItemProps) {
@@ -44,96 +41,78 @@ export default function SortableTaskItem({
     transition,
   }
 
-  const row = Math.floor(index / tasksPerRow)
-  const col = index % tasksPerRow
-  const isEvenRow = row % 2 === 0
-  const isLastInRow = col === tasksPerRow - 1 || index === totalTasks - 1
-  const isLastTask = index === totalTasks - 1
-
-  // Determine connection type (-> or <-)
-  const needsRightArrow = isEvenRow && !isLastInRow && !isLastTask
-  const needsLeftArrow = !isEvenRow && col > 0
-  const needsDownConnection = isLastInRow && !isLastTask
-
   return (
-    <div ref={setNodeRef} style={style} className={`group relative ${isDragging && "opacity-50"}`}>
-      <div className="flex items-center mt-4">
-        {/* Task Node */}
-        <Card className="w-64 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border-2">
-          <CardContent className="p-2">
-            <div className="flex items-start gap-3">
-              <button
-                className="mt-1 p-1 rounded hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
-                {...attributes}
-                {...listeners}
-              >
-                <GripVertical className="h-4 w-4 text-muted-foreground" />
-              </button>
+    <div ref={setNodeRef} style={style} className={cn("group", isDragging && "opacity-50 scale-105")}>
+      <Card className="rounded-xl border hover:border-primary/50 transition-all duration-200 hover:shadow-md">
+        <CardContent className="p-5">
+          <div className="flex items-start gap-4">
+            {/* Drag Handle */}
+            <button
+              className="mt-1 p-2 rounded-md hover:bg-muted/80 transition-colors cursor-grab active:cursor-grabbing flex-shrink-0"
+              {...attributes}
+              {...listeners}
+              title="Drag to reorder"
+            >
+              <GripVertical className="h-5 w-5 text-muted-foreground" />
+            </button>
 
-              <div className="flex-1 space-y-2">
-                <div className="flex items-start justify-between">
-                  <h3 className="font-semibold text-foreground leading-tight">{task.title}</h3>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                    <button onClick={() => onEditTask(task)} className="p-1 rounded hover:bg-muted transition-colors">
-                      <Edit2 className="h-3 w-3 text-muted-foreground" />
-                    </button>
-                    <button
-                      onClick={() => onDeleteTask(task.id)}
-                      className="p-1 rounded hover:bg-muted transition-colors"
-                    >
-                      <Trash2 className="h-3 w-3 text-destructive hover:text-destructive" />
-                    </button>
-                  </div>
-                </div>
-
-                {task.description && <p className="text-sm text-muted-foreground line-clamp-2">{task.description}</p>}
-
-                <div className="space-y-2">
-                  {task.deadline && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <CalendarIcon className="h-3 w-3" />
-                      <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
-                    </div>
-                  )}
-                  
-                  {task.assigned_to && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <span className="font-medium">Assigned to:</span>
-                      <span className="px-2 py-1 bg-secondary rounded-full text-secondary-foreground">
-                        {getMatchingFullName(members, task.assigned_to)}
-                      </span>
-                    </div>
-                  )}
-                </div>
+            {/* Task Number Badge */}
+            <div className="flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                {index + 1}
               </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {needsRightArrow && (
-          <div className="flex items-center ml-2">
-            <div className="w-6 h-0.5 bg-border"></div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground ml-1" />
-          </div>
-        )}
+            {/* Task Content */}
+            <div className="flex-1 min-w-0 space-y-2">
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="font-semibold text-lg text-foreground leading-tight break-words">{task.title}</h3>
 
-        {needsLeftArrow && (
-          <div className="flex items-center mr-2 order-first">
-            <ArrowLeft className="h-4 w-4 text-muted-foreground mr-1" />
-            <div className="w-6 h-0.5 bg-border"></div>
-          </div>
-        )}
-      </div>
+                {/* Action Buttons */}
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                  <button
+                    onClick={() => onEditTask(task)}
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                    title="Edit task"
+                  >
+                    <Edit2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  </button>
+                  <button
+                    onClick={() => onDeleteTask(task.id)}
+                    className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
+                    title="Delete task"
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </button>
+                </div>
+              </div>
 
-      {needsDownConnection && (
-        <div className="flex justify-center mt-4 mb-4">
-          <div className="flex flex-col items-center">
-            <div className="w-0.5 h-6 bg-border"></div>
-            <ArrowDown className="h-4 w-4 text-muted-foreground" />
-            <div className="w-0.5 h-6 bg-border"></div>
+              {task.description && (
+                <p className="text-sm text-muted-foreground leading-relaxed break-words">{task.description}</p>
+              )}
+
+              {/* Task Metadata */}
+              <div className="flex flex-wrap items-center gap-4 pt-1">
+                {task.assigned_to && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <span className="px-3 py-1 bg-secondary rounded-full text-secondary-foreground font-medium">
+                      {getMatchingFullName(members, task.assigned_to)}
+                    </span>
+                  </div>
+                )}
+
+                {task.deadline && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CalendarIcon className="h-4 w-4" />
+                    <span>Due {format(task.deadline, "MMM d, yyyy")}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -10,8 +10,6 @@ export type Task = {
 export type SortableTaskItemProps = {
   task: Task
   index: number
-  totalTasks: number
-  tasksPerRow: number
   onEditTask: (task: Task) => void
   onDeleteTask: (taskId: string) => void
 }

@@ -471,8 +471,6 @@ export default function CreateTasksStep({
                                         key={task.id}
                                         task={task}
                                         index={originalIndex}
-                                        totalTasks={tasks.length}
-                                        tasksPerRow={tasksPerRow}
                                         onEditTask={handleEditTask}
                                         onDeleteTask={handleDeleteTask}
                                     />
