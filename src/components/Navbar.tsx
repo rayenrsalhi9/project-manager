@@ -1,4 +1,5 @@
-import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle } from "lucide-react";
+import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle, Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -19,15 +20,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatNotificationTime } from "../utils";
 
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Navbar() {
 
   const {signUserOut, user, notifications} = useAuth()
-  console.log(notifications)
   const navigate = useNavigate()
 
   const getInitials = (name: string = 'Anonymous User') => {
@@ -85,6 +87,75 @@ export default function Navbar() {
           {
             user ?
             <div className="hidden items-center gap-4 lg:flex">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
+                    <Bell className="h-4 w-4" />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {notifications.length > 9 ? '9+' : notifications.length}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">Notifications</p>
+                      {notifications.length > 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          {notifications.length} new
+                        </span>
+                      )}
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {notifications.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No new notifications
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-[300px]">
+                      <div className="p-2">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium leading-tight">
+                                  {notification.title}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-black font-medium mt-1">
+                                  {notification.project}
+                                </p>
+                              </div>
+                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                {formatNotificationTime(notification.created_at)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                  {notifications.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/notifications" className="flex items-center justify-center text-sm text-muted-foreground hover:text-foreground">
+                          See all notifications
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
@@ -221,4 +292,4 @@ export default function Navbar() {
       </div>
     </section>
   );
-}
+}  

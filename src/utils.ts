@@ -278,6 +278,27 @@ export async function addUserToMembers(projectId: number, userId: string) {
 
 }
 
+export function formatNotificationTime(timestamp: string): string {
+    const now = new Date();
+    const notificationDate = new Date(timestamp);
+    const diffInMs = now.getTime() - notificationDate.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+
+    if (diffInMinutes < 1) {
+        return "just now";
+    } else if (diffInMinutes < 60) {
+        return `${diffInMinutes}min ago`;
+    } else if (diffInHours < 24) {
+        return `${diffInHours}h ago`;
+    } else {
+        const day = notificationDate.getDate();
+        const month = notificationDate.toLocaleString('en-US', { month: 'short' });
+        const year = notificationDate.getFullYear();
+        return `${day} ${month} ${year}`;
+    }
+}
+
 export async function formatNotifications(notifications: UserTask[]): Promise<NotificationType[]> {
 
     return await Promise.all(notifications.map(async (notification) => {
