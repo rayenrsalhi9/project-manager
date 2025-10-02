@@ -155,7 +155,7 @@ export default function TimeLine() {
       <div className="space-y-3">
         {projectTimeline.map((item) => (
           <Card key={item.id} className="border border-border bg-card hover:bg-accent/50 transition-colors">
-            <CardContent className="p-4">
+            <CardContent className="px-4 py-0.25">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="p-1 rounded-full bg-muted">{getIcon(item.type)}</div>
