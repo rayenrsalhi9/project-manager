@@ -26,6 +26,7 @@ type AuthContextType = {
     signUserOut: () => Promise<AuthResult>
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
     user: UserType | null
+    notifications: unknown[]
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -34,6 +35,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [user, setUser] = useState<UserType | null>(null)
+    const [notifications, setNotifications] = useState<unknown[]>([])
 
     // initial session state
     async function getInitialState(): Promise<void> {
@@ -115,6 +117,23 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
         }          
     }, [session?.user?.email])
 
+    const getUserNotifications = useCallback(async (userId: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('tasks')
+                .select('*')
+                .eq('assigned_to', userId)
+                .order('created_at', { ascending: false })
+                
+            if (error) throw error
+        
+            if (data) setNotifications(data)
+
+        } catch(err) {
+            console.error(`Error fetching notifications: ${(err as Error).message}`)
+        }          
+    }, [])
+
     useEffect(() => {
 
         getInitialState()
@@ -131,13 +150,22 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     useEffect(() => {
         if (!session?.user?.id) {
             setUser(null)
+            setNotifications([])
             return
         }
         getUserDetails(session.user.id)
-    }, [session?.user?.id, getUserDetails])
+        getUserNotifications(session.user.id)
+    }, [session?.user?.id, getUserDetails, getUserNotifications])
 
     return (
-        <AuthContext.Provider value={{ session,signUserIn, signUserOut, signUserUp, user}}>
+        <AuthContext.Provider value={{ 
+            session,
+            signUserIn, 
+            signUserOut, 
+            signUserUp, 
+            user, 
+            notifications,
+        }}>
             {children}
         </AuthContext.Provider>
     )

@@ -26,7 +26,8 @@ import { toast } from "sonner";
 
 export default function Navbar() {
 
-  const {signUserOut, user} = useAuth()
+  const {signUserOut, user, notifications} = useAuth()
+  console.log(notifications)
   const navigate = useNavigate()
 
   const getInitials = (name: string = 'Anonymous User') => {
