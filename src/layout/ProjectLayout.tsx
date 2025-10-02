@@ -94,7 +94,8 @@ export default function ProjectLayout() {
         const { data, error } = await supabase
           .from("tasks")
           .select('*')
-          .eq("project_id", projectId);
+          .eq("project_id", projectId)
+          .order('task_index', { ascending: true });
         if (error) throw error
         // Normalize dates to ensure consistency
         const normalizedTasks = normalizeTaskDates(data)

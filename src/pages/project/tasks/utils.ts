@@ -173,7 +173,8 @@ export const createNewTasks = async (
             deadline: formatDateToTimestamtz(task.deadline),
             project_id: projectId,
             created_by: adminId,
-            assigned_to: task.assigned_to
+            assigned_to: task.assigned_to,
+            task_index: task.task_index
         }))
 
         const { error } = await supabase
@@ -215,7 +216,8 @@ export const updateExistingTasks = async (
                     title: task.title.trim(),
                     description: task.description.trim(),
                     deadline: formatDateToTimestamtz(task.deadline),
-                    assigned_to: task.assigned_to
+                    assigned_to: task.assigned_to,
+                    task_index: task.task_index
                 })
                 .eq('id', task.id)
             

@@ -90,7 +90,13 @@ export default function CreateTasksStep({
                 setTasks((tasks: Task[]) => {
                     const oldIndex = tasks.findIndex((task) => task.id === active.id)
                     const newIndex = tasks.findIndex((task) => task.id === over.id)
-                    return arrayMove(tasks, oldIndex, newIndex)
+                    const reorderedTasks = arrayMove(tasks, oldIndex, newIndex)
+                    
+                    // Update task indices based on new order (1-based indexing)
+                    return reorderedTasks.map((task, index) => ({
+                        ...task,
+                        task_index: index + 1
+                    }))
                 })
             }
         } catch (error) {
@@ -103,11 +109,15 @@ export default function CreateTasksStep({
         const errors = validateTask(addFormData)
         if (Object.keys(errors).length > 0) return
 
+        // Calculate the next task index (1-based indexing)
+        const nextIndex = tasks.length > 0 ? Math.max(...tasks.map(t => t.task_index || 0)) + 1 : 1
+
         const newTask: Task = {
             id: generateUniqueId(),
             title: addFormData.title,
             description: addFormData.description,
             deadline: addFormData.deadline,
+            task_index: nextIndex,
         }
 
         setTasks([...tasks, newTask])
@@ -143,6 +153,7 @@ export default function CreateTasksStep({
                     title: editFormData.title,
                     description: editFormData.description,
                     deadline: editFormData.deadline,
+                    task_index: task.task_index, // Preserve existing task index
                     }
                 : task,
             ),
@@ -207,7 +218,14 @@ export default function CreateTasksStep({
     }
 
     const handleDeleteTask = (taskId: string) => {
-        setTasks(tasks.filter((task: Task) => task.id !== taskId))
+        setTasks((prevTasks) => {
+            const filteredTasks = prevTasks.filter((task: Task) => task.id !== taskId)
+            // Reindex remaining tasks to maintain sequential ordering
+            return filteredTasks.map((task, index) => ({
+                ...task,
+                task_index: index + 1
+            }))
+        })
     }
 
     return (

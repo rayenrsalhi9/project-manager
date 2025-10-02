@@ -76,7 +76,7 @@ export default function SortableTaskItem({
               {/* Task Number */}
               <div className="flex-shrink-0">
                 <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
-                  {index + 1}
+                  {task.task_index || index + 1}
                 </div>
               </div>
 
@@ -141,7 +141,7 @@ export default function SortableTaskItem({
               {/* Task Number Badge */}
               <div className="flex-shrink-0 mt-0.5">
                 <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-                  {index + 1}
+                  {task.task_index || index + 1}
                 </div>
               </div>
 

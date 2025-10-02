@@ -4,6 +4,7 @@ export type Task = {
   description: string
   deadline: Date | undefined
   assigned_to?: string
+  task_index?: number
   // Made optional since it's assigned in step 2 of task form
 }
 
