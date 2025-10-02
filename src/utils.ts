@@ -1,5 +1,6 @@
 import DOMPurify from 'dompurify'
 import { supabase } from './supabase';
+import type { NotificationType } from './context/AuthContext';
 
 type ValidationFields = {
     fullName?: string;
@@ -30,6 +31,18 @@ export type UserProject = {
     name: string,
     description: string,
     role: string[]
+}
+
+export type UserTask = {
+    id: string
+    title: string
+    description: string
+    project_id: number
+    created_by: string
+    assigned_to: string
+    status: string
+    created_at: string
+    updated_at: string
 }
 
 export function validateFields(
@@ -263,4 +276,48 @@ export async function addUserToMembers(projectId: number, userId: string) {
         return {success: false, error: 'Unexpected error occured, please try again later.'}
     }
 
+}
+
+export async function formatNotifications(notifications: UserTask[]): Promise<NotificationType[]> {
+
+    return await Promise.all(notifications.map(async (notification) => {
+
+        const {error: adminError, data: adminName} = await 
+            getAdminName(notification.created_by)
+        if (adminError) throw adminError
+
+        const {error: projectError, data: projectName} = await 
+            getProjectName(notification.project_id)
+        if (projectError) throw projectError
+        return ({
+            id: notification.id,
+            created_at: notification.created_at,
+            title: `${adminName.full_name || 'An admin'} has assigned you to a new task`,
+            message: notification.title,
+            description: notification.description,
+            project: projectName.name || 'A project',
+            admin: adminName.full_name || 'An admin'
+        })
+    }))
+
+}
+
+async function getAdminName(userId: string) {
+    const {data, error} = await supabase
+        .from('user_profiles')
+        .select('full_name')
+        .eq('id', userId)
+        .single()
+    if (error) return {error}
+    return {data}
+}
+
+async function getProjectName(projectId: number) {
+    const {data, error} = await supabase
+        .from('projects')
+        .select('name')
+        .eq('id', projectId)
+        .single()
+    if (error) return {error}
+    return {data}
 }

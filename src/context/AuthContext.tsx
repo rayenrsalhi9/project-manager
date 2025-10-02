@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { supabase } from '../supabase'
 import type { AuthError, Session, User} from '@supabase/supabase-js';
 import type { JSX } from "react";
+import { formatNotifications } from "../utils";
 
 type AuthContextProviderProps = {
     children: JSX.Element
@@ -20,13 +21,23 @@ type UserType = {
     created_at: string
 }
 
+export type NotificationType = {
+    id: string
+    title: string
+    message: string
+    description: string
+    created_at: string
+    project: string
+    admin: string
+}
+
 type AuthContextType = {
     session: Session | null | undefined
     signUserIn: (email: string, password: string) => Promise<AuthResult>
     signUserOut: () => Promise<AuthResult>
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
     user: UserType | null
-    notifications: unknown[]
+    notifications: NotificationType[]
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -35,7 +46,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     // states
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [user, setUser] = useState<UserType | null>(null)
-    const [notifications, setNotifications] = useState<unknown[]>([])
+    const [notifications, setNotifications] = useState<NotificationType[]>([])
 
     // initial session state
     async function getInitialState(): Promise<void> {
@@ -127,7 +138,8 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
                 
             if (error) throw error
         
-            if (data) setNotifications(data)
+            const formattedNotifications = await formatNotifications(data)
+            setNotifications(formattedNotifications)
 
         } catch(err) {
             console.error(`Error fetching notifications: ${(err as Error).message}`)
