@@ -215,12 +215,83 @@ export default function Navbar() {
             </div> : null
           }
 
-          <Sheet>
-            <SheetTrigger asChild className="lg:hidden">
-              <Button variant="outline" size="icon">
-                <MenuIcon className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
+          <div className="flex items-center gap-2 lg:hidden">
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
+                    <Bell className="h-4 w-4" />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {notifications.length > 9 ? '9+' : notifications.length}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">Notifications</p>
+                      {notifications.length > 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          {notifications.length} new
+                        </span>
+                      )}
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {notifications.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No new notifications
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-[300px]">
+                      <div className="p-2">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium leading-tight">
+                                  {notification.title}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-black font-medium mt-1">
+                                  {notification.project}
+                                </p>
+                              </div>
+                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                {formatNotificationTime(notification.created_at)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                  {notifications.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/notifications" className="flex items-center justify-center text-sm text-muted-foreground hover:text-foreground">
+                          See all notifications
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <MenuIcon className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
@@ -288,8 +359,9 @@ export default function Navbar() {
 
             </SheetContent>
           </Sheet>
+          </div>
         </nav>
       </div>
     </section>
   );
-}  
+}
