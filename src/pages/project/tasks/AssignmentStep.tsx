@@ -68,9 +68,9 @@ export default function AssignmentStep({
         toast.info("No changes were made", {
           duration: 3000,
           style: {
-            background: '#3b82f6',
-            color: '#fff',
-            border: '1px solid #2563eb'
+            background: '#E8F5E9',
+            border: '1px solid #81C784',
+            color: '#2E7D32'
           }
         })
         return
@@ -94,9 +94,9 @@ export default function AssignmentStep({
       toast.success("Tasks setup completed successfully!", {
         duration: 3000,
         style: {
-          background: '#10b981',
-          color: '#fff',
-          border: '1px solid #059669'
+          background: '#E8F5E9',
+          border: '1px solid #81C784',
+          color: '#2E7D32'
         }
       })
       navigate(`/dashboard/projects/${projectId}`)
@@ -105,9 +105,9 @@ export default function AssignmentStep({
       toast.error(error instanceof Error ? error.message : "Failed to complete setup", {
         duration: 5000,
         style: {
-          background: '#ef4444',
-          color: '#fff',
-          border: '1px solid #dc2626'
+          background: '#FEE2E2',
+          border: '1px solid #EF4444',
+          color: '#991B1B',
         }
       })
     }

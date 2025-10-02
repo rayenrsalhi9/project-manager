@@ -183,11 +183,24 @@ export default function CreateTasksStep({
             setTasks([])
             setCurrentStep(1) // Reset to step 1 when clearing
             
-            toast.success("All tasks have been cleared successfully")
+            toast.success("All tasks have been cleared successfully", {
+              style: {
+                background: '#E8F5E9',
+                border: '1px solid #81C784',
+                color: '#2E7D32'
+              }
+            })
             
         } catch (error) {
             console.error("Error clearing tasks:", error)
-            toast.error("Failed to clear tasks. Please try again.")
+            toast.error("Failed to clear tasks. Please try again.", {
+              duration: 5000,
+              style: {
+                background: '#FEE2E2',
+                border: '1px solid #EF4444',
+                color: '#991B1B',
+              }
+            })
         } finally {
             setIsClearAllDialogOpen(false)
         }
