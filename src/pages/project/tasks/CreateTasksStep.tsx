@@ -1,5 +1,6 @@
 import type { Task, CreateTasksStepProps } from "./types"
 import { useState } from "react"
+import { generateTasks } from "@/services/aiService"
 import { generateUniqueId, validateTask } from "./utils"
 import { useParams } from "react-router-dom"
 import { supabase } from "@/supabase"
@@ -229,10 +230,44 @@ export default function CreateTasksStep({
         })
     }
 
-    const handleProjectGPTSubmit = (input: string) => {
-        // TODO: Implement AI task generation logic
-        console.log('ProjectGPT input:', input)
-        toast.info("ProjectGPT feature coming soon!")
+    const handleProjectGPTSubmit = async (input: string) => {
+
+        toast.info("ProjectGPT feature coming soon!", {
+            duration: 5000,
+            style: {
+                background: '#f9fafb',
+                border: '1px solid #d1d5db',
+                color: '#1f2937'
+            }
+        })
+
+        try {
+            const tasks = await generateTasks(input)
+            const {tasks: generatedTasks} = JSON.parse(tasks || '[]')
+            setTasks(generatedTasks.map((task: Task, index: number) => ({
+                ...task,
+                id: generateUniqueId(),
+                task_index: index + 1,
+            })))
+            toast.success("Tasks generated successfully", {
+                duration: 5000,
+                style: {
+                    background: '#f9fafb',
+                    border: '1px solid #d1d5db',
+                    color: '#1f2937'
+                }
+            })
+        } catch (error) {
+            console.error("Error generating tasks:", error)
+            toast.error("Failed to generate tasks. Please try again.", {
+                duration: 5000,
+                style: {
+                    background: '#f3f4f6',
+                    border: '1px solid #9ca3af',
+                    color: '#374151',
+                }
+            })
+        }
     }
 
     return (
