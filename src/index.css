@@ -63,8 +63,8 @@
   --muted-foreground: oklch(0.46 0 0); /* Medium gray */
   --accent: oklch(0.85 0 0); /* Medium-light gray */
   --accent-foreground: oklch(0.21 0 0); /* Dark gray */
-  --destructive: oklch(0.35 0 0); /* Darker gray for destructive actions */
-  --destructive-foreground: oklch(0.97 0 0); /* Light gray */
+  --destructive: oklch(0.58 0.22 25.9); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.98 0 0); /* Light gray for contrast */
   --border: oklch(0.91 0 0); /* Light gray border */
   --input: oklch(1 0 0); /* Pure white */
   --ring: oklch(0.21 0 0); /* Dark gray */
@@ -99,8 +99,8 @@
   --muted-foreground: oklch(0.70 0 0); /* Medium-light gray */
   --accent: oklch(0.35 0 0); /* Medium-dark gray */
   --accent-foreground: oklch(0.93 0 0); /* Light gray */
-  --destructive: oklch(0.65 0 0); /* Light gray for destructive actions */
-  --destructive-foreground: oklch(0.11 0 0); /* Very dark gray */
+  --destructive: oklch(0.55 0.22 25.9); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.98 0 0); /* Light gray for contrast */
   --border: oklch(1 0 0 / 15%); /* Light gray borders */
   --input: oklch(1 0 0 / 10%); /* Light gray input background */
   --ring: oklch(0.75 0 0); /* Light gray */
@@ -171,7 +171,7 @@
 }
 
 .toast-error {
-  @apply bg-gray-100 border-gray-300 text-gray-900;
+  @apply bg-red-100 border-red-300 text-red-900;
 }
 
 .toast-warning {
@@ -188,7 +188,7 @@
 }
 
 .dark .toast-error {
-  @apply bg-gray-700/40 border-gray-500 text-gray-200;
+  @apply bg-red-900/40 border-red-600 text-red-200;
 }
 
 .dark .toast-warning {
