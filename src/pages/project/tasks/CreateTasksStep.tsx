@@ -6,6 +6,7 @@ import { supabase } from "@/supabase"
 import { toast } from "sonner"
 
 import SortableTaskItem from "../tasks/SortableTaskItem"
+import ProjectGPTDialog from "@/components/dialogs/ProjectGPTDialog"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -228,6 +229,12 @@ export default function CreateTasksStep({
         })
     }
 
+    const handleProjectGPTSubmit = (input: string) => {
+        // TODO: Implement AI task generation logic
+        console.log('ProjectGPT input:', input)
+        toast.info("ProjectGPT feature coming soon!")
+    }
+
     return (
         <section className="w-full max-w-2xl mx-auto space-y-4">
         <div className="flex items-center justify-between">
@@ -238,7 +245,10 @@ export default function CreateTasksStep({
             </p>
             </div>
 
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <div className="flex space-x-2">
+                <ProjectGPTDialog onSubmit={handleProjectGPTSubmit} />
+                
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                     <Button className="rounded-2xl">
                     <Plus className="h-4 w-4 mr-2" />
@@ -332,6 +342,7 @@ export default function CreateTasksStep({
                     </div>
                 </DialogContent>
             </Dialog>
+            </div>
         </div>
 
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
