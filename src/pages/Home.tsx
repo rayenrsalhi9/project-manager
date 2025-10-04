@@ -1,12 +1,22 @@
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import type { JSX } from "react";
+import { useEffect, type JSX } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { generateText } from "@/services/aiService";
 
 export default function Home():JSX.Element {
 
   const {session} = useAuth()
+
+  const handleClick = async () => {
+    const text = await generateText();
+    console.log(text);
+  }
+
+  // useEffect(() => {
+  //   handleClick();
+  // }, []);
 
   return (
     <section className="relative overflow-hidden py-6 min-h-dvh max-w-4xl mx-auto px-4">
