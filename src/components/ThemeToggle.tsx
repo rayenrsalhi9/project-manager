@@ -17,22 +17,21 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const { theme, toggleTheme } = useTheme();
 
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-12 h-12',
+    sm: 'w-9 h-9',
+    md: 'w-11 h-11',
+    lg: 'w-14 h-14',
   };
 
   const iconSizes = {
-    sm: 16,
-    md: 20,
-    lg: 24,
+    sm: 20,
+    md: 24,
+    lg: 28,
   };
 
   const baseClasses = cn(
     'relative inline-flex items-center justify-center',
-    'rounded-full transition-all duration-300 ease-in-out',
+    'rounded-full transition-colors duration-200',
     'focus:outline-none focus:ring-2 focus:ring-offset-2',
-    'hover:scale-110 active:scale-95',
     sizeClasses[size],
     className
   );
@@ -40,13 +39,15 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const variantClasses = {
     default: cn(
       'bg-background border border-border',
-      'text-foreground hover:bg-accent hover:text-accent-foreground',
-      'focus:ring-ring'
+      'hover:bg-accent',
+      'dark:bg-gray-800 dark:border-gray-600',
+      'dark:hover:bg-gray-700'
     ),
     floating: cn(
-      'bg-background/80 backdrop-blur-sm border border-border/50',
-      'text-foreground hover:bg-accent/80 hover:text-accent-foreground',
-      'focus:ring-ring shadow-lg',
+      'bg-background border border-border',
+      'hover:bg-accent',
+      'dark:bg-gray-800 dark:border-gray-600',
+      'dark:hover:bg-gray-700',
       'fixed bottom-6 right-6 z-50'
     ),
   };
@@ -63,47 +64,25 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         <div
           className={cn(
             'absolute inset-0 flex items-center justify-center',
-            'transition-all duration-300 ease-in-out',
-            theme === 'light' 
-              ? 'opacity-100 rotate-0 scale-100' 
-              : 'opacity-0 -rotate-90 scale-50'
+            'transition-opacity duration-200',
+            theme === 'light' ? 'opacity-100' : 'opacity-0'
           )}
         >
-          <Sun 
-            size={iconSizes[size]} 
-            className="text-gray-500"
-            strokeWidth={1.5}
-          />
+          <Sun size={iconSizes[size]} className="text-orange-500" />
         </div>
         
         {/* Moon Icon */}
         <div
           className={cn(
             'absolute inset-0 flex items-center justify-center',
-            'transition-all duration-300 ease-in-out',
-            theme === 'dark' 
-              ? 'opacity-100 rotate-0 scale-100' 
-              : 'opacity-0 rotate-90 scale-50'
+            'transition-opacity duration-200',
+            theme === 'dark' ? 'opacity-100' : 'opacity-0'
           )}
         >
-          <Moon 
-            size={iconSizes[size]} 
-            className="text-gray-400"
-            strokeWidth={1.5}
-          />
+          <Moon size={iconSizes[size]} className="text-blue-500" />
         </div>
       </div>
-      
-      {/* Ripple effect */}
-      <div className="absolute inset-0 rounded-full">
-        <div 
-          className={cn(
-            'absolute inset-0 rounded-full transition-all duration-300',
-            'bg-current opacity-0 scale-50',
-            'group-hover:opacity-10 group-hover:scale-100'
-          )}
-        />
-      </div>
+
     </button>
   );
 };
