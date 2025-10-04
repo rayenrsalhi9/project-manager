@@ -46,22 +46,14 @@ export default function Navbar() {
     if (!success && signoutError) {
       toast.error(signoutError, {
         duration: 5000,
-        style: {
-          background: '#FEE2E2',
-          border: '1px solid #EF4444',
-          color: '#991B1B',
-        },
+        className: 'toast-error',
       })
     } else if (success) {
       navigate("/signin")
     } else {
       toast.error('Unexpected error occured', {
         duration: 5000,
-        style: {
-          background: '#FEE2E2',
-          border: '1px solid #EF4444',
-          color: '#991B1B',
-        },
+        className: 'toast-error',
       })
     }
   }
@@ -92,7 +84,7 @@ export default function Navbar() {
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                     <Bell className="h-4 w-4" />
                     {notifications.length > 0 && (
-                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
                         {notifications.length > 9 ? '9+' : notifications.length}
                       </span>
                     )}
@@ -130,7 +122,7 @@ export default function Navbar() {
                                 <p className="text-xs text-muted-foreground mt-1">
                                   {notification.message}
                                 </p>
-                                <p className="text-xs text-black font-medium mt-1">
+                                <p className="text-xs text-foreground font-medium mt-1">
                                   {notification.project}
                                 </p>
                               </div>
@@ -222,7 +214,7 @@ export default function Navbar() {
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                     <Bell className="h-4 w-4" />
                     {notifications.length > 0 && (
-                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
                         {notifications.length > 9 ? '9+' : notifications.length}
                       </span>
                     )}
@@ -260,7 +252,7 @@ export default function Navbar() {
                                 <p className="text-xs text-muted-foreground mt-1">
                                   {notification.message}
                                 </p>
-                                <p className="text-xs text-black font-medium mt-1">
+                                <p className="text-xs text-foreground font-medium mt-1">
                                   {notification.project}
                                 </p>
                               </div>

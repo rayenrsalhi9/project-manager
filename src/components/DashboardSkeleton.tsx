@@ -27,7 +27,7 @@ export default function DashboardSkeleton() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {/* Create 6 skeleton cards to simulate a typical project layout */}
         {[...Array(6)].map((_, index) => (
-          <div key={index} className="rounded-lg border border-gray-200 p-6 space-y-4">
+          <div key={index} className="rounded-lg border border-border p-6 space-y-4 bg-card">
             {/* Card header skeleton */}
             <div className="flex items-start justify-between gap-3">
               <Skeleton className="h-6 w-32 flex-1" />

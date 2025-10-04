@@ -77,31 +77,31 @@ export default function Signin():JSX.Element {
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="e.g. name@example.com"
-                  className={`mt-2 ${error ? 'border-red-500' : ''}`}
-                  required
-                  aria-required="true"
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby={error ? 'signin-error' : undefined}
-                  disabled={isPending}
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="e.g. name@example.com"
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`}
+                    required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby={error ? 'signin-error' : undefined}
+                    disabled={isPending}
                 />
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
                 <Input
-                  name="password"
-                  id="password"
-                  type="password"
-                  placeholder="********"
-                  className={`mt-2 ${error ? 'border-red-500' : ''}`}
-                  required
-                  aria-required="true"
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby={error ? 'signin-error' : undefined}
-                  disabled={isPending}
+                    name="password"
+                    id="password"
+                    type="password"
+                    placeholder="********"
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`}
+                    required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby={error ? 'signin-error' : undefined}
+                    disabled={isPending}
                 />
               </div>
             </div>

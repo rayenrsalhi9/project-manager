@@ -12,7 +12,7 @@ const NotFound: React.FC = () => {
           <div className="mx-auto w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
             <AlertCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
           </div>
-          <CardTitle className="text-6xl font-bold text-foreground dark:text-white">
+          <CardTitle className="text-6xl font-bold text-foreground">
             404
           </CardTitle>
           <CardDescription className="text-lg text-gray-600 dark:text-gray-300">
@@ -26,7 +26,7 @@ const NotFound: React.FC = () => {
           <Link to="/" className="inline-block">
             <Button 
               size="lg" 
-              className="w-full sm:w-auto bg-foreground hover:bg-black text-white cursor-pointer"
+              className="w-full sm:w-auto bg-foreground hover:bg-foreground/90 text-background cursor-pointer"
             >
               <Home className="w-4 h-4 mr-2" />
               Return to Home Page

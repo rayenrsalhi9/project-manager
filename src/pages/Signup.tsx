@@ -77,7 +77,7 @@ export default function Signup():JSX.Element {
                     id="full-name"
                     type="text"
                     placeholder="e.g. John Doe"
-                    className={`mt-2 ${error ? 'border-red-500' : ''}`} 
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`} 
                     required
                     aria-required="true"
                     aria-invalid={error ? 'true' : 'false'}
@@ -92,7 +92,7 @@ export default function Signup():JSX.Element {
                     id="email"
                     type="email"
                     placeholder="e.g. name@example.com"
-                    className={`mt-2 ${error ? 'border-red-500' : ''}`}
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`}
                     required
                     aria-required="true"
                     aria-invalid={error ? 'true' : 'false'}
@@ -107,7 +107,7 @@ export default function Signup():JSX.Element {
                     id="password"
                     type="password"
                     placeholder="********"
-                    className={`mt-2 ${error ? 'border-red-500' : ''}`}
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`}
                     required
                     aria-required="true"
                     aria-invalid={error ? 'true' : 'false'}
@@ -122,7 +122,7 @@ export default function Signup():JSX.Element {
                     id="confirm-password"
                     type="password"
                     placeholder="********"
-                    className={`mt-2 ${error ? 'border-red-500' : ''}`}
+                    className={`mt-2 ${error ? 'border-destructive' : ''}`}
                     required
                     aria-required="true"
                     aria-invalid={error ? 'true' : 'false'}

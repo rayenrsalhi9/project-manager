@@ -135,7 +135,7 @@ export default function TimeLine() {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">Project Timeline</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Project Timeline</h1>
           <p className="text-gray-600">Track the progress and updates of your project</p>
         </div>
         <div className="text-center py-12">
