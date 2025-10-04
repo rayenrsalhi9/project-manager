@@ -196,7 +196,7 @@ export default function Navbar() {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
-                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    className="cursor-pointer text-gray-600 focus:text-gray-600"
                     onClick={handleSignOut}
                   >
                     <LogOut className="mr-2 h-4 w-4" />

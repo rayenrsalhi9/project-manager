@@ -42,10 +42,10 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
   // Get status color based on deadline
   const getStatusColor = () => {
     if (!deadlineInfo) return 'border-transparent'
-    if (deadlineInfo.isOverdue) return 'border-red-500/50 bg-red-50/30 dark:bg-red-950/20'
-    if (deadlineInfo.isDueToday) return 'border-amber-500/50 bg-amber-50/30 dark:bg-amber-950/20'
-    if (deadlineInfo.isDueTomorrow) return 'border-blue-500/50 bg-blue-50/30 dark:bg-blue-950/20'
-    return 'border-green-500/50 bg-green-50/30 dark:bg-green-950/20'
+    if (deadlineInfo.isOverdue) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
+    if (deadlineInfo.isDueToday) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
+    if (deadlineInfo.isDueTomorrow) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
+    return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
   }
 
   return (
@@ -75,10 +75,10 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
                 {deadlineInfo && (
                   <div className={cn(
                     "flex items-center gap-2 text-xs px-2 py-1 rounded-lg w-fit",
-                    deadlineInfo.isOverdue && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
-                    deadlineInfo.isDueToday && "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-                    deadlineInfo.isDueTomorrow && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                    deadlineInfo.isOverdue && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
+                    deadlineInfo.isDueToday && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
+    deadlineInfo.isDueTomorrow && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
+                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300"
                   )}>
                     <Clock className="h-3 w-3 flex-shrink-0" />
                     <span className="font-medium">
@@ -201,13 +201,13 @@ export default function TasksReadOnly() {
             <div className="text-2xl font-bold text-foreground">{taskStats.withDeadlines}</div>
             <div className="text-xs text-muted-foreground">With Deadlines</div>
           </div>
-          <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-3 border border-red-200 dark:border-red-800">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{taskStats.overdue}</div>
-            <div className="text-xs text-red-600 dark:text-red-400">Overdue</div>
+          <div className="bg-gray-50 dark:bg-gray-950/30 rounded-xl p-3 border border-gray-200 dark:border-gray-800">
+                      <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">{taskStats.overdue}</div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">Overdue</div>
           </div>
-          <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-200 dark:border-amber-800">
-            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{taskStats.dueToday}</div>
-            <div className="text-xs text-amber-600 dark:text-amber-400">Due Today</div>
+          <div className="bg-gray-50 dark:bg-gray-950/30 rounded-xl p-3 border border-gray-200 dark:border-gray-800">
+                      <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">{taskStats.dueToday}</div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">Due Today</div>
           </div>
         </div>
       </div>

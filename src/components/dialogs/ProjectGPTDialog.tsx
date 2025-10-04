@@ -47,7 +47,7 @@ export default function ProjectGPTDialog({
       <DialogContent className="w-[95vw] sm:max-w-lg rounded-2xl mx-4">
         <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-base">
-            <Bot className="h-5 w-5 text-blue-600 flex-shrink-0" />
+            <Bot className="h-5 w-5 text-gray-600 flex-shrink-0" />
             Ask ProjectGPT
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground leading-relaxed">

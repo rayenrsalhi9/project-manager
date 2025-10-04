@@ -197,9 +197,9 @@ export default function CreateTasksStep({
             
             toast.success("All tasks have been cleared successfully", {
               style: {
-                background: '#E8F5E9',
-                border: '1px solid #81C784',
-                color: '#2E7D32'
+                background: '#f9fafb',
+                border: '1px solid #d1d5db',
+                color: '#1f2937'
               }
             })
             
@@ -208,9 +208,9 @@ export default function CreateTasksStep({
             toast.error("Failed to clear tasks. Please try again.", {
               duration: 5000,
               style: {
-                background: '#FEE2E2',
-                border: '1px solid #EF4444',
-                color: '#991B1B',
+                background: '#f3f4f6',
+                border: '1px solid #9ca3af',
+                color: '#374151',
               }
             })
         } finally {
@@ -273,7 +273,7 @@ export default function CreateTasksStep({
                             />
                             {
                                 addTitle && (
-                                    <p className="text-red-500 text-sm mt-1">
+                                    <p className="text-gray-700 text-sm mt-1">
                                         {addTitle}
                                     </p>
                                 )
@@ -292,7 +292,7 @@ export default function CreateTasksStep({
                             />
                             {
                                 addDescription && (
-                                    <p className="text-red-500 text-sm mt-1">
+                                    <p className="text-gray-700 text-sm mt-1">
                                         {addDescription}
                                     </p>
                                 )
@@ -324,7 +324,7 @@ export default function CreateTasksStep({
                             </Popover>
                             {
                                 addDeadline && (
-                                    <p className="text-red-500 text-sm mt-1">
+                                    <p className="text-gray-700 text-sm mt-1">
                                         {addDeadline}
                                     </p>
                                 )
@@ -364,7 +364,7 @@ export default function CreateTasksStep({
                     />
                     {
                         editTitle && (
-                            <p className="text-red-500 text-sm mt-1">
+                            <p className="text-gray-700 text-sm mt-1">
                                 {editTitle}
                             </p>
                         )
@@ -383,7 +383,7 @@ export default function CreateTasksStep({
                     />
                     {
                         editDescription && (
-                            <p className="text-red-500 text-sm mt-1">
+                            <p className="text-gray-700 text-sm mt-1">
                                 {editDescription}
                             </p>
                         )
@@ -415,10 +415,10 @@ export default function CreateTasksStep({
                         </Popover>
                         {
                             editDeadline && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {editDeadline}
-                                </p>
-                            )
+                            <p className="text-gray-700 text-sm mt-1">
+                                {editDeadline}
+                            </p>
+                        )
                         }
                     </div>
 

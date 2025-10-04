@@ -67,9 +67,9 @@ export default function CreateProjectDialog() {
           if (project?.length) {
             toast.success('Project created successfully', {
               style: {
-                background: '#E8F5E9',
-                border: '1px solid #81C784',
-                color: '#2E7D32'
+                background: '#f9fafb',
+                border: '1px solid #d1d5db',
+                color: '#1f2937'
               }
             })
             navigate(`/dashboard/projects/${project[0].id}`)
@@ -119,7 +119,7 @@ export default function CreateProjectDialog() {
           {
             createState?.error 
               ? (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                <div className="bg-gray-100 border border-gray-300 text-gray-900 px-4 py-3 rounded-md text-sm">
                   {createState.error}
                 </div>
               ) 

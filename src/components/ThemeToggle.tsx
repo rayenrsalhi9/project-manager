@@ -71,7 +71,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         >
           <Sun 
             size={iconSizes[size]} 
-            className="text-yellow-500"
+            className="text-gray-500"
             strokeWidth={1.5}
           />
         </div>
@@ -88,7 +88,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         >
           <Moon 
             size={iconSizes[size]} 
-            className="text-blue-400"
+            className="text-gray-400"
             strokeWidth={1.5}
           />
         </div>

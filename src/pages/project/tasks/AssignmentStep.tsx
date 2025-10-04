@@ -68,9 +68,9 @@ export default function AssignmentStep({
         toast.info("No changes were made", {
           duration: 3000,
           style: {
-            background: '#E8F5E9',
-            border: '1px solid #81C784',
-            color: '#2E7D32'
+            background: '#f9fafb',
+            border: '1px solid #d1d5db',
+            color: '#1f2937'
           }
         })
         return
@@ -92,22 +92,22 @@ export default function AssignmentStep({
       }
 
       toast.success("Tasks setup completed successfully!", {
-        duration: 3000,
-        style: {
-          background: '#E8F5E9',
-          border: '1px solid #81C784',
-          color: '#2E7D32'
-        }
-      })
+          duration: 3000,
+          style: {
+            background: '#f9fafb',
+            border: '1px solid #d1d5db',
+            color: '#1f2937'
+          }
+        })
       navigate(`/dashboard/projects/${projectId}`)
     } catch (error) {
       console.error("Error completing setup:", error)
       toast.error(error instanceof Error ? error.message : "Failed to complete setup", {
         duration: 5000,
         style: {
-          background: '#FEE2E2',
-          border: '1px solid #EF4444',
-          color: '#991B1B',
+          background: '#f3f4f6',
+          border: '1px solid #9ca3af',
+          color: '#374151',
         }
       })
     }
@@ -178,7 +178,7 @@ export default function AssignmentStep({
           <h3 className="text-lg font-semibold text-foreground">Assigned Tasks ({assignedTasks.length})</h3>
           <div className="grid gap-4">
             {assignedTasks.map((task) => (
-              <Card key={task.id} className="rounded-2xl border-2 border-green-200 bg-green-50/50">
+              <Card key={task.id} className="rounded-2xl border-2 border-gray-300 bg-gray-50/50">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
@@ -189,7 +189,7 @@ export default function AssignmentStep({
                           task.assigned_to && (
                             <div className="flex items-center gap-1">
                               <Users className="h-3 w-3" />
-                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                              <span className="px-2 py-1 bg-gray-200 text-gray-800 rounded-full font-medium">
                                 {getMatchingFullName(members, task.assigned_to)}
                               </span>
                             </div>

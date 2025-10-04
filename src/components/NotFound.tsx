@@ -9,8 +9,8 @@ const NotFound: React.FC = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md text-center">
         <CardHeader className="space-y-2">
-          <div className="mx-auto w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-            <AlertCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
+          <div className="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-900/20 rounded-full flex items-center justify-center mb-4">
+          <AlertCircle className="w-10 h-10 text-gray-600 dark:text-gray-400" />
           </div>
           <CardTitle className="text-6xl font-bold text-foreground">
             404
