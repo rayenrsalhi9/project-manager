@@ -1,5 +1,5 @@
 import type { Task, CreateTasksStepProps } from "./types"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { generateTasks } from "@/services/aiService"
 import { generateUniqueId, validateTask } from "./utils"
 import { useParams } from "react-router-dom"
@@ -84,6 +84,11 @@ export default function CreateTasksStep({
         coordinateGetter: sortableKeyboardCoordinates,
         }),
     )
+
+    // Compute tasks without deadlines
+    const tasksWithoutDeadlines = useMemo(() => {
+        return tasks.filter(task => !task.deadline)
+    }, [tasks])
 
     const handleDragEnd = (event: DragEndEvent) => {
         try {
@@ -500,19 +505,40 @@ export default function CreateTasksStep({
 
         {
             tasks.length > 0 && (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <Button onClick={handleNextStep} className="rounded-xl order-1 sm:order-none">
-                        <ChevronRight className="h-4 w-4 mr-2 flex-shrink-0" />
-                        Proceed to task assignment
-                    </Button>
-                    <Button
-                        onClick={handleClearAll}
-                        variant="outline"
-                        className="rounded-xl text-destructive hover:text-destructive bg-transparent order-2 sm:order-none"
-                    >
-                        <Trash2 className="h-4 w-4 mr-2 flex-shrink-0" />
-                        Clear all tasks
-                    </Button>
+                <div className="flex flex-col gap-4">
+                    {/* Warning message for tasks without deadlines */}
+                    {tasksWithoutDeadlines.length > 0 && (
+                        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+                            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300">
+                                <CalendarIcon className="h-4 w-4 flex-shrink-0" />
+                                <div className="text-sm">
+                                    <p className="font-medium">{tasksWithoutDeadlines.length} task{tasksWithoutDeadlines.length > 1 ? 's' : ''} need{tasksWithoutDeadlines.length === 1 ? 's' : ''} a deadline</p>
+                                    <p className="text-amber-700 dark:text-amber-400 mt-1">
+                                        Please set deadlines for all tasks before proceeding to assignment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                        <Button 
+                            onClick={handleNextStep} 
+                            disabled={tasksWithoutDeadlines.length > 0}
+                            className="rounded-xl order-1 sm:order-none"
+                        >
+                            <ChevronRight className="h-4 w-4 mr-2 flex-shrink-0" />
+                            Proceed to task assignment
+                        </Button>
+                        <Button
+                            onClick={handleClearAll}
+                            variant="outline"
+                            className="rounded-xl text-destructive hover:text-destructive bg-transparent order-2 sm:order-none"
+                        >
+                            <Trash2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                            Clear all tasks
+                        </Button>
+                    </div>
                 </div>
             )
         }

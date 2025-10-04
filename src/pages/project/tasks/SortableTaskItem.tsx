@@ -17,7 +17,8 @@ import {
     Edit2,
     Trash2,
     CalendarIcon,
-    Users
+    Users,
+    AlertCircle
 } from 'lucide-react'
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -90,6 +91,15 @@ export default function SortableTaskItem({
 
               {/* Task Metadata - Horizontal */}
               <div className="flex items-center gap-2 flex-shrink-0">
+                {!task.deadline && (
+                  <div className="flex items-center gap-1 text-xs">
+                    <AlertCircle className="h-3 w-3 text-amber-500" />
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded dark:bg-amber-900/30 dark:text-amber-300">
+                      Needs deadline
+                    </span>
+                  </div>
+                )}
+                
                 {task.assigned_to && (
                   <div className="flex items-center gap-1 text-xs">
                     <Users className="h-3 w-3 text-muted-foreground" />
@@ -175,6 +185,15 @@ export default function SortableTaskItem({
 
                 {/* Task Metadata */}
                 <div className="flex flex-wrap items-center gap-4 pt-1">
+                  {!task.deadline && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <AlertCircle className="h-4 w-4 text-amber-500" />
+                      <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full font-medium dark:bg-amber-900/30 dark:text-amber-300">
+                        Needs deadline
+                      </span>
+                    </div>
+                  )}
+                  
                   {task.assigned_to && (
                     <div className="flex items-center gap-2 text-sm">
                       <Users className="h-4 w-4 text-muted-foreground" />
