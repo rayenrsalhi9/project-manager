@@ -237,27 +237,27 @@ export default function CreateTasksStep({
 
     return (
         <section className="w-full max-w-2xl mx-auto space-y-4">
-        <div className="flex items-center justify-between">
-            <div>
-            <h2 className="text-xl font-semibold mb-1 text-foreground">Task Manager</h2>
-            <p className="text-muted-foreground text-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+            <h2 className="text-2xl sm:text-xl font-semibold mb-1 text-foreground">Task Manager</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
                 Step 1: Create and organize your project tasks
             </p>
             </div>
 
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2 justify-start sm:justify-end flex-col sm:flex-row">
                 <ProjectGPTDialog onSubmit={handleProjectGPTSubmit} />
                 
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                    <Button className="rounded-2xl">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Task
+                    <Button className="rounded-2xl whitespace-nowrap">
+                    <Plus className="h-4 w-4 mr-2 flex-shrink-0" />
+                    Create a new task
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md rounded-2xl">
+                <DialogContent className="w-[95vw] sm:max-w-md rounded-2xl mx-4">
                     <DialogHeader>
-                        <DialogTitle>Create New Task</DialogTitle>
+                        <DialogTitle>Create A New Task</DialogTitle>
                         <DialogDescription>Add a new task to your project</DialogDescription>
                     </DialogHeader>
 
@@ -331,11 +331,11 @@ export default function CreateTasksStep({
                             }
                         </div>
 
-                        <div className="flex gap-2 pt-4">
-                            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="flex-1 rounded-xl">
+                        <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="rounded-xl order-2 sm:order-none">
                                 Cancel
                             </Button>
-                            <Button onClick={handleAddTask} disabled={Object.keys(validateTask(addFormData)).length > 0} className="flex-1 rounded-xl">
+                            <Button onClick={handleAddTask} disabled={Object.keys(validateTask(addFormData)).length > 0} className="rounded-xl order-1 sm:order-none">
                                 Add Task
                             </Button>
                         </div>
@@ -346,7 +346,7 @@ export default function CreateTasksStep({
         </div>
 
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogContent className="sm:max-w-md rounded-2xl">
+            <DialogContent className="w-[95vw] sm:max-w-md rounded-2xl mx-4">
                 <DialogHeader>
                     <DialogTitle>Edit Task</DialogTitle>
                     <DialogDescription>Update task details</DialogDescription>
@@ -422,11 +422,11 @@ export default function CreateTasksStep({
                         }
                     </div>
 
-                    <div className="flex gap-2 pt-4">
-                        <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="flex-1 rounded-xl">
+                    <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                        <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="rounded-xl order-2 sm:order-none">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdateTask} disabled={Object.keys(validateTask(editFormData)).length > 0} className="flex-1 rounded-xl">
+                        <Button onClick={handleUpdateTask} disabled={Object.keys(validateTask(editFormData)).length > 0} className="rounded-xl order-1 sm:order-none">
                             Update Task
                         </Button>
                     </div>
@@ -436,7 +436,7 @@ export default function CreateTasksStep({
 
         {/* Clear All Confirmation Dialog */}
         <Dialog open={isClearAllDialogOpen} onOpenChange={setIsClearAllDialogOpen}>
-            <DialogContent className="sm:max-w-md rounded-2xl">
+            <DialogContent className="w-[95vw] sm:max-w-md rounded-2xl mx-4">
                 <DialogHeader>
                     <DialogTitle>Clear All Tasks</DialogTitle>
                     <DialogDescription>
@@ -444,20 +444,20 @@ export default function CreateTasksStep({
                     </DialogDescription>
                 </DialogHeader>
                 
-                <div className="flex gap-2 pt-4">
+                <div className="flex flex-col sm:flex-row gap-2 pt-4">
                     <Button 
                         variant="outline" 
                         onClick={() => setIsClearAllDialogOpen(false)} 
-                        className="flex-1 rounded-xl"
+                        className="rounded-xl order-2 sm:order-none"
                     >
                         Cancel
                     </Button>
                     <Button 
                         onClick={confirmClearAll} 
                         variant="destructive"
-                        className="flex-1 rounded-xl"
+                        className="rounded-xl order-1 sm:order-none"
                     >
-                        Clear All
+                        Clear All Tasks
                     </Button>
                 </div>
             </DialogContent>
@@ -465,18 +465,18 @@ export default function CreateTasksStep({
 
         {
             tasks.length > 0 && (
-                <div className="flex gap-2">
-                    <Button onClick={handleNextStep} className="rounded-xl">
-                        <ChevronRight className="h-4 w-4 mr-2" />
-                        Assign Tasks
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <Button onClick={handleNextStep} className="rounded-xl order-1 sm:order-none">
+                        <ChevronRight className="h-4 w-4 mr-2 flex-shrink-0" />
+                        Proceed to task assignment
                     </Button>
                     <Button
                         onClick={handleClearAll}
                         variant="outline"
-                        className="rounded-xl text-destructive hover:text-destructive bg-transparent"
+                        className="rounded-xl text-destructive hover:text-destructive bg-transparent order-2 sm:order-none"
                     >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Clear All
+                        <Trash2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                        Clear all tasks
                     </Button>
                 </div>
             )

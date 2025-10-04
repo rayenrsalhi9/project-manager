@@ -38,26 +38,26 @@ export default function ProjectGPTDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="rounded-2xl">
-          <Bot className="h-4 w-4 mr-2" />
+        <Button variant="outline" className="rounded-2xl whitespace-nowrap">
+          <Bot className="h-4 w-4 mr-2 flex-shrink-0" />
           Ask ProjectGPT
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-lg rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-blue-600" />
+      <DialogContent className="w-[95vw] sm:max-w-lg rounded-2xl mx-4">
+        <DialogHeader className="space-y-3">
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-base">
+            <Bot className="h-5 w-5 text-blue-600 flex-shrink-0" />
             Ask ProjectGPT
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
+          <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
             Describe your project idea and let ProjectGPT generate a comprehensive list of tasks for you. 
             Be as detailed as possible - include your project goals, features, target audience, and any specific requirements. 
             ProjectGPT will analyze your description and create actionable tasks that you can review, edit, and organize.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-2 sm:py-4">
           <div className="space-y-2">
             <Label htmlFor="projectgpt-input" className="text-sm font-medium">
               Project Description
@@ -67,33 +67,37 @@ export default function ProjectGPTDialog({
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               placeholder="Describe your project idea... (e.g., 'I want to build a mobile app for fitness tracking with user authentication, workout logging, and progress visualization')"
-              className="rounded-xl resize-none min-h-[120px]"
-              rows={5}
+              className="rounded-xl resize-none min-h-[100px] sm:min-h-[120px] text-sm sm:text-base"
+              rows={4}
               disabled={isLoading}
             />
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
             <Button
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={isLoading}
-              className="rounded-xl"
+              className="rounded-xl order-2 sm:order-none"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={isLoading || !userInput.trim()}
-              className="rounded-xl"
+              className="rounded-xl order-1 sm:order-none"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Generating...
+                  <span className="hidden sm:inline">Generating...</span>
+                  <span className="sm:hidden">Gen...</span>
                 </>
               ) : (
-                'Generate Tasks'
+                <>
+                  <span className="hidden sm:inline">Generate Tasks</span>
+                  <span className="sm:hidden">Generate</span>
+                </>
               )}
             </Button>
           </div>
