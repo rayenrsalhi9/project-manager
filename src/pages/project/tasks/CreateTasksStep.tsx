@@ -271,7 +271,7 @@ export default function CreateTasksStep({
     }
 
     return (
-        <section className="w-full max-w-2xl mx-auto space-y-4">
+        <section className="w-full max-w-3xl mx-auto space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex-1 min-w-0">
             <h2 className="text-2xl sm:text-xl font-semibold mb-1 text-foreground">Task Manager</h2>

@@ -146,7 +146,7 @@ export default function TimeLine() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-4">
+    <div className="w-full max-w-3xl mx-auto space-y-4">
       <div className="flex items-center gap-2 mb-6">
         <Users className="h-5 w-5" />
         <h2 className="text-xl font-semibold">Project Updates</h2>

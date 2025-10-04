@@ -16,7 +16,7 @@ export default function Team() {
     }
 
     return (
-        <div className="w-full max-w-2xl mx-auto space-y-4">
+        <div className="w-full max-w-3xl mx-auto space-y-4">
             <div className="space-y-12 pt-4">
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">

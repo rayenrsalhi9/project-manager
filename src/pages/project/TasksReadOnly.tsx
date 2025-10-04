@@ -42,10 +42,10 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
   // Get status color based on deadline
   const getStatusColor = () => {
     if (!deadlineInfo) return 'border-transparent'
-    if (deadlineInfo.isOverdue) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
-    if (deadlineInfo.isDueToday) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
-    if (deadlineInfo.isDueTomorrow) return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
-    return 'border-gray-500/50 bg-gray-50/30 dark:bg-gray-950/20'
+    if (deadlineInfo.isOverdue) return 'border-red-500/50 bg-red-50/30 dark:bg-red-950/20'
+    if (deadlineInfo.isDueToday) return 'border-orange-500/50 bg-orange-50/30 dark:bg-orange-950/20'
+    if (deadlineInfo.isDueTomorrow) return 'border-yellow-500/50 bg-yellow-50/30 dark:bg-yellow-950/20'
+    return 'border-green-500/50 bg-green-50/30 dark:bg-green-950/20'
   }
 
   return (
@@ -75,10 +75,10 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
                 {deadlineInfo && (
                   <div className={cn(
                     "flex items-center gap-2 text-xs px-2 py-1 rounded-lg w-fit",
-                    deadlineInfo.isOverdue && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
-                    deadlineInfo.isDueToday && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
-    deadlineInfo.isDueTomorrow && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
-                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300"
+                    deadlineInfo.isOverdue && "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+                    deadlineInfo.isDueToday && "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+                    deadlineInfo.isDueTomorrow && "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
                   )}>
                     <Clock className="h-3 w-3 flex-shrink-0" />
                     <span className="font-medium">
@@ -181,9 +181,9 @@ export default function TasksReadOnly() {
   }
 
   return (
-    <section className="w-full max-w-2xl mx-auto space-y-4 pb-8">
+    <section className="w-full max-w-3xl mx-auto space-y-4 pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold text-foreground">Project Tasks</h2>
           <p className="text-muted-foreground text-sm">
@@ -192,23 +192,23 @@ export default function TasksReadOnly() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-card rounded-xl p-3 border">
-            <div className="text-2xl font-bold text-foreground">{taskStats.total}</div>
-            <div className="text-xs text-muted-foreground">Total Tasks</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+          <div className="bg-card rounded-xl p-3 border text-center">
+            <p className="text-2xl font-bold text-foreground">{taskStats.total}</p>
+            <p className="text-xs text-muted-foreground">Total Tasks</p>
           </div>
-          <div className="bg-card rounded-xl p-3 border">
-            <div className="text-2xl font-bold text-foreground">{taskStats.withDeadlines}</div>
-            <div className="text-xs text-muted-foreground">With Deadlines</div>
+      
+          <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl p-3 border border-orange-200 dark:border-orange-800 text-center">
+            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{taskStats.dueToday}</p>
+            <p className="text-xs text-orange-600 dark:text-orange-400">Due Today</p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-950/30 rounded-xl p-3 border border-gray-200 dark:border-gray-800">
-                      <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">{taskStats.overdue}</div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">Overdue</div>
+
+          <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-3 border border-red-200 dark:border-red-800 text-center">
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{taskStats.overdue}</p>
+            <p className="text-xs text-red-600 dark:text-red-400">Missed Deadlines</p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-950/30 rounded-xl p-3 border border-gray-200 dark:border-gray-800">
-                      <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">{taskStats.dueToday}</div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">Due Today</div>
-          </div>
+
         </div>
       </div>
 
