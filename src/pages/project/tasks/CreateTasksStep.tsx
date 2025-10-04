@@ -273,7 +273,7 @@ export default function CreateTasksStep({
                             />
                             {
                                 addTitle && (
-                                    <p className="text-gray-700 text-sm mt-1">
+                                    <p className="text-red-600 text-sm mt-1">
                                         {addTitle}
                                     </p>
                                 )
@@ -292,7 +292,7 @@ export default function CreateTasksStep({
                             />
                             {
                                 addDescription && (
-                                    <p className="text-gray-700 text-sm mt-1">
+                                    <p className="text-red-600 text-sm mt-1">
                                         {addDescription}
                                     </p>
                                 )
@@ -324,7 +324,7 @@ export default function CreateTasksStep({
                             </Popover>
                             {
                                 addDeadline && (
-                                    <p className="text-gray-700 text-sm mt-1">
+                                    <p className="text-red-600 text-sm mt-1">
                                         {addDeadline}
                                     </p>
                                 )
@@ -364,7 +364,7 @@ export default function CreateTasksStep({
                     />
                     {
                         editTitle && (
-                            <p className="text-gray-700 text-sm mt-1">
+                            <p className="text-red-600 text-sm mt-1">
                                 {editTitle}
                             </p>
                         )
@@ -383,7 +383,7 @@ export default function CreateTasksStep({
                     />
                     {
                         editDescription && (
-                            <p className="text-gray-700 text-sm mt-1">
+                            <p className="text-red-600 text-sm mt-1">
                                 {editDescription}
                             </p>
                         )
@@ -415,7 +415,7 @@ export default function CreateTasksStep({
                         </Popover>
                         {
                             editDeadline && (
-                            <p className="text-gray-700 text-sm mt-1">
+                            <p className="text-red-600 text-sm mt-1">
                                 {editDeadline}
                             </p>
                         )

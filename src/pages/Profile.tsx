@@ -62,9 +62,9 @@ export default function Profile() {
                 Edit Profile
             </Button>
             <Button
-                variant="outline"
+                variant="destructive"
                 size="sm"
-                className="flex items-center gap-2 text-destructive hover:text-destructive bg-transparent"
+                className="flex items-center gap-2"
                 onClick={() => setShowDeleteDialog(true)}
             >
                 <Trash2 className="h-4 w-4" />

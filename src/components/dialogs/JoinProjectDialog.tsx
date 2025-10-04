@@ -149,7 +149,7 @@ export default function JoinProjectDialog() {
           {
             joinState?.error
               ? (
-                <div className="bg-gray-100 border border-gray-300 text-gray-900 px-4 py-3 rounded-md text-sm">
+                <div className="bg-red-100 border border-red-300 text-red-900 px-4 py-3 rounded-md text-sm">
                   {joinState.error}
                 </div>
               )
