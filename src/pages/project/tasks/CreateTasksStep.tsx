@@ -522,18 +522,18 @@ export default function CreateTasksStep({
                 <div className="space-y-2">
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <SortableContext items={tasks.map((task: Task) => task.id)} strategy={verticalListSortingStrategy}>
-                        <div className="space-y-1">
-                            {tasks.map((task, index) => (
-                                <SortableTaskItem
-                                    key={task.id}
-                                    task={task}
-                                    index={index}
-                                    onEditTask={handleEditTask}
-                                    onDeleteTask={handleDeleteTask}
-                                    compact={true}
-                                />
-                            ))}
-                        </div>
+                            <div className="space-y-1">
+                                {tasks.map((task, index) => (
+                                    <SortableTaskItem
+                                        key={task.id}
+                                        task={task}
+                                        index={index}
+                                        onEditTask={handleEditTask}
+                                        onDeleteTask={handleDeleteTask}
+                                        compact={true}
+                                    />
+                                ))}
+                            </div>
                         </SortableContext>
                     </DndContext>
                 </div>

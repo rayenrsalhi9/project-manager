@@ -53,7 +53,7 @@ export default function SortableTaskItem({
   return (
     <div ref={setNodeRef} style={style} className={cn("group", isDragging && "opacity-50 scale-105")}>
       <Card className={cn(
-        "rounded-xl border hover:border-primary/50 transition-all duration-200 hover:shadow-md",
+        "my-6 rounded-xl border hover:border-primary/50 transition-all duration-200 hover:shadow-md",
         compact && "rounded-lg"
       )}>
         <CardContent className={cn(
