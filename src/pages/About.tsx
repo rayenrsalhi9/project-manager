@@ -11,6 +11,29 @@ export default function About():JSX.Element {
 
   const {session} = useAuth()
 
+  const features = [
+    {
+      icon: Clock,
+      title: "Save Time",
+      description: "Streamline project management and reduce time spent on coordination by up to 40%."
+    },
+    {
+      icon: MessageCircle,
+      title: "Effective Communication",
+      description: "Keep everyone aligned with real-time updates and centralized project discussions."
+    },
+    {
+      icon: RefreshCw,
+      title: "Sync Work",
+      description: "Ensure seamless collaboration with synchronized task updates and shared resources."
+    },
+    {
+      icon: BarChart3,
+      title: "Track Progress",
+      description: "Monitor project status and team performance with intuitive dashboards and reports."
+    }
+  ]
+
   return (
     <section className="py-8 max-w-4xl mx-auto px-4">
       <div className="container">
@@ -19,8 +42,8 @@ export default function About():JSX.Element {
             <span>Return to home page</span>
         </Link>
         <div className="mb-10 grid gap-5 text-center md:grid-cols-2 md:text-left">
-          <h1 className="text-5xl font-semibold">About Our Platform</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-4xl font-semibold">About Our Platform</h1>
+          <p className="text-muted-foreground leading-6">
             A collaborative platform for teams, students, and startups to organize projects, assign and track tasks, share resources, and communicate effectively.
           </p>
         </div>
@@ -60,49 +83,20 @@ export default function About():JSX.Element {
 
         <div className="relative overflow-hidden rounded-xl bg-muted p-8 my-8 md:p-16">
           <div className="flex flex-col gap-4 text-center md:text-left">
-            <h2 className="text-4xl font-semibold">Why Choose Our Platform</h2>
-            <p className="max-w-xl text-muted-foreground">
+            <h2 className="text-3xl font-semibold">Why Choose Our Platform</h2>
+            <p className="max-w-xl text-muted-foreground leading-6">
               Experience the perfect blend of simplicity and power for effective team collaboration.
             </p>
           </div>
           
-          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="rounded-full bg-primary/10 p-4">
-                <Clock className="h-8 w-8 text-primary" />
+          <div className="grid grid-cols-2 gap-4 mt-8 md:grid-cols-4">
+            {features.map((feature) => (
+              <div key={feature.title} className="flex flex-col items-center gap-1 text-center">
+                <feature.icon className="h-8 w-8 text-primary" />
+                <h3 className="text-lg font-semibold">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm">{feature.description}</p>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Save Time</h3>
-                <p className="text-muted-foreground">Streamline project management and reduce time spent on coordination by up to 40%</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="rounded-full bg-primary/10 p-4">
-                <MessageCircle className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Effective Communication</h3>
-                <p className="text-muted-foreground">Keep everyone aligned with real-time updates and centralized project discussions</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="rounded-full bg-primary/10 p-4">
-                <RefreshCw className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Sync Work</h3>
-                <p className="text-muted-foreground">Ensure seamless collaboration with synchronized task updates and shared resources</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="rounded-full bg-primary/10 p-4">
-                <BarChart3 className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Track Progress</h3>
-                <p className="text-muted-foreground">Monitor project status and team performance with intuitive dashboards and reports</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
