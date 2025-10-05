@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, TrendingUp, Clock, Calendar as CalendarIcon } from "lucide-react"
 import type { StatsProps } from "./types"
+import { cn } from "@/lib/utils"
 
 const Stats = ({
     totalTasks,
@@ -22,6 +23,8 @@ const Stats = ({
             value: inProgressTasks,
             description: "Currently in progress",
             icon: Clock,
+            style: "alert",
+            className: "border-amber-500 bg-amber-50 text-amber-900 dark:bg-transparent dark:text-amber-200",
         },
         {
             title: "Completion Rate",
@@ -29,22 +32,30 @@ const Stats = ({
             description: `${finishedTasks} of ${totalTasks} tasks finished`,
             icon: TrendingUp,
             progress: completionRate,
+            className: "border-green-500 bg-green-50 text-green-900 dark:bg-transparent dark:text-green-200",
         },
         {
             title: "Overdue",
             value: overdueTasks,
             description: "Past deadline",
             icon: CalendarIcon,
+            className: "border-red-500 bg-red-50 text-red-900 dark:bg-transparent dark:text-red-200",
         },
     ];
 
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {cards.map((card, index) => (
-                <Card key={index} className="rounded-2xl">
+                <Card
+                    key={index}
+                    className={cn(
+                        "rounded-2xl",
+                        card.className
+                    )}
+                >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-                        <card.icon className="h-4 w-4 text-muted-foreground" />
+                        <card.icon className="h-4 w-4 text-black dark:text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{card.value}</div>
