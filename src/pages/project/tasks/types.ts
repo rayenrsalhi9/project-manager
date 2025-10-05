@@ -5,7 +5,7 @@ export type Task = {
   deadline: Date | undefined
   assigned_to?: string
   task_index?: number
-  // Made optional since it's assigned in step 2 of task form
+  status?: 'in_progress' | 'finished'
 }
 
 export type SortableTaskItemProps = {

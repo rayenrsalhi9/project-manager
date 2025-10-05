@@ -2,10 +2,9 @@ import { useOutletContext } from "react-router-dom"
 import type { Task } from "./tasks/types"
 import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { CalendarIcon, Users, Clock } from "lucide-react"
+import { CalendarIcon, Users, Clock, CheckCircle2 } from "lucide-react"
 import { format, isPast, isToday, isTomorrow } from "date-fns"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "lucide-react"
 import type { Member } from "@/layout/ProjectLayout"
 import { getMatchingFullName } from "./tasks/utils"
 import { Button } from "@/components/ui/button"
@@ -19,8 +18,21 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
-  // Get deadline status and styling
-  const getDeadlineInfo = () => {
+  // Simplified status indicator
+  const StatusIndicator = () => {
+    const status = task.status || 'in_progress'
+    if (status === 'finished') {
+      return (
+        <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
+          <CheckCircle2 className="h-4 w-4" />
+          <span className="text-xs font-medium">Done</span>
+        </div>
+      )
+    }
+    return null // Don't show indicator for in_progress tasks
+  }
+  // Simplified deadline indicator - returns just the text and icon
+  const DeadlineIndicator = () => {
     if (!task.deadline) return null
     
     const deadline = new Date(task.deadline)
@@ -28,92 +40,83 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
     const isDueToday = isToday(deadline)
     const isDueTomorrow = isTomorrow(deadline)
     
-    return {
-      isOverdue,
-      isDueToday,
-      isDueTomorrow,
-      formatted: format(deadline, "MMM d, yyyy")
+    let text = format(deadline, "MMM d")
+    let iconColor = "text-muted-foreground"
+    
+    if (isOverdue) {
+      text = `Overdue • ${text}`
+      iconColor = "text-red-500"
+    } else if (isDueToday) {
+      text = `Today • ${text}`
+      iconColor = "text-orange-500"
+    } else if (isDueTomorrow) {
+      text = `Tomorrow • ${text}`
+      iconColor = "text-yellow-600"
     }
+    
+    return (
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Clock className={cn("h-3 w-3", iconColor)} />
+        <span>{text}</span>
+      </div>
+    )
   }
 
-  const deadlineInfo = getDeadlineInfo()
+  // Simplified card styling - only highlight overdue tasks
+  const getCardBorder = () => {
+    if (!task.deadline) return 'border-border'
+    
+    const deadline = new Date(task.deadline)
+    const isOverdue = isPast(deadline) && !isToday(deadline)
+    
+    return isOverdue ? 'border-red-200 dark:border-red-800' : 'border-border'
+  }
+
   const assignedMember = task.assigned_to ? getMatchingFullName(members, task.assigned_to) : null
-
-  // Get status color based on deadline
-  const getStatusColor = () => {
-    if (!deadlineInfo) return 'border-transparent'
-    if (deadlineInfo.isOverdue) return 'border-red-500/50 bg-red-50/30 dark:bg-red-950/20'
-    if (deadlineInfo.isDueToday) return 'border-orange-500/50 bg-orange-50/30 dark:bg-orange-950/20'
-    if (deadlineInfo.isDueTomorrow) return 'border-yellow-500/50 bg-yellow-50/30 dark:bg-yellow-950/20'
-    return 'border-green-500/50 bg-green-50/30 dark:bg-green-950/20'
-  }
 
   return (
     <div className="group relative">
-      <Card className={cn("w-full rounded-xl shadow-sm", getStatusColor())}>
+      <Card className={cn("w-full rounded-lg shadow-sm border", getCardBorder())}>
         <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            {/* Task Number & Title */}
+          <div className="flex items-start justify-between gap-3">
+            {/* Task Info */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">
                   {index + 1}
                 </span>
-                <h3 className="font-semibold text-foreground leading-tight truncate">{task.title}</h3>
+                <h3 className="font-medium text-foreground leading-tight">{task.title}</h3>
               </div>
 
               {/* Description */}
               {task.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-2 leading-relaxed">
                   {task.description}
                 </p>
               )}
 
-              {/* Task Details */}
-              <div className="space-y-2">
-                {/* Deadline */}
-                {deadlineInfo && (
-                  <div className={cn(
-                    "flex items-center gap-2 text-xs px-2 py-1 rounded-lg w-fit",
-                    deadlineInfo.isOverdue && "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
-                    deadlineInfo.isDueToday && "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
-                    deadlineInfo.isDueTomorrow && "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
-                    !deadlineInfo.isOverdue && !deadlineInfo.isDueToday && !deadlineInfo.isDueTomorrow && "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                  )}>
-                    <Clock className="h-3 w-3 flex-shrink-0" />
-                    <span className="font-medium">
-                      {deadlineInfo.isOverdue ? 'Overdue' : 
-                       deadlineInfo.isDueToday ? 'Due today' :
-                       deadlineInfo.isDueTomorrow ? 'Due tomorrow' : 'Due'}
-                      {' '}{deadlineInfo.formatted}
-                    </span>
-                  </div>
-                )}
-
-                {/* Assigned Member */}
+              {/* Meta Info */}
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <DeadlineIndicator />
                 {assignedMember && (
-                  <div className="flex items-center gap-2 text-xs">
-                    <Users className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                    Assigned to: 
-                    <span className="px-2 py-1 bg-secondary/80 rounded-full text-secondary-foreground font-medium">
-                      {assignedMember}
-                    </span>
+                  <div className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    <span>{assignedMember}</span>
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Status */}
+            <StatusIndicator />
           </div>
         </CardContent>
       </Card>
 
       {/* Connection Arrow */}
       {index < totalTasks - 1 && (
-        <div className="flex items-center justify-center my-4">
-          <div className="flex flex-col items-center">
-            <div className="w-0.5 h-4 bg-gradient-to-b from-transparent via-border to-border"></div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground/60 rotate-90" />
-            <div className="w-0.5 h-4 bg-gradient-to-b from-border via-border to-transparent"></div>
-          </div>
+        <div className="flex items-center justify-center my-3">
+          <div className="w-0.5 h-3 bg-border"></div>
         </div>
       )}
     </div>
@@ -181,85 +184,50 @@ export default function TasksReadOnly() {
   }
 
   return (
-    <section className="w-full max-w-3xl mx-auto space-y-4 pb-8">
+    <section className="w-full max-w-3xl mx-auto space-y-6 pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-        <div className="space-y-1">
-          <h2 className="text-xl font-semibold text-foreground">Project Tasks</h2>
-          <p className="text-muted-foreground text-sm">
-            Manage and track your project tasks efficiently
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">Tasks</h2>
+          <p className="text-sm text-muted-foreground">
+            {taskStats.total} total • {taskStats.dueToday} due today • {taskStats.overdue} overdue
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-
-          <div className="bg-card rounded-xl p-3 border text-center">
-            <p className="text-2xl font-bold text-foreground">{taskStats.total}</p>
-            <p className="text-xs text-muted-foreground">Total Tasks</p>
-          </div>
-      
-          <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl p-3 border border-orange-200 dark:border-orange-800 text-center">
-            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{taskStats.dueToday}</p>
-            <p className="text-xs text-orange-600 dark:text-orange-400">Due Today</p>
-          </div>
-
-          <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-3 border border-red-200 dark:border-red-800 text-center">
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{taskStats.overdue}</p>
-            <p className="text-xs text-red-600 dark:text-red-400">Missed Deadlines</p>
-          </div>
-
+        {/* Filter Tabs */}
+        <div className="flex gap-2">
+          <Button
+            variant={filter === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('all')}
+          >
+            All Tasks
+          </Button>
+          <Button
+            variant={filter === 'overdue' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('overdue')}
+          >
+            Overdue Tasks
+          </Button>
+          <Button
+            variant={filter === 'today' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilter('today')}
+          >
+            Tasks Due Today
+          </Button>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('all')}
-          className="rounded-lg"
-        >
-          All Tasks ({projectTasks.length})
-        </Button>
-        <Button
-          variant={filter === 'overdue' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('overdue')}
-          className="rounded-lg"
-        >
-          Overdue ({taskStats.overdue})
-        </Button>
-        <Button
-          variant={filter === 'today' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('today')}
-          className="rounded-lg"
-        >
-          Due Today ({taskStats.dueToday})
-        </Button>
-        <Button
-          variant={filter === 'tomorrow' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('tomorrow')}
-          className="rounded-lg"
-        >
-          Due Tomorrow
-        </Button>
-      </div>
-
-      {/* Tasks List */}
-      {filteredTasks.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <CalendarIcon className="h-8 w-8 text-muted-foreground" />
+      {/* Task List */}
+      <div className="space-y-3">
+        {filteredTasks.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No tasks found</p>
           </div>
-          <h3 className="text-lg font-semibold text-muted-foreground mb-2">No tasks found</h3>
-          <p className="text-muted-foreground">Try adjusting your filter or check back later.</p>
-        </div>
-      ) : (
-        <div className="grid gap-6">
-          {filteredTasks.map(task => (
+        ) : (
+          filteredTasks.map(task => (
             <TaskCard
               key={task.id}
               task={task}
@@ -267,9 +235,9 @@ export default function TasksReadOnly() {
               totalTasks={filteredTasks.length}
               members={members}
             />
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </section>
   )
 }
