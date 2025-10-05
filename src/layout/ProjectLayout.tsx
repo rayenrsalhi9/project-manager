@@ -117,7 +117,8 @@ export default function ProjectLayout() {
     { to: ".", label: "Overview", end: true },
     { to: "members", label: "Members", end: false },
     { to: "tasks", label: "Tasks", end: false },
-    { to: "info", label: "Project details", end: false },
+    { to: "info", label: "Project Details", end: false },
+    { to: "progress", label: "Project Progress", end: false },
   ]
 
   return (

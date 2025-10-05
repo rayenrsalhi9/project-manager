@@ -15,6 +15,7 @@ import Timeline from "./pages/project/Timeline";
 import Members from "./pages/project/Members";
 import TasksProtected from "./components/TasksProtected";
 import ProjectInfo from "./pages/project/ProjectInfo";
+import Progress from "./pages/project/Progress";
 
 import Root from "./components/Root";
 import Protected from "./components/Protected";
@@ -79,6 +80,9 @@ export const router = createBrowserRouter([
                     }, {
                         path: 'tasks',
                         element: <TasksProtected />
+                    }, {
+                        path: 'progress',
+                        element: <Progress />
                     }
                 ]
             }
