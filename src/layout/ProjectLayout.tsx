@@ -122,21 +122,22 @@ export default function ProjectLayout() {
   ]
 
   return (
-    <section className="max-w-4xl mx-auto">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <header>
             <Link to=".." className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 mt-4">
                 <Home className="w-5 h-5" />
                 <span className="text-sm">Return to Dashboard</span>
             </Link>
             
-            <nav className="flex space-x-6 border-b border-gray-200 mb-6">
+            {/* Desktop Navigation */}
+            <nav className="hidden sm:flex space-x-6 border-b border-gray-200 mb-6">
                 {navLinks.map(({ to, label, end }) => (
                     <NavLink
                         key={to}
                         to={to}
                         end={end}
                         className={({ isActive }) =>
-                            `pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                            `pb-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                                 isActive
                                     ? "border-black text-black dark:text-white dark:border-white"
                                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -147,6 +148,28 @@ export default function ProjectLayout() {
                     </NavLink>
                 ))}
             </nav>
+
+            {/* Mobile Navigation - Scrollable */}
+            <div className="sm:hidden mb-6">
+                <nav className="flex overflow-x-auto scrollbar-hide border-b border-gray-200 pb-2">
+                    {navLinks.map(({ to, label, end }) => (
+                        <NavLink
+                            key={to}
+                            to={to}
+                            end={end}
+                            className={({ isActive }) =>
+                                `flex-shrink-0 px-4 py-2 mx-1 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ${
+                                    isActive
+                                        ? "bg-primary text-primary-foreground"
+                                        : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                }`
+                            }
+                        >
+                            {label}
+                        </NavLink>
+                    ))}
+                </nav>
+            </div>
         </header>
         <Outlet context={{members, projectInfo, projectTasks}} />
     </section>
