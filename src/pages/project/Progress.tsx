@@ -1,6 +1,6 @@
 import type { Task } from "./tasks/types"
 import { useOutletContext } from "react-router-dom"
-import { isPast, isToday } from "date-fns"
+import { isPast, isToday, isTomorrow } from "date-fns"
 import Stats from "./progress/Stats"
 import PieChart from "./progress/Pie"
 
@@ -14,10 +14,23 @@ const Progress = () => {
     const inProgressTasks = tasks.filter(task => task.status === "in_progress").length
     const completionRate = totalTasks > 0 ? Math.round((finishedTasks / totalTasks) * 100) : 0
 
-    // calculate overdue tasks
+    // calculate task status
     const overdueTasks = tasks.filter(task => {
         if (!task.deadline) return null
         return isPast(task.deadline) && !isToday(task.deadline)
+    }).length
+    const dueTodayTasks = tasks.filter(task => {
+        if (!task.deadline) return null
+        return isToday(task.deadline)
+    }).length
+    const dueTomorrowTasks = tasks.filter(task => {
+        if (!task.deadline) return null
+        return isTomorrow(task.deadline)
+    }).length
+    // calculate remaining tasks (not overdue, not today, not tomorrow)
+    const remainingTasks = tasks.filter(task => {
+        if (!task.deadline) return true
+        return !isPast(task.deadline) && !isToday(task.deadline) && !isTomorrow(task.deadline)
     }).length
 
     return (
@@ -39,6 +52,10 @@ const Progress = () => {
             <PieChart
                 finishedTasks={finishedTasks}
                 inProgressTasks={inProgressTasks}
+                overdueTasks={overdueTasks}
+                dueTodayTasks={dueTodayTasks}
+                dueTomorrowTasks={dueTomorrowTasks}
+                remainingTasks={remainingTasks}
             />
         </section>
     )
