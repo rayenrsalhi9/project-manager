@@ -25,7 +25,7 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
       return (
         <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
           <CheckCircle2 className="h-4 w-4" />
-          <span className="text-xs font-medium">Done</span>
+          <span className="text-xs font-medium">Finished</span>
         </div>
       )
     }
