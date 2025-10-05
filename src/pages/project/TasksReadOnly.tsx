@@ -3,7 +3,7 @@ import type { Task } from "./tasks/types"
 import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { CalendarIcon, Users, Clock, CheckCircle2, Loader } from "lucide-react"
-import { format, isPast, isToday, isTomorrow } from "date-fns"
+import { format, isPast, isToday } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { Member } from "@/layout/ProjectLayout"
 import { getMatchingFullName } from "./tasks/utils"
@@ -18,14 +18,14 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
-  // Simplified status indicator
+  // Simplified status indicator - only show finished status
   const StatusIndicator = () => {
     const status = task.status || 'in_progress'
     if (status === 'finished') {
       return (
         <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
           <CheckCircle2 className="h-4 w-4" />
-          <span className="text-xs font-medium">Finished</span>
+          <span className="text-xs font-medium">Done</span>
         </div>
       )
     }
@@ -43,7 +43,6 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
     const deadline = new Date(task.deadline)
     const isOverdue = isPast(deadline) && !isToday(deadline)
     const isDueToday = isToday(deadline)
-    const isDueTomorrow = isTomorrow(deadline)
     
     let text = format(deadline, "MMM d")
     let iconColor = "text-muted-foreground"
@@ -54,9 +53,6 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
     } else if (isDueToday) {
       text = `Today • ${text}`
       iconColor = "text-orange-500"
-    } else if (isDueTomorrow) {
-      text = `Tomorrow • ${text}`
-      iconColor = "text-yellow-600"
     }
     
     return (
@@ -134,7 +130,7 @@ export default function TasksReadOnly() {
     members: Member[] 
   }>()
 
-  const [filter, setFilter] = useState<'all' | 'overdue' | 'today' | 'tomorrow'>('all')
+  const [filter, setFilter] = useState<'all' | 'overdue' | 'today'>('all')
 
   // Filter tasks based on selected filter
   const filteredTasks = useMemo(() => {
@@ -149,8 +145,6 @@ export default function TasksReadOnly() {
           return isPast(deadline) && !isToday(deadline)
         case 'today':
           return isToday(deadline)
-        case 'tomorrow':
-          return isTomorrow(deadline)
         default:
           return true
       }
@@ -160,11 +154,10 @@ export default function TasksReadOnly() {
   // Task statistics
   const taskStats = useMemo(() => {
     const total = projectTasks.length
-    const withDeadlines = projectTasks.filter(t => t.deadline).length
     const overdue = projectTasks.filter(t => t.deadline && isPast(new Date(t.deadline)) && !isToday(new Date(t.deadline))).length
     const dueToday = projectTasks.filter(t => t.deadline && isToday(new Date(t.deadline))).length
     
-    return { total, withDeadlines, overdue, dueToday }
+    return { total, overdue, dueToday }
   }, [projectTasks])
 
   // This component is read-only for non-admin users
