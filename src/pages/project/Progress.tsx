@@ -1,12 +1,14 @@
 import type { Task } from "./tasks/types"
+import type { Member } from "@/layout/ProjectLayout"
 import { useOutletContext } from "react-router-dom"
 import { isPast, isToday, isTomorrow } from "date-fns"
 import Stats from "./progress/Stats"
 import PieChart from "./progress/Pie"
+import BarChart from "./progress/BarChart"
 
 const Progress = () => {
 
-    const { projectTasks: tasks } = useOutletContext<{ projectTasks: Task[] }>()
+    const { projectTasks: tasks, members } = useOutletContext<{ projectTasks: Task[]; members: Member[] }>()
 
     // calculate statistics
     const totalTasks = tasks.length
@@ -56,6 +58,12 @@ const Progress = () => {
                 dueTodayTasks={dueTodayTasks}
                 dueTomorrowTasks={dueTomorrowTasks}
                 remainingTasks={remainingTasks}
+            />
+
+            {/* Bar Chart Visualization */}
+            <BarChart
+                members={members}
+                projectTasks={tasks}
             />
         </section>
     )

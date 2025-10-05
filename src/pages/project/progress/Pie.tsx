@@ -48,7 +48,7 @@ const pieChart = ({
               cy="50%"
               outerRadius={100}
               innerRadius={50}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(2)}%`}
+              label={({ name, percent }: any) => `${name}: ${(percent * 100).toFixed(2)}%`}
             >
               {completionRateData.map((entry) => (
                 <Cell key={`cell-${entry.name}`} fill={entry.color} />
@@ -74,7 +74,7 @@ const pieChart = ({
               cy="50%"
               outerRadius={100}
               innerRadius={50}
-              label={({ name, percent }) => percent > 0 ? `${name}: ${(percent * 100).toFixed(2)}%` : ''}
+              label={({ name, percent }: any) => percent > 0 ? `${name}: ${(percent * 100).toFixed(2)}%` : ''}
             >
               {statusData.map((entry) => (
                 <Cell key={`cell-${entry.name}`} fill={entry.color} />

@@ -1,3 +1,6 @@
+import type { Member } from "@/layout/ProjectLayout"
+import type { Task } from "@/pages/project/tasks/types"
+
 export type StatsProps = {
     totalTasks: number
     finishedTasks: number
@@ -13,4 +16,9 @@ export type PieChartProps = {
     dueTodayTasks: number
     dueTomorrowTasks: number
     remainingTasks: number
+}
+
+export type BarChartProps = {
+    members: Member[]
+    projectTasks: Task[]
 }
