@@ -1,4 +1,5 @@
 import type { Task } from "./tasks/types"
+import { ChartNoAxesCombined } from "lucide-react"
 import type { Member } from "@/layout/ProjectLayout"
 import { useOutletContext } from "react-router-dom"
 import { isPast, isToday, isTomorrow } from "date-fns"
@@ -37,9 +38,15 @@ const Progress = () => {
 
     return (
         <section className="w-full max-w-3xl mx-auto space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">
-                Project Progress
-            </h2>
+            <div className="flex items-center gap-2">
+                <ChartNoAxesCombined className="w-5 h-5 text-muted-foreground" />
+                <h2 className="text-xl font-semibold text-foreground">
+                    Project Progress
+                </h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+                Track overall completion, upcoming deadlines, and team performance metrics in one place.
+            </p>
 
             {/* Stats Overview */}
             <Stats
