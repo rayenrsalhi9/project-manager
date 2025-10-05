@@ -31,60 +31,65 @@ const pieChart = ({
   ]
 
   return (
-    <>
-    <Card className="my-6">
-      <CardHeader>
-        <CardTitle>Task Completion Rate</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Legend />
-            <Pie
-              data={completionRateData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              innerRadius={50}
-              label={({ name, percent }: any) => `${name}: ${(percent * 100).toFixed(2)}%`}
-            >
-              {completionRateData.map((entry) => (
-                <Cell key={`cell-${entry.name}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
-    <Card className="my-6">
-      <CardHeader>
-        <CardTitle>Task Status</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Legend />
-            <Pie
-              data={statusData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              innerRadius={50}
-              label={({ name, percent }: any) => percent > 0 ? `${name}: ${(percent * 100).toFixed(2)}%` : ''}
-            >
-              {statusData.map((entry) => (
-                <Cell key={`cell-${entry.name}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
-    </>
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      {/* Task Completion Rate */}
+      <Card className="my-6">
+        <CardHeader>
+          <CardTitle>Task Completion Rate</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Legend />
+              <Pie
+                data={completionRateData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={75}
+                innerRadius={35}
+                label={({ percent }: any) => `${(percent * 100).toFixed(2)}%`}
+              >
+                {completionRateData.map((entry) => (
+                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Task Status */}
+      <Card className="my-6">
+        <CardHeader>
+          <CardTitle>Task Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Legend />
+              <Pie
+                data={statusData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={75}
+                innerRadius={35}
+                label={({ percent }: any) => percent > 0 ? `${(percent * 100).toFixed(2)}%` : ''}
+              >
+                {statusData.map((entry) => (
+                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+      
+    </section>
   )
 
 }
