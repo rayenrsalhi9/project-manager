@@ -16,6 +16,7 @@ const Stats = ({
             title: "Total Tasks",
             value: totalTasks,
             description: `${finishedTasks} task${finishedTasks === 1 ? "" : "s"} completed`,
+            descriptionStyle: "text-green-700 dark:text-green-200",
             icon: CheckCircle2,
         },
         {
@@ -23,7 +24,6 @@ const Stats = ({
             value: inProgressTasks,
             description: "Currently in progress",
             icon: Clock,
-            style: "alert",
             className: "border-amber-500 bg-amber-50 text-amber-900 dark:bg-transparent dark:text-amber-200",
         },
         {
@@ -59,7 +59,10 @@ const Stats = ({
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{card.value}</div>
-                        <p className="text-xs text-muted-foreground">{card.description}</p>
+                        <p className={cn(
+                            "text-xs text-muted-foreground",
+                            card.descriptionStyle
+                        )}>{card.description}</p>
                         {card.progress ? (
                             <div className="w-full bg-muted-foreground/20 rounded-full h-2.5 mt-4">
                                 <div
