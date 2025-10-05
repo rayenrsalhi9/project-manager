@@ -18,7 +18,10 @@ export default function Home():JSX.Element {
             <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight md:text-6xl"> 
               Simplify teamwork. 
               <br /> 
-              <span className="text-muted-foreground">Empower your projects.</span> 
+              <span className="text-muted-foreground">
+                <span className="text-amber-500">Empower </span> 
+                your projects.
+              </span> 
             </h1>
             <p className="mb-8 max-w-3xl mx-auto text-pretty text-base text-muted-foreground md:text-lg"> 
               Organize tasks, share resources, and track progress — all in one simple platform built for teams, 
