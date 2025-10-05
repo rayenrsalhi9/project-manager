@@ -63,7 +63,7 @@ const Stats = ({
                         {card.progress ? (
                             <div className="w-full bg-muted-foreground/20 rounded-full h-2.5 mt-4">
                                 <div
-                                    className="bg-foreground h-2.5 rounded-full"
+                                    className="bg-green-900 h-2.5 rounded-full dark:bg-green-200"
                                     style={{ width: `${card.progress}%` }}
                                 ></div>
                             </div>
