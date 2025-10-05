@@ -27,20 +27,20 @@ const Stats = ({
             className: "border-amber-500 bg-amber-50 text-amber-900 dark:bg-transparent dark:text-amber-200",
         },
         {
-            title: "Completion Rate",
-            value: `${completionRate}%`,
-            description: `${finishedTasks} of ${totalTasks} tasks finished`,
-            icon: TrendingUp,
-            progress: completionRate,
-            className: "border-green-500 bg-green-50 text-green-900 dark:bg-transparent dark:text-green-200",
-        },
-        {
             title: "Overdue",
             value: overdueTasks,
             description: "Past deadline",
             icon: CalendarIcon,
             className: "border-red-500 bg-red-50 text-red-900 dark:bg-transparent dark:text-red-200",
         },
+        {
+            title: "Completion Rate",
+            value: `${completionRate}%`,
+            description: `${finishedTasks} of ${totalTasks} tasks finished`,
+            icon: TrendingUp,
+            progress: completionRate,
+            className: "border-green-500 bg-green-50 text-green-900 dark:bg-transparent dark:text-green-200",
+        }
     ];
 
     return (
@@ -49,7 +49,7 @@ const Stats = ({
                 <Card
                     key={index}
                     className={cn(
-                        "rounded-2xl",
+                        "rounded-2xl h-fit",
                         card.className
                     )}
                 >
