@@ -2,6 +2,7 @@ import type { Task } from "./tasks/types"
 import { useOutletContext } from "react-router-dom"
 import { isPast, isToday } from "date-fns"
 import Stats from "./progress/Stats"
+import PieChart from "./progress/Pie"
 
 const Progress = () => {
 
@@ -32,6 +33,13 @@ const Progress = () => {
                 inProgressTasks={inProgressTasks}
                 completionRate={completionRate}
                 overdueTasks={overdueTasks}
+            />
+
+            {/* Pie Chart Visualization */}
+            <PieChart
+                totalTasks={totalTasks}
+                finishedTasks={finishedTasks}
+                inProgressTasks={inProgressTasks}
             />
         </section>
     )
