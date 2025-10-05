@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom"
 import type { Task } from "./tasks/types"
 import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { CalendarIcon, Users, Clock, CheckCircle2 } from "lucide-react"
+import { CalendarIcon, Users, Clock, CheckCircle2, Loader } from "lucide-react"
 import { format, isPast, isToday, isTomorrow } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { Member } from "@/layout/ProjectLayout"
@@ -25,11 +25,16 @@ function TaskCard({ task, index, totalTasks, members }: TaskCardProps) {
       return (
         <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
           <CheckCircle2 className="h-4 w-4" />
-          <span className="text-xs font-medium">Done</span>
+          <span className="text-xs font-medium">Finished</span>
         </div>
       )
     }
-    return null // Don't show indicator for in_progress tasks
+    return (
+      <div className="flex items-center gap-1.5 text-yellow-600 dark:text-yellow-400">
+        <Loader className="h-4 w-4" />
+        <span className="text-xs font-medium">In Progress</span>
+      </div>
+    )
   }
   // Simplified deadline indicator - returns just the text and icon
   const DeadlineIndicator = () => {
