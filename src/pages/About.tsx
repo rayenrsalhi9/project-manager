@@ -1,3 +1,6 @@
+import icon from '/icon.png'
+import about1 from '/about-1.jpg'
+import about2 from '/about-2.jpg'
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import type { JSX } from "react";
@@ -24,7 +27,7 @@ export default function About():JSX.Element {
 
         <div className="grid gap-7 lg:grid-cols-3">
           <img
-            src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg"
+            src={about2}
             alt="Main platform image"
             className="size-full max-h-[620px] rounded-xl object-cover lg:col-span-2"
           />
@@ -32,8 +35,8 @@ export default function About():JSX.Element {
           <div className="flex flex-col gap-7 md:flex-row lg:flex-col">
             <div className="flex flex-col justify-between gap-6 rounded-xl bg-muted p-7 md:w-1/2 lg:w-auto">
               <img
-                src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
-                alt="Collaboration icon"
+                src={icon}
+                alt="ProjectRoom icon"
                 className="mr-auto h-12"
               />
               <div>
@@ -48,7 +51,7 @@ export default function About():JSX.Element {
             </div>
             
             <img
-              src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-2.svg"
+              src={about1}
               alt="Secondary platform image"
               className="grow basis-0 rounded-xl object-cover md:w-1/2 lg:min-h-0 lg:w-auto"
             />
