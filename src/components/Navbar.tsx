@@ -1,3 +1,4 @@
+import icon from '/icon.png'
 import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -66,10 +67,10 @@ export default function Navbar() {
             to='../home'
             className="flex items-center gap-2"
           >
-            <img
-              src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+             <img
+              src={icon}
               className="max-h-8"
-              alt="Shadcn UI Navbar"
+              alt="ProjectRoom icon"
             />
             <span className="text-lg font-semibold tracking-tighter">
               ProjectRoom
@@ -287,19 +288,12 @@ export default function Navbar() {
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <a
-                    href="https://www.shadcnblocks.com"
-                    className="flex items-center gap-2"
-                  >
-                    <img
-                      src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
-                      className="max-h-8"
-                      alt="Shadcn UI Navbar"
-                    />
+                  <div className="flex items-center gap-2">
+                     <img src={icon} className="max-h-8" alt="ProjectRoom icon" />
                     <span className="text-lg font-semibold tracking-tighter">
                       ProjectRoom
                     </span>
-                  </a>
+                  </div>
                 </SheetTitle>
                 <SheetDescription className="sr-only">
                   Navigation menu for mobile devices
