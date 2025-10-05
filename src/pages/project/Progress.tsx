@@ -37,7 +37,6 @@ const Progress = () => {
 
             {/* Pie Chart Visualization */}
             <PieChart
-                totalTasks={totalTasks}
                 finishedTasks={finishedTasks}
                 inProgressTasks={inProgressTasks}
             />
