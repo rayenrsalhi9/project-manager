@@ -14,8 +14,14 @@ const Stats = ({
         {
             title: "Total Tasks",
             value: totalTasks,
-            description: `${finishedTasks} completed`,
+            description: `${finishedTasks} task${finishedTasks === 1 ? "" : "s"} completed`,
             icon: CheckCircle2,
+        },
+        {
+            title: "In Progress",
+            value: inProgressTasks,
+            description: "Currently in progress",
+            icon: Clock,
         },
         {
             title: "Completion Rate",
@@ -23,12 +29,6 @@ const Stats = ({
             description: `${finishedTasks} of ${totalTasks} tasks finished`,
             icon: TrendingUp,
             progress: completionRate,
-        },
-        {
-            title: "In Progress",
-            value: inProgressTasks,
-            description: "Currently in progress",
-            icon: Clock,
         },
         {
             title: "Overdue",
