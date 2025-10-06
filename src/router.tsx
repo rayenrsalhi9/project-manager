@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
+import Notifications from "./pages/Notifications";
 
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
@@ -87,6 +88,11 @@ export const router = createBrowserRouter([
                 ]
             }
         ]
+    },
+    {
+        path: '/notifications',
+        element: <Notifications />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: '*',
