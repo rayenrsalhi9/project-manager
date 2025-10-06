@@ -26,8 +26,12 @@ const Notifications = () => {
             </Link>
             <h1 className="text-2xl font-semibold mb-6">All Notifications</h1>
             <div className="space-y-4">
-            {
-                notifications.map((notification) => (
+            {notifications.map((notification) => (
+                <Link 
+                    to={`/notifications/${notification.id}`}
+                    key={notification.id}
+                    className="block hover:shadow-lg transition-all duration-200 hover:border-primary/20 cursor-pointer"
+                >
                     <Card 
                         key={notification.id}
                         className="hover:shadow-lg transition-all duration-200 hover:border-primary/20 cursor-pointer"
@@ -60,17 +64,17 @@ const Notifications = () => {
                             </div>
                         </CardContent>
                     </Card>
-                ))
-                }
-                {notifications.length === 0 && (
-                    <Card className="border-dashed">
-                        <CardContent className="p-8 text-center">
-                            <p className="text-muted-foreground">No notifications yet</p>
-                        </CardContent>
-                    </Card>
-                )}
-            </div>
-        </section>
+                </Link>
+            ))}
+            {notifications.length === 0 && (
+                <Card className="border-dashed">
+                    <CardContent className="p-8 text-center">
+                        <p className="text-muted-foreground">No notifications yet</p>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
+    </section>
     )
 };
 
