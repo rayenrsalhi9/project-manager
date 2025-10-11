@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useActionState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Upload, FileText, Image, File, X, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Image, File, X, CheckCircle2, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type UploadedFile = {
@@ -13,6 +13,62 @@ type UploadedFile = {
   type: string;
   size: number;
   file: File;
+}
+
+type FormState = {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+} | null;
+
+// Server action to handle task submission
+async function submitTaskAction(_prevState: FormState, formData: FormData): Promise<FormState> {
+  try {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const description = formData.get('description') as string;
+    const file = formData.get('file') as File;
+    
+    // Validate required fields
+    if (!description || description.trim().length < 10) {
+      return {
+        success: false,
+        message: 'Please provide a description of at least 10 characters.',
+        errors: { description: 'Description must be at least 10 characters long.' }
+      };
+    }
+    
+    if (!file || file.size === 0) {
+      return {
+        success: false,
+        message: 'Please upload a file to submit your task.',
+        errors: { file: 'File is required for task submission.' }
+      };
+    }
+    
+    // Here you would typically upload the file to your storage service
+    // and save the task submission to your database
+    console.log('Task submitted successfully:', {
+      description: description.trim(),
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
+    
+    return {
+      success: true,
+      message: 'Task submitted successfully! Your submission is now under review.'
+    };
+    
+  } catch (error) {
+    console.error('Task submission error:', error);
+    return {
+      success: false,
+      message: 'An error occurred while submitting your task. Please try again.',
+      errors: { general: 'Submission failed. Please try again.' }
+    };
+  }
 }
 
 const TaskSubmission = () => {
@@ -115,6 +171,8 @@ const TaskSubmission = () => {
     fileInputRef.current?.click();
   };
 
+  const [formState, formAction, isPending] = useActionState(submitTaskAction, null);
+
   return (
     <section className="min-h-[100dvh] flex items-center justify-center py-4 bg-gradient-to-br from-background to-muted/30">
       <div className="w-full max-w-2xl px-4">
@@ -127,133 +185,179 @@ const TaskSubmission = () => {
         </Link>
 
         {/* Main Task Submission Card */}
-        <Card className="w-full border-0 shadow-xl bg-card/80 backdrop-blur-sm">
-          <CardHeader className="py-4">
-            <CardTitle className="text-xl font-bold text-foreground">
-              Task Submission
-            </CardTitle>
-            <CardDescription className="text-sm text-muted-foreground">
-              Upload the file that proves you completed the task and add a short description of what you did. Once everything looks good, hit “Submit Task” to send it for review.
-            </CardDescription>
-          </CardHeader>
+        <form action={formAction}>
+          <Card className="w-full border-0 shadow-xl bg-card/80 backdrop-blur-sm">
+            <CardHeader className="py-4">
+              <CardTitle className="text-xl font-bold text-foreground">
+                Task Submission
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">
+                Upload the file that proves you completed the task and add a short description of what you did. Once everything looks good, hit “Submit Task” to send it for review.
+              </CardDescription>
+            </CardHeader>
 
-          <CardContent className="space-y-6">
-            {/* Task Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium">
-                Task Description
-              </Label>
-              <Textarea 
-                id="description"
-                placeholder="Describe your task completion..."
-                className="min-h-[100px] resize-none"
-              />
-            </div>
+            <CardContent className="space-y-6">
+              {/* Form State Messages */}
+              {formState && (
+                <div className={`p-4 rounded-lg border ${
+                  formState.success 
+                    ? 'bg-green-50 border-green-200 text-green-800' 
+                    : 'bg-destructive/10 border-destructive/20 text-destructive'
+                }`}>
+                  <p className="text-sm font-medium">{formState.message}</p>
+                  {formState.errors && Object.keys(formState.errors).length > 0 && (
+                    <ul className="mt-2 text-sm space-y-1">
+                      {Object.values(formState.errors).map((error, index) => (
+                        <li key={index}>• {error}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
 
-            {/* File Upload Section */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Upload File
-              </Label>
-              
-              {/* Hidden file input */}
-              <Input
-                ref={fileInputRef}
-                type="file"
-                onChange={handleFileInputChange}
-                accept=".png,.jpg,.jpeg,.pdf,.docx,.txt"
-                className="hidden"
-              />
-
-              {/* Drag and Drop Area */}
-              {!uploadedFile && (
-                <div
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
-                    isDragging
-                      ? 'border-primary bg-primary/5'
-                      : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+              {/* Task Description */}
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-sm font-medium">
+                  Task Description
+                </Label>
+                <Textarea 
+                  id="description"
+                  name="description"
+                  placeholder="Describe your task completion..."
+                  className={`min-h-[100px] resize-none ${
+                    formState?.errors?.description ? 'border-destructive' : ''
                   }`}
-                >
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="p-3 bg-muted rounded-full">
-                      <Upload className="w-6 h-6 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-foreground">
-                        Drag and drop your file here, or{' '}
-                        <button
-                          type="button"
-                          onClick={triggerFileInput}
-                          className="text-primary hover:text-primary/80 underline font-medium"
-                        >
-                          browse
-                        </button>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Accepted: PNG, JPG, JPEG, PDF, DOCX, TXT (Max 5MB)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+                  disabled={isPending}
+                />
+                {formState?.errors?.description && (
+                  <p className="text-sm text-destructive">{formState.errors.description}</p>
+                )}
+              </div>
 
-              {/* Error Message */}
-              {error && (
-                <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                  <div className="w-2 h-2 bg-destructive rounded-full"></div>
-                  <p className="text-sm text-destructive">{error}</p>
-                </div>
-              )}
+              {/* File Upload Section */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Upload File
+                </Label>
+                
+                {/* Hidden file input */}
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  name="file"
+                  onChange={handleFileInputChange}
+                  accept=".png,.jpg,.jpeg,.pdf,.docx,.txt"
+                  className="hidden"
+                  disabled={isPending}
+                />
 
-              {/* Uploaded File Display */}
-              {uploadedFile && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border">
-                    <div className="flex items-center gap-3">
-                      {getFileIcon(uploadedFile.type)}
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium text-foreground truncate max-w-[200px]">
-                          {uploadedFile.name}
+                {/* Drag and Drop Area */}
+                {!uploadedFile && (
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+                      isDragging
+                        ? 'border-primary bg-primary/5'
+                        : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+                    } ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
+                  >
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="p-3 bg-muted rounded-full">
+                        <Upload className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-foreground">
+                          Drag and drop your file here, or{' '}
+                          <button
+                            type="button"
+                            onClick={triggerFileInput}
+                            className="text-primary hover:text-primary/80 underline font-medium"
+                            disabled={isPending}
+                          >
+                            browse
+                          </button>
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {formatFileSize(uploadedFile.size)}
+                          Accepted: PNG, JPG, JPEG, PDF, DOCX, TXT (Max 5MB)
                         </p>
                       </div>
                     </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={removeFile}
-                      className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
                   </div>
-                  
-                  <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <p className="text-sm text-green-800">File uploaded successfully!</p>
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
 
-            {/* Submit Button */}
-            <div className="flex justify-end pt-4">
-              <Button 
-                type="submit"
-                className="min-w-[120px]"
-                disabled={!uploadedFile}
-              >
-                Submit Task
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                {/* Error Message */}
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                    <div className="w-2 h-2 bg-destructive rounded-full"></div>
+                    <p className="text-sm text-destructive">{error}</p>
+                  </div>
+                )}
+
+                {/* Form File Validation Error */}
+                {formState?.errors?.file && (
+                  <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                    <div className="w-2 h-2 bg-destructive rounded-full"></div>
+                    <p className="text-sm text-destructive">{formState.errors.file}</p>
+                  </div>
+                )}
+
+                {/* Uploaded File Display */}
+                {uploadedFile && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border">
+                      <div className="flex items-center gap-3">
+                        {getFileIcon(uploadedFile.type)}
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-foreground truncate max-w-[200px]">
+                            {uploadedFile.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatFileSize(uploadedFile.size)}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={removeFile}
+                        className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                        disabled={isPending}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      <p className="text-sm text-green-800">File uploaded successfully!</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end pt-4">
+                <Button 
+                  type="submit"
+                  className="min-w-[120px]"
+                  disabled={isPending || !uploadedFile}
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Submit Task'
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
       </div>
     </section>
   );
