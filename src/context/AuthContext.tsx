@@ -29,6 +29,10 @@ export type NotificationType = {
     created_at: string
     project: string
     admin: string
+    project_id: number
+    status: string
+    assigned_to: string
+    created_by: string
 }
 
 type AuthContextType = {

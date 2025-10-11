@@ -43,6 +43,7 @@ export type UserTask = {
     status: string
     created_at: string
     updated_at: string
+    deadline: string
 }
 
 export function validateFields(
@@ -317,7 +318,12 @@ export async function formatNotifications(notifications: UserTask[]): Promise<No
             message: notification.title,
             description: notification.description,
             project: projectName.name || 'A project',
-            admin: adminName.full_name || 'An admin'
+            admin: adminName.full_name || 'An admin',
+            project_id: notification.project_id,
+            status: notification.status,
+            assigned_to: notification.assigned_to,
+            created_by: notification.created_by,
+            deadline: notification.deadline
         })
     }))
 
