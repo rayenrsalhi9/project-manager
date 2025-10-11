@@ -45,14 +45,14 @@ const Notification = () => {
                 <Card className="w-full border-0 shadow-xl bg-card/80 backdrop-blur-sm">
                     {/* Header with Avatar and Title */}
                     <CardHeader className="py-4">
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-center gap-4">
                             <Avatar className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20">
                                 <AvatarFallback className="text-lg font-semibold text-primary">
                                     {getInitials(notification.admin)}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                                <Badge variant="secondary" className="text-xs font-medium">
+                                <Badge variant="secondary" className="text-xs font-medium mb-1">
                                     Task Assignment
                                 </Badge>
                                     
@@ -113,7 +113,7 @@ const Notification = () => {
                                     <Calendar className="w-4 h-4 text-primary" />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs font-medium text-muted-foreground mb-1">Created</p>
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">Created at</p>
                                     <p className="text-sm text-foreground">
                                         {formatNotificationTime(notification.created_at)}
                                     </p>
@@ -143,7 +143,9 @@ const Notification = () => {
                                         }`} />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">Deadline</p>
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">
+                                            To accomplish before
+                                        </p>
                                         <div className="space-y-1">
                                             <p className={`text-sm font-semibold ${
                                                 getDeadlineUrgency(notification.deadline).color === 'red'
@@ -178,7 +180,9 @@ const Notification = () => {
                                         <AlertCircle className="w-4 h-4 text-muted-foreground" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">Deadline</p>
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">
+                                            To accomplish before
+                                        </p>
                                         <p className="text-sm text-muted-foreground">No deadline set</p>
                                     </div>
                                 </div>
@@ -191,7 +195,7 @@ const Notification = () => {
                                 to="submit"
                                 className="inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-200 hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                             >
-                                Submit Task
+                                Proceed to task submission
                             </Link>
                         </div>
                     </CardContent>
