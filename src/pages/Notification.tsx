@@ -1,11 +1,11 @@
 import {useAuth} from "@/context/AuthContext";
 import { useParams } from "react-router-dom";
-import { formatNotificationTime } from "@/utils";
+import { formatNotificationTime, formatDeadlineDate } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { Calendar, User, Folder, Clock, ArrowLeft } from "lucide-react";
+import { Calendar, User, Folder, Clock, ArrowLeft, AlertCircle } from "lucide-react";
 
 const Notification = () => {
 
@@ -110,6 +110,26 @@ const Notification = () => {
                             <Clock className="w-4 h-4 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">
                                 Created on {formatNotificationTime(notification.created_at)}
+                            </span>
+                        </div>
+
+                        {/* Deadline */}
+                        <div className="flex items-center justify-center gap-2">
+                            <AlertCircle className={`w-4 h-4 ${
+                                notification.deadline && new Date(notification.deadline) < new Date() 
+                                    ? 'text-red-500' 
+                                    : new Date(notification.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+                                    ? 'text-orange-500'
+                                    : 'text-muted-foreground'
+                            }`} />
+                            <span className={`text-sm font-medium ${
+                                notification.deadline && new Date(notification.deadline) < new Date() 
+                                    ? 'text-red-500' 
+                                    : new Date(notification.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+                                    ? 'text-orange-500'
+                                    : 'text-muted-foreground'
+                            }`}>
+                                Deadline: {notification.deadline ? formatDeadlineDate(notification.deadline) : 'No deadline set'}
                             </span>
                         </div>
 

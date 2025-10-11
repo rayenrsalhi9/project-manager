@@ -279,6 +279,31 @@ export async function addUserToMembers(projectId: number, userId: string) {
 
 }
 
+export function formatDeadlineDate(timestamp: string): string {
+    const deadlineDate = new Date(timestamp);
+    const now = new Date();
+    
+    // Format as "Dec 25, 2024"
+    const month = deadlineDate.toLocaleString('en-US', { month: 'short' });
+    const day = deadlineDate.getDate();
+    const year = deadlineDate.getFullYear();
+    
+    // Check if deadline has passed
+    if (deadlineDate < now) {
+        return `${month} ${day}, ${year} (Overdue)`;
+    }
+    
+    // Check if deadline is within 3 days
+    const diffInMs = deadlineDate.getTime() - now.getTime();
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays <= 3 && diffInDays > 0) {
+        return `${month} ${day}, ${year} (${diffInDays} day${diffInDays > 1 ? 's' : ''} left)`;
+    }
+    
+    return `${month} ${day}, ${year}`;
+}
+
 export function formatNotificationTime(timestamp: string): string {
     const now = new Date();
     const notificationDate = new Date(timestamp);

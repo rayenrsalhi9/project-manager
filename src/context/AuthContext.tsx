@@ -33,6 +33,7 @@ export type NotificationType = {
     status: string
     assigned_to: string
     created_by: string
+    deadline: string
 }
 
 type AuthContextType = {
