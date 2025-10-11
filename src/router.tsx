@@ -1,92 +1,91 @@
 import { createBrowserRouter } from "react-router-dom";
+import { lazy } from "react";
+import SuspenseWrapper from "./components/SuspenseWrapper";
 
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Profile from "./pages/Profile";
-
-import Notifications from "./pages/Notifications";
-import Notification from "./pages/Notification";
-import TaskSubmission from "./pages/TaskSubmission";
-
-import Signin from "./pages/Signin";
-import Signup from "./pages/Signup";
-
-import DashboardLayout from "./layout/DashboardLayout";
-import Dashboard from "./pages/Dashboard";
-
-import ProjectLayout from "./layout/ProjectLayout";
-import Timeline from "./pages/project/Timeline";
-import Members from "./pages/project/Members";
-import TasksProtected from "./components/TasksProtected";
-import ProjectInfo from "./pages/project/ProjectInfo";
-import Progress from "./pages/project/Progress";
-
-import Root from "./components/Root";
-import Protected from "./components/Protected";
-
-import NotFound from "./components/NotFound";
-import ErrorBoundary from "./components/ErrorBoundary";
+// Lazy load pages for code splitting
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Notification = lazy(() => import("./pages/Notification"));
+const TaskSubmission = lazy(() => import("./pages/TaskSubmission"));
+const Signin = lazy(() => import("./pages/Signin"));
+const Signup = lazy(() => import("./pages/Signup"));
+const DashboardLayout = lazy(() => import("./layout/DashboardLayout"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const ProjectLayout = lazy(() => import("./layout/ProjectLayout"));
+const Timeline = lazy(() => import("./pages/project/Timeline"));
+const Members = lazy(() => import("./pages/project/Members"));
+const TasksProtected = lazy(() => import("./components/TasksProtected"));
+const ProjectInfo = lazy(() => import("./pages/project/ProjectInfo"));
+const Progress = lazy(() => import("./pages/project/Progress"));
+const Root = lazy(() => import("./components/Root"));
+const Protected = lazy(() => import("./components/Protected"));
+const NotFound = lazy(() => import("./components/NotFound"));
+const ErrorBoundary = lazy(() => import("./components/ErrorBoundary"));
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
-        errorElement: <ErrorBoundary />
+        element: <SuspenseWrapper><Root /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: "/home",
-        element: <Home />,
+        element: <SuspenseWrapper><Home /></SuspenseWrapper>,
     },
     {
         path: "/about",
-        element: <About />
+        element: <SuspenseWrapper><About /></SuspenseWrapper>
     },
     {
         path: '/profile',
-        element: <Profile />,
-        errorElement: <ErrorBoundary />
+        element: <SuspenseWrapper><Profile /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: '/signin',
-        element: <Signin />,
-        errorElement: <ErrorBoundary />
+        element: <SuspenseWrapper><Signin /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: '/signup',
-        element: <Signup />,
-        errorElement: <ErrorBoundary />
+        element: <SuspenseWrapper><Signup /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: '/dashboard',
         element: (
-            <Protected>
-                <DashboardLayout />
-            </Protected>
+            <SuspenseWrapper>
+                <Protected>
+                    <DashboardLayout />
+                </Protected>
+            </SuspenseWrapper>
         ),
-        errorElement: <ErrorBoundary />,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>,
         children: [
             {
                 index: true,
-                element: <Dashboard />
+                element: <SuspenseWrapper><Dashboard /></SuspenseWrapper>
             }, {
                 path: 'projects/:projectId',
-                element: <ProjectLayout />,
+                element: <SuspenseWrapper><ProjectLayout /></SuspenseWrapper>,
                 children: [
                     {
                         index: true,
-                        element: <Timeline />
+                        element: <SuspenseWrapper><Timeline /></SuspenseWrapper>
                     }, {
                         path: 'members',
-                        element: <Members />
+                        element: <SuspenseWrapper><Members /></SuspenseWrapper>
                     }, {
                         path: 'info',
-                        element: <ProjectInfo />
+                        element: <SuspenseWrapper><ProjectInfo /></SuspenseWrapper>
                     }, {
                         path: 'tasks',
-                        element: <TasksProtected />
+                        element: <SuspenseWrapper><TasksProtected /></SuspenseWrapper>
                     }, {
                         path: 'progress',
-                        element: <Progress />
+                        element: <SuspenseWrapper><Progress /></SuspenseWrapper>
                     }
                 ]
             }
@@ -94,20 +93,20 @@ export const router = createBrowserRouter([
     },
     {
         path: '/notifications',
-        element: <Notifications />,
-        errorElement: <ErrorBoundary />
+        element: <SuspenseWrapper><Notifications /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: '/notifications/:notificationId',
-        element: <Notification />,
-        errorElement: <ErrorBoundary />,
+        element: <SuspenseWrapper><Notification /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>,
     },
     {
         path: '/notifications/:notificationId/submit',
-        element: <TaskSubmission />
+        element: <SuspenseWrapper><TaskSubmission /></SuspenseWrapper>
     },
     {
         path: '*',
-        element: <NotFound />
+        element: <SuspenseWrapper><NotFound /></SuspenseWrapper>
     }
 ])
