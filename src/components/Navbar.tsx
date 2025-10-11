@@ -111,27 +111,30 @@ export default function Navbar() {
                     <ScrollArea className="h-[300px]">
                       <div className="p-2">
                         {notifications.map((notification) => (
-                          <div
+                          <Link
                             key={notification.id}
-                            className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                            to={`/notifications/${notification.id}`}
+                            className="block"
                           >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex-1">
-                                <p className="text-sm font-medium leading-tight">
-                                  {notification.title}
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  {notification.message}
-                                </p>
-                                <p className="text-xs text-foreground font-medium mt-1">
-                                  {notification.project}
-                                </p>
+                            <div className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium leading-tight">
+                                    {notification.title}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    {notification.message}
+                                  </p>
+                                  <p className="text-xs text-foreground font-medium mt-1">
+                                    {notification.project}
+                                  </p>
+                                </div>
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                  {formatNotificationTime(notification.created_at)}
+                                </span>
                               </div>
-                              <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                {formatNotificationTime(notification.created_at)}
-                              </span>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     </ScrollArea>
