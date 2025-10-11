@@ -1,5 +1,5 @@
 import { useState, useRef, useActionState } from 'react';
-import type { ChangeEvent, DragEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,7 +73,6 @@ async function submitTaskAction(_prevState: FormState, formData: FormData): Prom
 
 const TaskSubmission = () => {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,26 +129,6 @@ const TaskSubmission = () => {
       file: file
     });
     setError('');
-  };
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileUpload(files[0]);
-    }
   };
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -251,32 +230,22 @@ const TaskSubmission = () => {
                   disabled={isPending}
                 />
 
-                {/* Drag and Drop Area */}
+                {/* File Selection Area */}
                 {!uploadedFile && (
-                  <div
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
-                      isDragging
-                        ? 'border-primary bg-primary/5'
-                        : 'border-muted-foreground/25 hover:border-muted-foreground/50'
-                    } ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
-                  >
+                  <div className="relative border-2 border-dashed rounded-lg p-8 text-center">
                     <div className="flex flex-col items-center space-y-4">
                       <div className="p-3 bg-muted rounded-full">
                         <Upload className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div className="space-y-2">
                         <p className="text-sm font-medium text-foreground">
-                          Drag and drop your file here, or{' '}
                           <button
                             type="button"
                             onClick={triggerFileInput}
-                            className="text-primary hover:text-primary/80 underline font-medium"
+                            className="cursor-pointer text-primary hover:text-primary/80 underline font-medium"
                             disabled={isPending}
                           >
-                            browse
+                            Browse files
                           </button>
                         </p>
                         <p className="text-xs text-muted-foreground">
