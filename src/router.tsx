@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 
 import Notifications from "./pages/Notifications";
 import Notification from "./pages/Notification";
+import TaskSubmission from "./pages/TaskSubmission";
 
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
@@ -99,7 +100,11 @@ export const router = createBrowserRouter([
     {
         path: '/notifications/:notificationId',
         element: <Notification />,
-        errorElement: <ErrorBoundary />
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/notifications/:notificationId/submit',
+        element: <TaskSubmission />
     },
     {
         path: '*',

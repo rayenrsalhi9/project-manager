@@ -112,6 +112,16 @@ const Notification = () => {
                                 Created on {formatNotificationTime(notification.created_at)}
                             </span>
                         </div>
+
+                        {/* Submit Button */}
+                        <div className="pt-6 border-t border-border/50">
+                            <Link
+                                to="submit"
+                                className="inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-200 hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                            >
+                                Submit Task
+                            </Link>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
