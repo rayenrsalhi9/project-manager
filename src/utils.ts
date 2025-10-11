@@ -304,6 +304,73 @@ export function formatDeadlineDate(timestamp: string): string {
     return `${month} ${day}, ${year}`;
 }
 
+export function getDeadlineUrgency(timestamp: string): {
+    color: 'red' | 'orange' | 'yellow' | 'green';
+    countdown: string;
+    isOverdue: boolean;
+} {
+    const deadlineDate = new Date(timestamp);
+    const now = new Date();
+    const diffInMs = deadlineDate.getTime() - now.getTime();
+    
+    // Overdue
+    if (diffInMs < 0) {
+        return {
+            color: 'red',
+            countdown: 'Overdue',
+            isOverdue: true
+        };
+    }
+    
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    
+    // Less than 24 hours
+    if (diffInHours < 24) {
+        const hours = diffInHours;
+        const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+        
+        if (hours > 0) {
+            return {
+                color: 'red',
+                countdown: `${hours}h ${minutes}m left`,
+                isOverdue: false
+            };
+        } else {
+            return {
+                color: 'red',
+                countdown: `${minutes}m left`,
+                isOverdue: false
+            };
+        }
+    }
+    
+    // 1-3 days
+    if (diffInDays <= 3) {
+        return {
+            color: 'orange',
+            countdown: `${diffInDays} day${diffInDays > 1 ? 's' : ''} left`,
+            isOverdue: false
+        };
+    }
+    
+    // 4-7 days
+    if (diffInDays <= 7) {
+        return {
+            color: 'yellow',
+            countdown: `${diffInDays} days left`,
+            isOverdue: false
+        };
+    }
+    
+    // More than 7 days
+    return {
+        color: 'green',
+        countdown: `${diffInDays} days left`,
+        isOverdue: false
+    };
+}
+
 export function formatNotificationTime(timestamp: string): string {
     const now = new Date();
     const notificationDate = new Date(timestamp);

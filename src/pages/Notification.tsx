@@ -1,11 +1,11 @@
 import {useAuth} from "@/context/AuthContext";
 import { useParams } from "react-router-dom";
-import { formatNotificationTime, formatDeadlineDate } from "@/utils";
+import { formatNotificationTime, formatDeadlineDate, getDeadlineUrgency } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { Calendar, User, Folder, Clock, ArrowLeft, AlertCircle } from "lucide-react";
+import { Calendar, User, Folder, ArrowLeft, AlertCircle } from "lucide-react";
 
 const Notification = () => {
 
@@ -105,32 +105,84 @@ const Notification = () => {
                             </div>
                         </div>
 
-                        {/* Timestamp */}
-                        <div className="flex items-center justify-center gap-2 pt-4 border-t border-border/50">
-                            <Clock className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">
-                                Created on {formatNotificationTime(notification.created_at)}
-                            </span>
-                        </div>
+                        {/* Date Information Section */}
+                        <div className="space-y-3 pt-4 border-t border-border/50">
+                            {/* Creation Date */}
+                            <div className="flex items-center gap-3">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                                    <Calendar className="w-4 h-4 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">Created</p>
+                                    <p className="text-sm text-foreground">
+                                        {formatNotificationTime(notification.created_at)}
+                                    </p>
+                                </div>
+                            </div>
 
-                        {/* Deadline */}
-                        <div className="flex items-center justify-center gap-2">
-                            <AlertCircle className={`w-4 h-4 ${
-                                notification.deadline && new Date(notification.deadline) < new Date() 
-                                    ? 'text-red-500' 
-                                    : new Date(notification.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-                                    ? 'text-orange-500'
-                                    : 'text-muted-foreground'
-                            }`} />
-                            <span className={`text-sm font-medium ${
-                                notification.deadline && new Date(notification.deadline) < new Date() 
-                                    ? 'text-red-500' 
-                                    : new Date(notification.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-                                    ? 'text-orange-500'
-                                    : 'text-muted-foreground'
-                            }`}>
-                                Deadline: {notification.deadline ? formatDeadlineDate(notification.deadline) : 'No deadline set'}
-                            </span>
+                            {/* Deadline */}
+                            {notification.deadline && (
+                                <div className="flex items-center gap-3">
+                                    <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                                        getDeadlineUrgency(notification.deadline).color === 'red'
+                                            ? 'bg-red-100'
+                                            : getDeadlineUrgency(notification.deadline).color === 'orange'
+                                            ? 'bg-orange-100'
+                                            : getDeadlineUrgency(notification.deadline).color === 'yellow'
+                                            ? 'bg-yellow-100'
+                                            : 'bg-green-100'
+                                    }`}>
+                                        <AlertCircle className={`w-4 h-4 ${
+                                            getDeadlineUrgency(notification.deadline).color === 'red'
+                                                ? 'text-red-600'
+                                                : getDeadlineUrgency(notification.deadline).color === 'orange'
+                                                ? 'text-orange-600'
+                                                : getDeadlineUrgency(notification.deadline).color === 'yellow'
+                                                ? 'text-yellow-600'
+                                                : 'text-green-600'
+                                        }`} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">Deadline</p>
+                                        <div className="space-y-1">
+                                            <p className={`text-sm font-semibold ${
+                                                getDeadlineUrgency(notification.deadline).color === 'red'
+                                                    ? 'text-red-600'
+                                                    : getDeadlineUrgency(notification.deadline).color === 'orange'
+                                                    ? 'text-orange-600'
+                                                    : getDeadlineUrgency(notification.deadline).color === 'yellow'
+                                                    ? 'text-yellow-600'
+                                                    : 'text-green-600'
+                                            }`}>
+                                                {formatDeadlineDate(notification.deadline)}
+                                            </p>
+                                            <p className={`text-xs font-medium ${
+                                                getDeadlineUrgency(notification.deadline).color === 'red'
+                                                    ? 'text-red-500'
+                                                    : getDeadlineUrgency(notification.deadline).color === 'orange'
+                                                    ? 'text-orange-500'
+                                                    : getDeadlineUrgency(notification.deadline).color === 'yellow'
+                                                    ? 'text-yellow-500'
+                                                    : 'text-green-500'
+                                            }`}>
+                                                {getDeadlineUrgency(notification.deadline).countdown}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!notification.deadline && (
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted/20">
+                                        <AlertCircle className="w-4 h-4 text-muted-foreground" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">Deadline</p>
+                                        <p className="text-sm text-muted-foreground">No deadline set</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Submit Button */}
