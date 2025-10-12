@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { FileText, Calendar, User, Filter } from "lucide-react"
 
-type Submission = {
-  id: bigint
+export type Submission = {
+  id: number
   created_at: string
   project_id: number
   task_id: number
@@ -22,7 +22,7 @@ type Submission = {
   full_name: string
 }
 
-type ProjectContext = {
+export type ProjectContext = {
   submissions: Submission[] | null
 }
 

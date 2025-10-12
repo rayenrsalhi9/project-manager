@@ -1,50 +1,22 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import { ArrowLeft, FileText, User, Calendar, Download, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Link, useOutletContext, useParams } from 'react-router-dom'
+import type { ProjectContext } from './project/Submissions'
+import { ArrowLeft, FileText, User, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
-interface Submission {
-  id: string | number
-  created_at: string
-  project_id: string
-  task_id: string
-  user_id: string
-  file_url: string
-  file_name: string
-  file_size: number
-  file_type: string
-  description: string | null
-  status: 'under_review' | 'approved' | 'rejected'
-  role: string
-  full_name: string
-}
-
-// Mock data for demonstration - in real app this would come from API
-const mockSubmission: Submission = {
-  id: '1',
-  created_at: '2024-01-15T10:30:00Z',
-  project_id: 'proj-123',
-  task_id: 'task-456',
-  user_id: 'user-789',
-  file_url: 'https://example.com/submission.pdf',
-  file_name: 'project_proposal.pdf',
-  file_size: 2048576, // 2MB
-  file_type: 'application/pdf',
-  description: 'This is my initial project proposal with detailed requirements and timeline. Please review and provide feedback.',
-  status: 'under_review',
-  role: 'Developer',
-  full_name: 'John Doe'
-}
-
 const Submission = () => {
 
-  const [submission, setSubmission] = useState<Submission>(mockSubmission)
-  const [isApproving, setIsApproving] = useState(false)
-  const [isRejecting, setIsRejecting] = useState(false)
+  const {submissionId} = useParams()
+  if(!submissionId) throw new Error('No submission available')
+
+  const { submissions } = useOutletContext<ProjectContext>()
+  if (!submissions) throw new Error('No submissions available')
+
+  const submission = submissions.find(s => s.id === parseInt(submissionId))
+  if(!submission) throw new Error('No submission available')
 
   // Format file size
   const formatFileSize = (bytes: number): string => {
@@ -55,7 +27,6 @@ const Submission = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  // Get status badge variant
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case 'under_review':
@@ -69,7 +40,6 @@ const Submission = () => {
     }
   }
 
-  // Get status icon
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'under_review':
@@ -83,7 +53,6 @@ const Submission = () => {
     }
   }
 
-  // Get status text
   const getStatusText = (status: string) => {
     switch (status) {
       case 'under_review':
@@ -95,31 +64,6 @@ const Submission = () => {
       default:
         return status
     }
-  }
-
-  // Handle approval
-  const handleApprove = async () => {
-    setIsApproving(true)
-    // Simulate API call
-    setTimeout(() => {
-      setSubmission(prev => ({ ...prev, status: 'approved' as const }))
-      setIsApproving(false)
-    }, 1000)
-  }
-
-  // Handle rejection
-  const handleReject = async () => {
-    setIsRejecting(true)
-    // Simulate API call
-    setTimeout(() => {
-      setSubmission(prev => ({ ...prev, status: 'rejected' as const }))
-      setIsRejecting(false)
-    }, 1000)
-  }
-
-  // Handle file download
-  const handleDownload = () => {
-    window.open(submission.file_url, '_blank')
   }
 
   return (
@@ -139,12 +83,12 @@ const Submission = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Submission Details</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Submission Details</h1>
           <p className="text-muted-foreground mt-1">
             Review and manage this submission
           </p>
         </div>
-        <Badge variant={getStatusBadgeVariant(submission.status)} className="text-lg px-3 py-1">
+        <Badge variant={getStatusBadgeVariant(submission.status)} className="text-sm px-3 py-1">
           {getStatusIcon(submission.status)}
           <span className="ml-2">{getStatusText(submission.status)}</span>
         </Badge>
@@ -172,15 +116,6 @@ const Submission = () => {
                     </p>
                   </div>
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleDownload}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Download
-                </Button>
               </div>
 
               <Separator />
@@ -269,20 +204,16 @@ const Submission = () => {
               <CardContent className="space-y-3">
                 <Button 
                   className="w-full flex items-center gap-2" 
-                  onClick={handleApprove}
-                  disabled={isApproving}
                 >
                   <CheckCircle className="w-4 h-4" />
-                  {isApproving ? 'Approving...' : 'Approve Submission'}
+                  Approve Submission
                 </Button>
                 <Button 
                   variant="outline" 
                   className="w-full flex items-center gap-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                  onClick={handleReject}
-                  disabled={isRejecting}
                 >
                   <XCircle className="w-4 h-4" />
-                  {isRejecting ? 'Rejecting...' : 'Reject Submission'}
+                  Reject Submission
                 </Button>
               </CardContent>
             </Card>
