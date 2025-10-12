@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { useOutletContext } from "react-router-dom"
+import { useOutletContext, Link } from "react-router-dom"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -141,64 +141,66 @@ const Submissions = () => {
       {/* Submissions List */}
       <div className="space-y-2">
         {filteredSubmissions.map((submission) => (
-          <Card key={submission.id.toString()} className="hover:shadow-sm transition-shadow p-4">
-            <div className="flex items-center justify-between gap-4">
-              {/* Left side - File Info */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {submission.file_name}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {submission.file_type.toUpperCase()} • {formatFileSize(Number(submission.file_size))}
-                  </p>
-                </div>
-              </div>
+            <Link to={`./${submission.id}`}>
+                <Card key={submission.id.toString()} className="hover:shadow-sm transition-shadow p-4">
+                    <div className="flex items-center justify-between gap-4">
+                    {/* Left side - File Info */}
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                        <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            {submission.file_name}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {submission.file_type.toUpperCase()} • {formatFileSize(Number(submission.file_size))}
+                        </p>
+                        </div>
+                    </div>
 
-              {/* Middle - Submitter Info */}
-              <div className="hidden md:flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                <span className="font-medium">{submission.full_name}</span>
-                <span className="text-gray-400 dark:text-gray-600">•</span>
-                <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
-              </div>
+                    {/* Middle - Submitter Info */}
+                    <div className="hidden md:flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                        <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <span className="font-medium">{submission.full_name}</span>
+                        <span className="text-gray-400 dark:text-gray-600">•</span>
+                        <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
+                    </div>
 
-              {/* Middle - Time */}
-              <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                <span>{format(new Date(submission.created_at), 'MMM dd, yyyy')}</span>
-              </div>
+                    {/* Middle - Time */}
+                    <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                        <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <span>{format(new Date(submission.created_at), 'MMM dd, yyyy')}</span>
+                    </div>
 
-              {/* Right side - Status and Action */}
-              <div className="flex items-center gap-3">
-                <Badge 
-                  variant={getStatusBadgeVariant(submission.status)}
-                  className="flex-shrink-0"
-                >
-                  <span className={`w-2 h-2 rounded-full ${getStatusColor(submission.status)} mr-1`}></span>
-                  {getStatusText(submission.status)}
-                </Badge>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="h-8 px-3"
-                  onClick={() => window.open(submission.file_url, '_blank')}
-                >
-                  View
-                </Button>
-              </div>
-            </div>
+                    {/* Right side - Status and Action */}
+                    <div className="flex items-center gap-3">
+                        <Badge 
+                        variant={getStatusBadgeVariant(submission.status)}
+                        className="flex-shrink-0"
+                        >
+                        <span className={`w-2 h-2 rounded-full ${getStatusColor(submission.status)} mr-1`}></span>
+                        {getStatusText(submission.status)}
+                        </Badge>
+                        <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="h-8 px-3"
+                        onClick={() => window.open(submission.file_url, '_blank')}
+                        >
+                        View
+                        </Button>
+                    </div>
+                    </div>
 
-            {/* Mobile-only submitter info */}
-            <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-              <span className="font-medium">{submission.full_name}</span>
-              <span className="text-gray-400 dark:text-gray-600">•</span>
-              <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
-              <span className="text-gray-400 dark:text-gray-500 ml-auto">{format(new Date(submission.created_at), 'MMM dd')}</span>
-            </div>
-          </Card>
+                    {/* Mobile-only submitter info */}
+                    <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                    <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    <span className="font-medium">{submission.full_name}</span>
+                    <span className="text-gray-400 dark:text-gray-600">•</span>
+                    <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
+                    <span className="text-gray-400 dark:text-gray-500 ml-auto">{format(new Date(submission.created_at), 'MMM dd')}</span>
+                    </div>
+                </Card>
+            </Link>
         ))}
       </div>
 
