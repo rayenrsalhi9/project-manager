@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Upload, FileText, Image, File, X, CheckCircle2, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from '@/supabase';
 
 type UploadedFile = {
   name: string;
@@ -24,9 +25,6 @@ type FormState = {
 // Server action to handle task submission
 async function submitTaskAction(_prevState: FormState, formData: FormData): Promise<FormState> {
   try {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
     const description = formData.get('description') as string;
     const file = formData.get('file') as File;
     
@@ -47,19 +45,23 @@ async function submitTaskAction(_prevState: FormState, formData: FormData): Prom
       };
     }
     
-    // Here you would typically upload the file to your storage service
-    // and save the task submission to your database
-    console.log('Task submitted successfully:', {
-      description: description.trim(),
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type
-    });
-    
+    const filePath = `submissions/${Date.now()}_${file.name}`
+
+    const {error} = await supabase
+      .storage
+      .from('submissions')
+      .upload(filePath, file)
+
+    if(error) return {
+      success: false,
+        message: 'File upload failed. Please try again.',
+        errors: { file: error.message }
+    }
+
     return {
       success: true,
-      message: 'Task submitted successfully! Your submission is now under review.'
-    };
+      message: 'File uploaded successfully'
+    }
     
   } catch (error) {
     console.error('Task submission error:', error);
