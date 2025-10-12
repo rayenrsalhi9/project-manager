@@ -1,13 +1,15 @@
 import { useState, useRef, useActionState } from 'react';
 import type { ChangeEvent } from 'react';
+import { Link, useParams } from "react-router-dom";
+import { supabase } from '@/supabase';
+import { useAuth } from '@/context/AuthContext';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Upload, FileText, Image, File, X, CheckCircle2, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { supabase } from '@/supabase';
 
 type UploadedFile = {
   name: string;
@@ -22,58 +24,22 @@ type FormState = {
   errors?: Record<string, string>;
 } | null;
 
-// Server action to handle task submission
-async function submitTaskAction(_prevState: FormState, formData: FormData): Promise<FormState> {
-  try {
-    const description = formData.get('description') as string;
-    const file = formData.get('file') as File;
-    
-    // Validate required fields
-    if (!description || description.trim().length < 10) {
-      return {
-        success: false,
-        message: 'Please provide a description of at least 10 characters.',
-        errors: { description: 'Description must be at least 10 characters long.' }
-      };
-    }
-    
-    if (!file || file.size === 0) {
-      return {
-        success: false,
-        message: 'Please upload a file to submit your task.',
-        errors: { file: 'File is required for task submission.' }
-      };
-    }
-    
-    const filePath = `submissions/${Date.now()}_${file.name}`
-
-    const {error} = await supabase
-      .storage
-      .from('submissions')
-      .upload(filePath, file)
-
-    if(error) return {
-      success: false,
-        message: 'File upload failed. Please try again.',
-        errors: { file: error.message }
-    }
-
-    return {
-      success: true,
-      message: 'File uploaded successfully'
-    }
-    
-  } catch (error) {
-    console.error('Task submission error:', error);
-    return {
-      success: false,
-      message: 'An error occurred while submitting your task. Please try again.',
-      errors: { general: 'Submission failed. Please try again.' }
-    };
-  }
-}
-
 const TaskSubmission = () => {
+
+  // dynamic data
+  const {notificationId} = useParams()
+  if (!notificationId) throw new Error('No task available')
+
+  const {user, notifications} = useAuth()
+  if (!user) throw new Error('No user available')
+  if (!notifications) throw new Error('No notifications available')
+
+  const userId = user?.id
+  const notification = notifications.find(n => n.id === parseInt(notificationId))
+  if (!notification) throw new Error('No notification available')
+  const {project_id: projectId} = notification
+
+  // local states
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -151,6 +117,77 @@ const TaskSubmission = () => {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
+  async function submitTaskAction(_prevState: FormState, formData: FormData): Promise<FormState> {
+    try {
+      const description = formData.get('description') as string;
+      const file = formData.get('file') as File;
+      
+      // Validate required fields
+      if (!description || description.trim().length < 10) {
+        return {
+          success: false,
+          message: 'Please provide a description of at least 10 characters.',
+          errors: { description: 'Description must be at least 10 characters long.' }
+        };
+      }
+      
+      if (!file || file.size === 0) {
+        return {
+          success: false,
+          message: 'Please upload a file to submit your task.',
+          errors: { file: 'File is required for task submission.' }
+        };
+      }
+      
+      const filePath = `submissions/${Date.now()}_${file.name}`
+
+      const {error} = await supabase
+        .storage
+        .from('submissions')
+        .upload(filePath, file)
+
+      if(error) return {
+        success: false,
+          message: 'File upload failed. Please try again.',
+          errors: { file: error.message }
+      }
+
+      // get the inserted file's public URL
+      const {data:fileData} = supabase
+        .storage
+        .from('submissions')
+        .getPublicUrl(filePath)
+
+      const fileURL = fileData.publicUrl
+
+      const submissionObj = {
+        description: description.trim(),
+        file_name: file.name,
+        file_size: file.size,
+        file_url: fileURL,
+        file_type: file.type,
+        project_id: projectId,
+        user_id: userId,
+        task_id: notificationId
+      }
+
+      console.log(submissionObj)
+
+      return {
+        success: true,
+        message: 'File uploaded successfully'
+      }
+      
+    } catch (error) {
+      console.error('Task submission error:', error);
+      return {
+        success: false,
+        message: 'An error occurred while submitting your task. Please try again.',
+        errors: { general: 'Submission failed. Please try again.' }
+      };
+    }
+  }
 
   const [formState, formAction, isPending] = useActionState(submitTaskAction, null);
 

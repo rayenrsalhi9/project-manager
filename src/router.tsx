@@ -103,7 +103,8 @@ export const router = createBrowserRouter([
     },
     {
         path: '/notifications/:notificationId/submit',
-        element: <SuspenseWrapper><TaskSubmission /></SuspenseWrapper>
+        element: <SuspenseWrapper><TaskSubmission /></SuspenseWrapper>,
+        errorElement: <SuspenseWrapper><ErrorBoundary /></SuspenseWrapper>
     },
     {
         path: '*',

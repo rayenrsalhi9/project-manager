@@ -22,7 +22,7 @@ type UserType = {
 }
 
 export type NotificationType = {
-    id: string
+    id: number
     title: string
     message: string
     description: string
