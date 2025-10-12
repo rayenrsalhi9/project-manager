@@ -172,7 +172,15 @@ const TaskSubmission = () => {
         task_id: notificationId
       }
 
-      console.log(submissionObj)
+      const {error: submissionInsertError} = await supabase
+        .from('task_submissions')
+        .insert(submissionObj)
+
+      if (submissionInsertError) return {
+        success: false,
+        message: 'Submission failed, please try again',
+        errors: { file: submissionInsertError.message }
+      }
 
       return {
         success: true,
