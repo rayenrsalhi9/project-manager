@@ -121,8 +121,8 @@ const Submissions = () => {
         
         {/* Status Filter */}
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-500" />
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
             {(['all', 'under_review', 'approved', 'rejected'] as const).map((status) => (
               <Button
                 key={status}
@@ -147,26 +147,26 @@ const Submissions = () => {
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                     {submission.file_name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {submission.file_type.toUpperCase()} • {formatFileSize(Number(submission.file_size))}
                   </p>
                 </div>
               </div>
 
               {/* Middle - Submitter Info */}
-              <div className="hidden md:flex items-center gap-3 text-sm text-gray-600">
-                <User className="w-4 h-4 text-gray-400" />
+              <div className="hidden md:flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <span className="font-medium">{submission.full_name}</span>
-                <span className="text-gray-400">•</span>
-                <span className="text-gray-500">{submission.role}</span>
+                <span className="text-gray-400 dark:text-gray-600">•</span>
+                <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
               </div>
 
               {/* Middle - Time */}
-              <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600">
-                <Calendar className="w-4 h-4 text-gray-400" />
+              <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <span>{format(new Date(submission.created_at), 'MMM dd, yyyy')}</span>
               </div>
 
@@ -191,12 +191,12 @@ const Submissions = () => {
             </div>
 
             {/* Mobile-only submitter info */}
-            <div className="md:hidden mt-3 pt-3 border-t flex items-center gap-2 text-sm text-gray-600">
-              <User className="w-4 h-4 text-gray-400" />
+            <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+              <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
               <span className="font-medium">{submission.full_name}</span>
-              <span className="text-gray-400">•</span>
-              <span className="text-gray-500">{submission.role}</span>
-              <span className="text-gray-400 ml-auto">{format(new Date(submission.created_at), 'MMM dd')}</span>
+              <span className="text-gray-400 dark:text-gray-600">•</span>
+              <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
+              <span className="text-gray-400 dark:text-gray-500 ml-auto">{format(new Date(submission.created_at), 'MMM dd')}</span>
             </div>
           </Card>
         ))}
@@ -206,7 +206,7 @@ const Submissions = () => {
       {filteredSubmissions.length === 0 && submissions.length > 0 && (
         <div className="flex items-center justify-center h-32">
           <div className="text-center">
-            <p className="text-gray-500">No submissions match the selected filter</p>
+            <p className="text-gray-500 dark:text-gray-400">No submissions match the selected filter</p>
           </div>
         </div>
       )}
