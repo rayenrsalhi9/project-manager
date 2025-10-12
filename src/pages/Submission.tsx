@@ -127,11 +127,12 @@ const Submission = () => {
       {/* Back Navigation */}
       <div className="flex items-center gap-2">
         <Link 
-          to={`/dashboard/projects/${submission.project_id}/submissions`}
+          to='..'
+          relative='path'
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Submissions
+          Back to submissions list
         </Link>
       </div>
 
