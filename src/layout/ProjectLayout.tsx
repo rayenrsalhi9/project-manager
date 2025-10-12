@@ -29,6 +29,7 @@ export default function ProjectLayout() {
   const[members, setMembers] = useState<Member[]>([])
   const[projectInfo, setProjectInfo] = useState<Project | null>(null)
   const[projectTasks, setProjectTasks] = useState<Task[]>([])
+  const [submissions, setSubmissions] = useState(null)
 
   if(!session) throw new Error("No session available")
   if(!projectId) throw new Error("No project available")
@@ -106,10 +107,22 @@ export default function ProjectLayout() {
       }
     }
 
+    async function getProjectSubmissions() {
+      try {
+        const {data, error} = await supabase.rpc('get_all_submissions', {target_project_id: projectId})
+        if (error) throw new Error(error.message)
+        setSubmissions(data)
+      } catch(err) {
+        console.error("Error fetching project submissions:", (err as Error).message)
+        setError(err as Error)
+      }
+    }
+
     isUserAMember()
     getProjectMembers()
     getProjectInfo()
     getProjectTasks()
+    getProjectSubmissions()
 
   }, [projectId, session])
 
@@ -119,6 +132,7 @@ export default function ProjectLayout() {
     { to: "tasks", label: "Tasks", end: false },
     { to: "info", label: "Project Details", end: false },
     { to: "progress", label: "Project Progress", end: false },
+    { to: "submissions", label: "Task Submissions", end: false }
   ]
 
   return (
@@ -171,7 +185,7 @@ export default function ProjectLayout() {
                 </nav>
             </div>
         </header>
-        <Outlet context={{members, projectInfo, projectTasks}} />
+        <Outlet context={{members, projectInfo, projectTasks, submissions}} />
     </section>
   )
 }
