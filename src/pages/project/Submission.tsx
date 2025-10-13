@@ -1,5 +1,5 @@
 import { Link, useOutletContext, useParams } from 'react-router-dom'
-import type { ProjectContext } from './project/Submissions'
+import type { ProjectContext } from './Submissions'
 import { ArrowLeft, FileText, User, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'

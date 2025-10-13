@@ -20,7 +20,7 @@ const TasksProtected = lazy(() => import("./components/TasksProtected"));
 const ProjectInfo = lazy(() => import("./pages/project/ProjectInfo"));
 const Progress = lazy(() => import("./pages/project/Progress"));
 const SubmissionsProtected = lazy(() => import("./components/SubmissionsProtected"))
-const Submission = lazy(() => import("./pages/Submission"))
+const Submission = lazy(() => import("./pages/project/Submission"))
 const Root = lazy(() => import("./components/Root"));
 const Protected = lazy(() => import("./components/Protected"));
 const NotFound = lazy(() => import("./components/NotFound"));
