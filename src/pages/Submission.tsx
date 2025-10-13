@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 const Submission = () => {
 
@@ -17,6 +18,15 @@ const Submission = () => {
 
   const submission = submissions.find(s => s.id === parseInt(submissionId))
   if(!submission) throw new Error('No submission available')
+
+  const getInitials = (name: string = 'Anonymous User') => {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   // Format file size
   const formatFileSize = (bytes: number): string => {
@@ -140,14 +150,6 @@ const Submission = () => {
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Submission ID</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-mono text-sm">{submission.id}</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Task ID</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-mono text-sm">{submission.task_id}</p>
-                </div>
-                <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</p>
                   <p className="text-gray-900 dark:text-gray-100">
                     {format(new Date(submission.created_at), 'PPP at p')}
@@ -174,20 +176,13 @@ const Submission = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-white text-xl font-bold">
-                    {submission.full_name.split(' ').map(n => n[0]).join('')}
-                  </span>
-                </div>
+                <Avatar className="w-16 h-16 mx-auto mb-3 border border-border">
+                  <AvatarFallback className="text-lg font-semibold bg-muted text-muted-foreground">
+                    {getInitials(submission.full_name)}
+                  </AvatarFallback>
+                </Avatar>
                 <h3 className="font-medium text-gray-900 dark:text-gray-100">{submission.full_name}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{submission.role}</p>
-              </div>
-              <Separator />
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">User ID</span>
-                  <span className="text-gray-900 dark:text-gray-100 font-mono">{submission.user_id}</span>
-                </div>
               </div>
             </CardContent>
           </Card>
