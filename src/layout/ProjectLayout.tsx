@@ -35,6 +35,8 @@ export default function ProjectLayout() {
   if(!projectId) throw new Error("No project available")
   if(error) throw error
 
+  const userRole = members.find(m => m.user_id === session?.user?.id)?.role
+
   useEffect(() => {
 
     async function isUserAMember() {
@@ -132,7 +134,7 @@ export default function ProjectLayout() {
     { to: "tasks", label: "Tasks", end: false },
     { to: "info", label: "Project Details", end: false },
     { to: "progress", label: "Project Progress", end: false },
-    { to: "submissions", label: "Task Submissions", end: false }
+    { to: "submissions", label: "Task Submissions", end: false, role: 'admin' }
   ]
 
   return (
@@ -145,12 +147,13 @@ export default function ProjectLayout() {
             
             {/* Desktop Navigation */}
             <nav className="hidden sm:flex space-x-6 border-b border-gray-200 mb-6">
-                {navLinks.map(({ to, label, end }) => (
+                {navLinks.map(link => (
+                    link.role === userRole || !link.role ?
                     <NavLink
-                        key={to}
-                        to={to}
-                        end={end}
-                        className={({ isActive }) =>
+                        key={link.to}
+                        to={link.to}
+                        end={link.end}
+                        className={({ isActive }) => 
                             `pb-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                                 isActive
                                     ? "border-black text-black dark:text-white dark:border-white"
@@ -158,19 +161,20 @@ export default function ProjectLayout() {
                             }`
                         }
                     >
-                        {label}
-                    </NavLink>
+                        {link.label}
+                    </NavLink> : null
                 ))}
             </nav>
 
             {/* Mobile Navigation - Scrollable */}
             <div className="sm:hidden mb-6">
                 <nav className="flex overflow-x-auto scrollbar-hide border-b border-gray-200 pb-2">
-                    {navLinks.map(({ to, label, end }) => (
+                    {navLinks.map(link => (
+                        link.role === userRole || !link.role ?
                         <NavLink
-                            key={to}
-                            to={to}
-                            end={end}
+                            key={link.to}
+                            to={link.to}
+                            end={link.end}
                             className={({ isActive }) =>
                                 `flex-shrink-0 px-4 py-2 mx-1 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ${
                                     isActive
@@ -179,8 +183,8 @@ export default function ProjectLayout() {
                                 }`
                             }
                         >
-                            {label}
-                        </NavLink>
+                            {link.label}
+                        </NavLink> : null
                     ))}
                 </nav>
             </div>
