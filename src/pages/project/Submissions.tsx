@@ -141,7 +141,7 @@ const Submissions = () => {
       {/* Submissions List */}
       <div className="space-y-2">
         {filteredSubmissions.map((submission) => (
-            <Link to={`./${submission.id}`}>
+            <Link to={`./${submission.id}`} className="block">
                 <Card key={submission.id.toString()} className="hover:shadow-sm transition-shadow p-4">
                     <div className="flex items-center justify-between gap-4">
                     {/* Left side - File Info */}
@@ -161,14 +161,12 @@ const Submissions = () => {
                     <div className="hidden md:flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                         <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         <span className="font-medium">{submission.full_name}</span>
-                        <span className="text-gray-400 dark:text-gray-600">•</span>
-                        <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
                     </div>
 
                     {/* Middle - Time */}
                     <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                         <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                        <span>{format(new Date(submission.created_at), 'MMM dd, yyyy')}</span>
+                        <span>{format(new Date(submission.created_at), 'MMM dd')}</span>
                     </div>
 
                     {/* Right side - Status */}
@@ -187,8 +185,6 @@ const Submissions = () => {
                     <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                     <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     <span className="font-medium">{submission.full_name}</span>
-                    <span className="text-gray-400 dark:text-gray-600">•</span>
-                    <span className="text-gray-500 dark:text-gray-400">{submission.role}</span>
                     <span className="text-gray-400 dark:text-gray-500 ml-auto">{format(new Date(submission.created_at), 'MMM dd')}</span>
                     </div>
                 </Card>

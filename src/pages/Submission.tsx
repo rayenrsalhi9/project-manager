@@ -122,7 +122,7 @@ const Submission = () => {
                   <div>
                     <p className="font-medium text-gray-900 dark:text-gray-100">{submission.file_name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {submission.file_type.toUpperCase()} • {formatFileSize(Number(submission.file_size))}
+                      {submission.file_type} • {formatFileSize(Number(submission.file_size))}
                     </p>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ const Submission = () => {
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</p>
                   <p className="text-gray-900 dark:text-gray-100">
-                    {format(new Date(submission.created_at), 'PPP at p')}
+                    {format(new Date(submission.created_at), 'd MMMM yyyy, h:mm a')}
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -220,39 +220,6 @@ const Submission = () => {
               </CardContent>
             </Card>
           )}
-
-          {/* Status History */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Status History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Submitted</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {format(new Date(submission.created_at), 'PP')}
-                    </p>
-                  </div>
-                </div>
-                {submission.status !== 'under_review' && (
-                  <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      submission.status === 'approved' ? 'bg-green-500' : 'bg-red-500'
-                    }`}></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {submission.status === 'approved' ? 'Approved' : 'Rejected'}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Just now</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
