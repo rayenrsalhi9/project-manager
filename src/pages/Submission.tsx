@@ -126,6 +126,13 @@ const Submission = () => {
                     </p>
                   </div>
                 </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => window.open(submission.file_url, '_blank')}
+                >
+                  View File
+                </Button>
               </div>
 
               <Separator />

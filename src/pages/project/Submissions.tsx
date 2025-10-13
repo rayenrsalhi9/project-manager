@@ -171,7 +171,7 @@ const Submissions = () => {
                         <span>{format(new Date(submission.created_at), 'MMM dd, yyyy')}</span>
                     </div>
 
-                    {/* Right side - Status and Action */}
+                    {/* Right side - Status */}
                     <div className="flex items-center gap-3">
                         <Badge 
                         variant={getStatusBadgeVariant(submission.status)}
@@ -180,14 +180,6 @@ const Submissions = () => {
                         <span className={`w-2 h-2 rounded-full ${getStatusColor(submission.status)} mr-1`}></span>
                         {getStatusText(submission.status)}
                         </Badge>
-                        <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="h-8 px-3"
-                        onClick={() => window.open(submission.file_url, '_blank')}
-                        >
-                        View
-                        </Button>
                     </div>
                     </div>
 
