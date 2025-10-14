@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { supabase } from '../supabase'
 import type { AuthError, Session, User} from '@supabase/supabase-js';
 import type { JSX } from "react";
-import { formatNotifications } from "../utils";
 
 type AuthContextProviderProps = {
     children: JSX.Element
@@ -135,16 +134,10 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
     const getUserNotifications = useCallback(async (userId: string) => {
         try {
-            const { data, error } = await supabase
-                .from('tasks')
-                .select('*')
-                .eq('assigned_to', userId)
-                .order('created_at', { ascending: false })
-                
+            const { data, error } = await supabase.rpc('get_notifications', { user_uuid: userId })
             if (error) throw error
-        
-            const formattedNotifications = await formatNotifications(data)
-            setNotifications(formattedNotifications)
+
+            setNotifications(data || [])
 
         } catch(err) {
             console.error(`Error fetching notifications: ${(err as Error).message}`)
