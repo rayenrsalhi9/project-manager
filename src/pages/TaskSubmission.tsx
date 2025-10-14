@@ -1,9 +1,10 @@
-import { useState, useRef, useActionState } from 'react';
+import { useState, useRef, useActionState, useEffect } from 'react';
 import type { ChangeEvent } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, redirect } from "react-router-dom";
 import { supabase } from '@/supabase';
 import { useAuth } from '@/context/AuthContext';
 import Spinner from '@/components/Spinner';
+import { toast } from 'sonner';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -196,10 +197,31 @@ const TaskSubmission = () => {
         errors: { file: submissionInsertError.message }
       }
 
+      // Update notification status to submitted
+      const {error: updateError} = await supabase
+        .from('tasks')
+        .update({ is_submitted: true })
+        .eq('id', Number(notificationId))
+
+      if (updateError) return {
+        success: false,
+        message: 'Submission failed, please try again',
+        errors: { file: updateError.message }
+      }
+
+      toast.success('Task submitted successfully!', {
+        style: {
+          background: '#f9fafb',
+          border: '1px solid #d1d5db',
+          color: '#1f2937'
+        }
+      })
+
+      // redirect to submissions page
       return {
         success: true,
-        message: 'File uploaded successfully'
-      }
+        message: 'Task submitted successfully!',
+      };
       
     } catch (error) {
       console.error('Task submission error:', error);
