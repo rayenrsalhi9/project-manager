@@ -33,6 +33,7 @@ export type NotificationType = {
     assigned_to: string
     created_by: string
     deadline: string
+    is_submitted: boolean
 }
 
 type AuthContextType = {

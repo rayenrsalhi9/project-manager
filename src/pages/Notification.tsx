@@ -112,7 +112,7 @@ const Notification = () => {
                                     <Calendar className="w-4 h-4 text-primary" />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs font-medium text-muted-foreground mb-1">Created at</p>
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">Assigned at</p>
                                     <p className="text-sm text-foreground">
                                         {formatNotificationTime(notification.created_at)}
                                     </p>
@@ -120,7 +120,7 @@ const Notification = () => {
                             </div>
 
                             {/* Deadline */}
-                            {notification.deadline && (
+                            {!notification.is_submitted && notification.deadline && (
                                 <div className="flex items-center gap-3">
                                     <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
                                         getDeadlineUrgency(notification.deadline).color === 'red'
@@ -172,20 +172,6 @@ const Notification = () => {
                                     </div>
                                 </div>
                             )}
-
-                            {!notification.deadline && (
-                                <div className="flex items-center gap-3">
-                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted/20">
-                                        <AlertCircle className="w-4 h-4 text-muted-foreground" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">
-                                            To accomplish before
-                                        </p>
-                                        <p className="text-sm text-muted-foreground">No deadline set</p>
-                                    </div>
-                                </div>
-                            )}
                         </div>
 
                         {/* Submit Button */}
@@ -193,6 +179,7 @@ const Notification = () => {
                             notification.assigned_to === session?.user?.id 
                             && notification.status === 'in_progress'
                             && notification.deadline > new Date().toISOString()
+                            && !notification.is_submitted
                             ? (
                                 <div className="pt-6 border-t border-border/50">
                                     <Link
@@ -201,6 +188,17 @@ const Notification = () => {
                                     >
                                         Proceed to task submission
                                     </Link>
+                                </div>
+                            ) : null
+                        }
+
+                        {
+                            notification.is_submitted ?
+                            (
+                                <div className="pt-6 border-t border-border/50">
+                                    <p className="text-sm text-muted-foreground">
+                                        This task has been submitted.
+                                    </p>
                                 </div>
                             ) : null
                         }

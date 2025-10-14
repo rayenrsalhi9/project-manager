@@ -1,7 +1,7 @@
 import { useAuth} from "@/context/AuthContext";
 import { formatNotificationTime } from "@/utils";
 import { Link } from "react-router-dom";
-import { Home } from "lucide-react";
+import { Home, CheckCircle, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -46,15 +46,32 @@ const Notifications = () => {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1">
-                                            <h3 className="text-sm font-semibold leading-tight text-foreground">
-                                                {notification.title}
-                                            </h3>
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-sm font-semibold leading-tight text-foreground">
+                                                    {notification.title}
+                                                </h3>
+                                            </div>
                                             <p className="text-sm text-muted-foreground mt-1">
                                                 {notification.message}
                                             </p>
-                                            <p className="text-xs text-foreground/70 font-medium mt-2">
-                                                {notification.project}
-                                            </p>
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <p className="text-xs text-foreground/70 font-medium">
+                                                    {notification.project}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-1 text-xs mt-2">
+                                                {notification.is_submitted ? (
+                                                    <span className="text-green-600 border border-green-600 rounded-full px-2 flex items-center gap-1 py-1">
+                                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                                        submitted
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-amber-600 border border-amber-600 rounded-full px-2 flex items-center gap-1 py-1">
+                                                        <Clock className="w-4 h-4 text-amber-600" />
+                                                        waiting to submit
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                         <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
                                             {formatNotificationTime(notification.created_at)}

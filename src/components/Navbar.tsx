@@ -1,6 +1,8 @@
 import icon from '/icon.png'
 import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { cn } from '@/lib/utils';
+
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -32,6 +34,10 @@ export default function Navbar() {
 
   const {signUserOut, user, notifications} = useAuth()
   const navigate = useNavigate()
+
+  const getUnsubmittedNotifications = () => {
+    return notifications.filter((notification) => !notification.is_submitted).length
+  }
 
   const getInitials = (name: string = 'Anonymous User') => {
     return name
@@ -86,7 +92,7 @@ export default function Navbar() {
                     <Bell className="h-4 w-4" />
                     {notifications.length > 0 && (
                       <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-white text-xs rounded-full flex items-center justify-center">
-                        {notifications.length > 9 ? '9+' : notifications.length}
+                        {(() => getUnsubmittedNotifications() > 9 ? '9+' : getUnsubmittedNotifications())()}
                       </span>
                     )}
                   </Button>
@@ -97,7 +103,7 @@ export default function Navbar() {
                       <p className="text-sm font-medium">Notifications</p>
                       {notifications.length > 0 && (
                         <span className="text-xs text-muted-foreground">
-                          {notifications.length} new
+                          {getUnsubmittedNotifications()} unsubmitted
                         </span>
                       )}
                     </div>
@@ -116,7 +122,10 @@ export default function Navbar() {
                             to={`/notifications/${notification.id}`}
                             className="block"
                           >
-                            <div className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer">
+                            <div className={cn(
+                              'mb-2 p-3 rounded-lg hover:shadow-md transition-shadow cursor-pointer',
+                              notification.is_submitted ? 'bg-muted' : 'bg-accent'
+                            )}>
                               <div className="flex items-start justify-between gap-2">
                                 <div className="flex-1">
                                   <p className="text-sm font-medium leading-tight">
@@ -219,7 +228,7 @@ export default function Navbar() {
                     <Bell className="h-4 w-4" />
                     {notifications.length > 0 && (
                       <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-white text-xs rounded-full flex items-center justify-center">
-                        {notifications.length > 9 ? '9+' : notifications.length}
+                        {getUnsubmittedNotifications() > 9 ? '9+' : getUnsubmittedNotifications()}
                       </span>
                     )}
                   </Button>
@@ -230,7 +239,7 @@ export default function Navbar() {
                       <p className="text-sm font-medium">Notifications</p>
                       {notifications.length > 0 && (
                         <span className="text-xs text-muted-foreground">
-                          {notifications.length} new
+                          {getUnsubmittedNotifications() > 9 ? '9+' : getUnsubmittedNotifications()} unsubmitted
                         </span>
                       )}
                     </div>
@@ -244,9 +253,10 @@ export default function Navbar() {
                     <ScrollArea className="h-[300px]">
                       <div className="p-2">
                         {notifications.map((notification) => (
-                          <div
+                          <Link
                             key={notification.id}
-                            className="mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                            to={`/notifications/${notification.id}`}
+                            className={`mb-2 p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer block ${notification.is_submitted ? 'bg-muted' : 'bg-accent'}`}
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
@@ -264,7 +274,7 @@ export default function Navbar() {
                                 {formatNotificationTime(notification.created_at)}
                               </span>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     </ScrollArea>
@@ -335,8 +345,8 @@ export default function Navbar() {
                         Help & Support
                       </Link>
                       <Button 
-                        variant="destructive" 
-                        className="w-full flex items-center gap-2 cursor-pointer"
+                        variant="outline" 
+                        className="w-full flex items-center gap-2 py-6 rounded-none cursor-pointer text-red-600 bg-red-50 hover:text-red-700"
                         onClick={handleSignOut}
                       >
                         <LogOut className="h-4 w-4" />
