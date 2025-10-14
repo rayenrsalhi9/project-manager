@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext"
 import { Link, useSearchParams } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { supabase } from "@/supabase"
 import {format} from "date-fns"
 import { cn } from "@/lib/utils"
@@ -71,19 +71,26 @@ export default function Dashboard() {
       .slice(0, 2)
   }
   
-  const filteredProjects = userProjects.filter(project => {
-    switch (filter) {
-      case 'created':
-        return project.role[0] === 'admin'
-      case 'joined':
-        return project.role[0] !== 'admin'
-      default:
-        return true
-    }
-  })
+  const filteredProjects = useMemo(() => {
+    return userProjects.filter(project => {
+      switch (filter) {
+        case 'created':
+          return project.role[0] === 'admin'
+        case 'joined':
+          return project.role[0] !== 'admin'
+        default:
+          return true
+      }
+    })
+  }, [userProjects, filter])
 
-  const createdProjectCount = userProjects.filter(project => project.role[0] === 'admin').length
-  const joinedProjectCount = userProjects.filter(project => project.role[0] !== 'admin').length
+  const createdProjectCount = useMemo(() => {
+    return filteredProjects.filter(project => project.role === 'admin').length
+  }, [filteredProjects])
+
+  const joinedProjectCount = useMemo(() => {
+    return filteredProjects.filter(project => project.role === 'member').length
+  }, [filteredProjects])
 
   if (!session) throw new Error('No active session found. Please login to continue.')
   if (!user) return <DashboardSkeleton />
