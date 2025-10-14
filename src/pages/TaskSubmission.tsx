@@ -1,6 +1,6 @@
-import { useState, useRef, useActionState, useEffect } from 'react';
+import { useState, useRef, useActionState } from 'react';
 import type { ChangeEvent } from 'react';
-import { Link, useParams, redirect } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { supabase } from '@/supabase';
 import { useAuth } from '@/context/AuthContext';
 import Spinner from '@/components/Spinner';
@@ -217,7 +217,6 @@ const TaskSubmission = () => {
         }
       })
 
-      // redirect to submissions page
       return {
         success: true,
         message: 'Task submitted successfully!',
