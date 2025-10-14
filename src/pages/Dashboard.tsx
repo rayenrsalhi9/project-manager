@@ -2,7 +2,6 @@ import { useAuth } from "@/context/AuthContext"
 import { Link, useSearchParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { supabase } from "@/supabase"
-import type { UserProject } from "@/utils"
 
 import { Button } from "@/components/ui/button"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
@@ -18,6 +17,14 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
+type UserProject = {
+  id: string
+  name: string
+  description: string
+  created_at: string
+  role: string
+}
+
 export default function Dashboard() {
 
   const { user, session } = useAuth()
@@ -25,6 +32,7 @@ export default function Dashboard() {
 
   const [userProjects, setUserProjects] = useState<UserProject[]>([])
   const [loadingProjects, setLoadingProjects] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   const filter = searchParams.get('filter') || 'all'
 
@@ -34,25 +42,13 @@ export default function Dashboard() {
       setLoadingProjects(true)
       
       const { data, error } = await supabase
-        .from('projects')
-        .select(
-          `
-          id,
-          name,
-          description,
-          ...project_members!inner(
-          role
-          )
-          `,
-        )
-        .eq(
-          'project_members.user_id',
-          userId
-        )
+        .rpc('get_user_projects', { user_id_param: userId })
       
       if (error) throw error
-      if (data) setUserProjects(data)
+      setUserProjects(data || [])
+
     } catch(err) {
+      setError((err as Error).message)
       console.error(`Error fetching projects: ${(err as Error).message}`)
     } finally {
       setLoadingProjects(false)
@@ -81,6 +77,7 @@ export default function Dashboard() {
   if (!session) throw new Error('No active session found. Please login to continue.')
   if (!user) return <DashboardSkeleton />
   if (loadingProjects) return <DashboardSkeleton />
+  if (error) throw new Error(error)
 
   return (
     <section className="py-8 max-w-4xl mx-auto">
