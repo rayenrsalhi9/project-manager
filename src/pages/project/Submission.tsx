@@ -167,6 +167,21 @@ const Submission = () => {
                   <p className="text-gray-900 dark:text-gray-100">{submission.file_type}</p>
                 </div>
               </div>
+              
+              {/* Task ID and Link */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Associated Task</p>
+                  <Link 
+                    to="assignedTask"
+                    state={{ taskId: submission.task_id }}
+                    relative="path"
+                    className="inline-flex items-center text-sm text-blue-600 underline underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  >
+                    See the assigned task for this submission
+                  </Link>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

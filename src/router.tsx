@@ -21,6 +21,7 @@ const ProjectInfo = lazy(() => import("./pages/project/ProjectInfo"));
 const Progress = lazy(() => import("./pages/project/Progress"));
 const SubmissionsProtected = lazy(() => import("./components/SubmissionsProtected"))
 const Submission = lazy(() => import("./pages/project/Submission"))
+const AssignedTask = lazy(() => import("./pages/project/AssignedTask"))
 const Root = lazy(() => import("./components/Root"));
 const Protected = lazy(() => import("./components/Protected"));
 const NotFound = lazy(() => import("./components/NotFound"));
@@ -94,6 +95,9 @@ export const router = createBrowserRouter([
                     }, {
                         path: 'submissions/:submissionId',
                         element: <SuspenseWrapper><Submission /></SuspenseWrapper>
+                    }, {
+                        path: 'submissions/:submissionId/assignedTask',
+                        element: <SuspenseWrapper><AssignedTask /></SuspenseWrapper>
                     }
                 ]
             }
