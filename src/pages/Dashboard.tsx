@@ -2,8 +2,9 @@ import { useAuth } from "@/context/AuthContext"
 import { Link, useSearchParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { supabase } from "@/supabase"
+import {format} from "date-fns"
+import { cn } from "@/lib/utils"
 
-import { Button } from "@/components/ui/button"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 import EmptyState from "@/components/EmptyState"
 import CreateProjectDialog from "@/components/dialogs/CreateProjectDialog"
@@ -16,6 +17,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Calendar, Users, ArrowRight } from "lucide-react"
 
 type UserProject = {
   id: string
@@ -59,6 +61,15 @@ export default function Dashboard() {
     if (!session?.user?.id) return
     getUserProjects(session.user.id)
   }, [session?.user.id])
+
+  const getInitials = (name: string = 'Anonymous User') => {
+      return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
   
   const filteredProjects = userProjects.filter(project => {
     switch (filter) {
@@ -82,10 +93,22 @@ export default function Dashboard() {
   return (
     <section className="py-8 max-w-4xl mx-auto">
       
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-2">
-          <h1 className="text-xl sm:text-2xl font-semibold">
-            Welcome, <span className="text-blue-500"> {user?.full_name} </span>
-          </h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <span className="text-lg font-semibold text-primary">
+                {getInitials(user?.full_name)}
+              </span>
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
+                Welcome back, <span className="text-blue-500">{user?.full_name}</span>
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Manage your projects and collaborations
+              </p>
+            </div>
+          </div>
           
           <div className="flex gap-2">
             <CreateProjectDialog />
@@ -93,79 +116,90 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-12 mb-12 justify-center">
+        <div className="flex justify-center items-center gap-2 mb-8 w-full">
           <Link
             to="?filter=all"
-            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
-              filter === 'all' 
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
-                : 'border border-input hover:bg-accent hover:text-accent-foreground'
-            }`}
+            className={cn(
+              "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+              filter === "all"
+                ? "bg-primary text-white"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            )}
           >
-            All projects ({userProjects.length})
+            All Projects <span className="ml-1 text-xs">{userProjects.length}</span>
           </Link>
           <Link
             to="?filter=created"
-            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
-              filter === 'created' 
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
-                : 'border border-input hover:bg-accent hover:text-accent-foreground'
-            }`}
+            className={cn(
+              "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+              filter === "created"
+                ? "bg-primary text-white"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            )}
           >
-            Created projects ({createdProjectCount})
+            Created <span className="ml-1 text-xs">{createdProjectCount}</span>
           </Link>
           <Link
             to="?filter=joined"
-            className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-9 px-3 ${
-              filter === 'joined' 
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
-                : 'border border-input hover:bg-accent hover:text-accent-foreground'
-            }`}
+            className={cn(
+              "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+              filter === "joined"
+                ? "bg-primary text-white"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            )}
           >
-            Joined projects ({joinedProjectCount})
+            Joined <span className="ml-1 text-xs">{joinedProjectCount}</span>
           </Link>
         </div>
-
-        
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {filteredProjects.length === 0 ? (
             <EmptyState />
           ) : (
-            filteredProjects.map((project, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all duration-300 relative group">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <CardTitle className="text-xl font-semibold flex-1 truncate">
-                      {project.name}
-                    </CardTitle>
-                    {project.role[0] === 'admin' ? (
-                      <Badge variant="default" className="text-xs px-2 py-1 flex-shrink-0">
-                        <span className="flex items-center gap-1">
+            filteredProjects.map((project) => (
+              <Card key={project.id} className="group border border-border/60 bg-card/50 transition-all duration-300 hover:border-border hover:bg-card hover:shadow-lg">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    {/* Role Badge */}
+                    {project.role === 'admin' ? (
+                      <Badge variant="default" className="text-xs font-medium px-2.5 py-1">
+                        <span className="flex items-center gap-1.5">
+                          <Users className="h-3 w-3" />
                           Admin
                         </span>
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
-                        <span className="flex items-center gap-1">
+                      <Badge variant="secondary" className="text-xs font-medium px-2.5 py-1">
+                        <span className="flex items-center gap-1.5">
+                          <Users className="h-3 w-3" />
                           Member
                         </span>
                       </Badge>
                     )}
+
+                    <span className="flex items-center gap-1.5 rounded-full bg-secondary/80 px-2.5 py-1 text-xs text-muted-foreground w-fit">
+                      <Calendar className="h-3 w-3" />
+                      {format(new Date(project.created_at), 'MMM d, yyyy')}
+                    </span>
                   </div>
+
+                  <CardTitle className="text-lg font-semibold text-foreground line-clamp-2 leading-tight flex-1">
+                    {project.name}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <CardDescription className="text-sm leading-relaxed mb-6 line-clamp-1">
-                    {project.description}
-                  </CardDescription>
-                  
-                  <Button 
-                    asChild 
-                    variant="default"
-                    className="block w-fit ml-auto"
-                  >
-                    <Link to={`./projects/${project.id}`}>View project</Link>
-                  </Button>
+
+                <CardContent>
+                  {/* Description */}
+                  {project.description && (
+                    <CardDescription className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-3">
+                      {project.description}
+                    </CardDescription>
+                  )}
+
+                  <Link to={`./projects/${project.id}`} className="flex items-center justify-center w-fit ml-auto bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-primary/90">
+                    View project
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
                   
                 </CardContent>
               </Card>
