@@ -3,6 +3,7 @@ import type { ChangeEvent } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { supabase } from '@/supabase';
 import { useAuth } from '@/context/AuthContext';
+import Spinner from '@/components/Spinner';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,20 @@ const TaskSubmission = () => {
   const {notificationId} = useParams()
   if (!notificationId) throw new Error('No task available')
 
-  const {user, notifications} = useAuth()
+  const {user, notifications, isLoading, isAuthLoading} = useAuth()
+  
+  // Loading state handling
+  if (isLoading || isAuthLoading || !user || !notifications) {
+    return (
+      <section className="min-h-[100dvh] flex items-center justify-center py-4 bg-gradient-to-br from-background to-muted/30">
+        <div className="text-center">
+          <Spinner />
+          <p className="mt-4 text-muted-foreground">Loading task submission...</p>
+        </div>
+      </section>
+    )
+  }
+
   if (!user) throw new Error('No user available')
   if (!notifications) throw new Error('No notifications available')
 

@@ -43,6 +43,8 @@ type AuthContextType = {
     signUserUp: (fullName: string, email: string, password: string) => Promise<AuthResult>
     user: UserType | null
     notifications: NotificationType[]
+    isLoading: boolean
+    isAuthLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -52,15 +54,20 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [user, setUser] = useState<UserType | null>(null)
     const [notifications, setNotifications] = useState<NotificationType[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [isAuthLoading, setIsAuthLoading] = useState(true)
 
     // initial session state
     async function getInitialState(): Promise<void> {
         try {
+            setIsAuthLoading(true)
             const { data, error } = await supabase.auth.getSession()
             if (error) throw error
             if (data?.session) setSession(data.session)
         } catch (err) {
             console.error('Auth initialization error: ', (err as AuthError).message)
+        } finally {
+            setIsAuthLoading(false)
         }
     }
 
@@ -114,6 +121,7 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
     const getUserDetails = useCallback(async (userId: string) => {
         try {
+            setIsLoading(true)
             const { data, error } = await supabase
                 .from('user_profiles')
                 .select('id, full_name, created_at')
@@ -130,11 +138,14 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             })
         } catch(err) {
             console.error(`Error fetching user: ${(err as Error).message}`)
+        } finally {
+            setIsLoading(false)
         }          
     }, [session?.user?.email])
 
     const getUserNotifications = useCallback(async (userId: string) => {
         try {
+            setIsLoading(true)
             const { data, error } = await supabase.rpc('get_notifications', { user_uuid: userId })
             if (error) throw error
 
@@ -142,6 +153,8 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
 
         } catch(err) {
             console.error(`Error fetching notifications: ${(err as Error).message}`)
+        } finally {
+            setIsLoading(false)
         }          
     }, [])
 
@@ -176,6 +189,8 @@ export const AuthContextProvider = ({children}: AuthContextProviderProps) => {
             signUserUp, 
             user, 
             notifications,
+            isLoading,
+            isAuthLoading,
         }}>
             {children}
         </AuthContext.Provider>

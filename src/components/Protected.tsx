@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
+import Spinner from "./Spinner";
 import type { JSX } from "react";
 
 type ProtectedProps = {
@@ -8,10 +9,10 @@ type ProtectedProps = {
 
 export default function Protected({children}: ProtectedProps) {
 
-    const {session} = useAuth()
+    const {session, isAuthLoading} = useAuth()
     const location = useLocation()
 
-    if (session === undefined) return <h2>Loading...</h2>
+    if (session === undefined || isAuthLoading) return <div className="flex items-center justify-center min-h-screen"><Spinner /></div>
     return session 
     ? children 
     : <Navigate 

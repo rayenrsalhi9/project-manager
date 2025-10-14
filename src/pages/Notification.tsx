@@ -6,13 +6,28 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Calendar, User, Folder, ArrowLeft, AlertCircle } from "lucide-react";
+import Spinner from "@/components/Spinner";
 
 const Notification = () => {
 
     const {notificationId} = useParams()
-    const {notifications, session} = useAuth()
+    const {notifications, session, isLoading, isAuthLoading} = useAuth()
 
     if (!notificationId) throw new Error("Notification ID not found")
+    
+    // Handle loading state
+    if (isLoading || isAuthLoading || !notifications) {
+        return (
+            <section className="min-h-[100dvh] flex items-center justify-center py-4 bg-gradient-to-br from-background to-muted/30">
+                <div className="w-full max-w-2xl px-4">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <Spinner />
+                        <p className="text-muted-foreground">Loading notification details...</p>
+                    </div>
+                </div>
+            </section>
+        )
+    }
     
     const notification = notifications.find((n) => n.id == Number(notificationId))
     if (!notification) throw new Error("Notification not found")

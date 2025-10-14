@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import Spinner from '@/components/Spinner'
 
 const Submission = () => {
 
@@ -14,7 +15,20 @@ const Submission = () => {
   if(!submissionId) throw new Error('No submission available')
 
   const { submissions } = useOutletContext<ProjectContext>()
-  if (!submissions) throw new Error('No submissions available')
+  
+  // Loading state handling
+  if (!submissions) {
+    return (
+      <div className="w-full max-w-4xl mx-auto p-6">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Spinner />
+            <p className="mt-4 text-muted-foreground">Loading submission details...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const submission = submissions.find(s => s.id === parseInt(submissionId))
   if(!submission) throw new Error('No submission available')
