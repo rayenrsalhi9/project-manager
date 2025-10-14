@@ -1,6 +1,6 @@
 import { useState, useRef, useActionState } from 'react';
 import type { ChangeEvent } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { supabase } from '@/supabase';
 import { useAuth } from '@/context/AuthContext';
 import Spinner from '@/components/Spinner';
@@ -133,6 +133,8 @@ const TaskSubmission = () => {
     fileInputRef.current?.click();
   };
 
+  const navigate = useNavigate()
+
   async function submitTaskAction(_prevState: FormState, formData: FormData): Promise<FormState> {
     try {
       const description = formData.get('description') as string;
@@ -216,6 +218,8 @@ const TaskSubmission = () => {
           color: '#1f2937'
         }
       })
+
+      navigate(`/notifications`)
 
       return {
         success: true,
