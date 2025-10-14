@@ -66,8 +66,8 @@ export default function Navbar() {
   }
 
   return (
-    <section className="py-4">
-      <div className="container">
+    <section className="w-full max-w-4xl mx-auto py-4">
+      <>
         <nav className="flex items-center justify-between">
           <Link
             to='../home'
@@ -360,7 +360,7 @@ export default function Navbar() {
           </Sheet>
           </div>
         </nav>
-      </div>
+      </>
     </section>
   );
 }

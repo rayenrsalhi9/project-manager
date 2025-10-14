@@ -85,9 +85,9 @@ export default function Dashboard() {
   return (
     <section className="py-8 max-w-4xl mx-auto">
       
-        <div className="flex justify-between items-center mb-2">
-          <h1 className="text-2xl font-semibold">
-            Welcome, <span className="text-primary"> {user?.full_name} </span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-2">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Welcome, <span className="text-blue-500"> {user?.full_name} </span>
           </h1>
           
           <div className="flex gap-2">
@@ -142,11 +142,16 @@ export default function Dashboard() {
                     <CardTitle className="text-xl font-semibold flex-1 truncate">
                       {project.name}
                     </CardTitle>
-                    {project.role[0] === 'admin' && (
+                    {project.role[0] === 'admin' ? (
                       <Badge variant="default" className="text-xs px-2 py-1 flex-shrink-0">
                         <span className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 bg-current rounded-full"></span>
                           Admin
+                        </span>
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
+                        <span className="flex items-center gap-1">
+                          Member
                         </span>
                       </Badge>
                     )}
@@ -156,17 +161,15 @@ export default function Dashboard() {
                   <CardDescription className="text-sm leading-relaxed mb-6 line-clamp-1">
                     {project.description}
                   </CardDescription>
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs text-muted-foreground">
-                      {project.role[0] === 'admin' ? 'Owner' : 'Collaborator'}
-                    </div>
-                    <Button 
-                      asChild 
-                      variant="default"
-                    >
-                      <Link to={`./projects/${project.id}`}>Open Project</Link>
-                    </Button>
-                  </div>
+                  
+                  <Button 
+                    asChild 
+                    variant="default"
+                    className="block w-fit ml-auto"
+                  >
+                    <Link to={`./projects/${project.id}`}>View project</Link>
+                  </Button>
+                  
                 </CardContent>
               </Card>
             ))
