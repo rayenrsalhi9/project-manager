@@ -27,6 +27,7 @@ export type ProjectContext = {
 }
 
 const Submissions = () => {
+
   const { submissions } = useOutletContext<ProjectContext>()
   const [statusFilter, setStatusFilter] = useState<'all' | 'under_review' | 'approved' | 'rejected'>('all')
 
@@ -42,6 +43,12 @@ const Submissions = () => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const formatFileName = (fileName: string): string => {
+    return fileName === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+    ? 'word document' 
+    : fileName
   }
 
   const getStatusBadgeVariant = (status: string) => {
@@ -82,8 +89,6 @@ const Submissions = () => {
         return status
     }
   }
-
-
 
   if (!submissions) {
     return (
@@ -152,7 +157,7 @@ const Submissions = () => {
                             {submission.file_name}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {submission.file_type.toUpperCase()} • {formatFileSize(Number(submission.file_size))}
+                            {formatFileName(submission.file_type)} • {formatFileSize(Number(submission.file_size))}
                         </p>
                         </div>
                     </div>
