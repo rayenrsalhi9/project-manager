@@ -45,7 +45,12 @@ const Submission = () => {
       .slice(0, 2)
   }
 
-  // Format file size
+  const formatFileName = (fileName: string): string => {
+    return fileName === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+    ? 'word document' 
+    : fileName
+  }
+
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
@@ -139,7 +144,7 @@ const Submission = () => {
                   <div>
                     <p className="font-medium text-gray-900 dark:text-gray-100">{submission.file_name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {submission.file_type} • {formatFileSize(Number(submission.file_size))}
+                      {formatFileName(submission.file_type)} • {formatFileSize(Number(submission.file_size))}
                     </p>
                   </div>
                 </div>
@@ -181,7 +186,7 @@ const Submission = () => {
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">File Type</p>
-                  <p className="text-gray-900 dark:text-gray-100">{submission.file_type}</p>
+                  <p className="text-gray-900 dark:text-gray-100">{formatFileName(submission.file_type)}</p>
                 </div>
               </div>
               
