@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { Link, useOutletContext, useParams } from 'react-router-dom'
 import type { ProjectContext } from './Submissions'
 import { format } from 'date-fns'
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import ApproveSubmissionDialog from '@/components/dialogs/ApproveSubmissionDialog'
+import RejectSubmissionDialog from '@/components/dialogs/RejectSubmissionDialog'
 import { ArrowLeft, FileText, User, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,10 +18,6 @@ const Submission = () => {
   if(!submissionId) throw new Error('No submission available')
 
   const { submissions } = useOutletContext<ProjectContext>()
-
-  // dialogs
-  const [showApproveDialog, setShowApproveDialog] = useState(false)
-  const [showRejectDialog, setShowRejectDialog] = useState(false)
   
   // Loading state handling
   if (!submissions) {
@@ -240,47 +236,8 @@ const Submission = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
-                  <DialogTrigger asChild>
-                    <Button className="w-full flex items-center gap-2" >
-                      <CheckCircle className="w-4 h-4" />
-                      Approve Submission
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Approve Submission</DialogTitle>
-                      <DialogDescription>
-                        Are you sure you want to approve this submission? The associated project task will be marked as completed.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowApproveDialog(false)}>Cancel</Button>
-                      <Button onClick={() => setShowApproveDialog(false)} variant="default">Approve</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-                  
-                <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full flex items-center gap-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300" >
-                      <XCircle className="w-4 h-4" />
-                      Reject Submission
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Reject Submission</DialogTitle>
-                      <DialogDescription>
-                        Rejecting this submission will reset the linked project task's submit status.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowRejectDialog(false)}>Cancel</Button>
-                      <Button onClick={() => setShowRejectDialog(false)} variant="default">Reject</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <ApproveSubmissionDialog />
+                <RejectSubmissionDialog />
                 
               </CardContent>
             </Card>
