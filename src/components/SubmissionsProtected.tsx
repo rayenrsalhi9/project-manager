@@ -7,9 +7,10 @@ import Spinner from "./Spinner";
 const SubmissionsProtected = () => {
 
     const { user, isLoading, isAuthLoading } = useAuth();
+    const { members } = useOutletContext<{members: Member[]}>();
     
-    // Loading state handling
-    if (isLoading || isAuthLoading || !user) {
+    // Handle loading states gracefully
+    if (isLoading || isAuthLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
@@ -20,12 +21,12 @@ const SubmissionsProtected = () => {
         )
     }
 
-    if (!user) throw new Error("No user available");
+    // If no user is available after loading, navigate to dashboard
+    if (!user) {
+        return <Navigate to="/dashboard" />;
+    }
 
-    const { members } = useOutletContext<{members: Member[]}>()
-    
-    // Loading state handling for members
-    if (!members) {
+    if (!members || members.length === 0) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
@@ -36,8 +37,7 @@ const SubmissionsProtected = () => {
         )
     }
 
-    const userRole = members.find(m => m.user_id === user.id)?.role
-    if (!userRole) throw new Error('No role available')
+    const userRole = members.find(m => m.user_id === user.id)?.role || 'member';
 
     return userRole === 'admin' ? <Submissions /> : <Navigate to="/dashboard" />
   
