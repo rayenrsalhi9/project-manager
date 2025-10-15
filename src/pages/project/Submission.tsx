@@ -244,7 +244,7 @@ const Submission = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                <ApproveSubmissionDialog />
+                <ApproveSubmissionDialog submissionId={submission.id} taskId={submission.task_id} />
                 <RejectSubmissionDialog submissionId={submission.id} taskId={submission.task_id} />  
               </CardContent>
             </Card>

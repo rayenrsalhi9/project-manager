@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { supabase } from '@/supabase'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 import { 
     Dialog, 
     DialogContent, 
@@ -11,10 +14,30 @@ import {
 import { Button } from '../ui/button'
 import { CheckCircle } from 'lucide-react'
 
-const ApproveSubmissionDialog = () => {
+const ApproveSubmissionDialog = ({submissionId, taskId}: {submissionId: number, taskId: number}) => {
 
     const [showApproveDialog, setShowApproveDialog] = useState(false)
-    const handleApproveClick = () => setShowApproveDialog(true)
+    const navigate = useNavigate()
+
+    const handleApproveClick = async() => {
+        try {
+            const {error} = await supabase.rpc('approve_submission', {
+                submission_id_param: submissionId,
+                task_id_param: taskId
+            })
+            if (error) {
+                console.error('Error approving submission:', error)
+                toast.error('Failed to approve submission');
+                throw error;
+            }
+            toast.success('Submission approved successfully');
+            navigate(`..`, {replace: true, relative: 'path'})
+        } catch (error) {
+            console.error('Error approving submission:', error)
+            toast.error('Failed to approve submission');
+        }
+    } 
+
     const handleCloseClick = () => setShowApproveDialog(false)
 
     return(

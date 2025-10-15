@@ -28,7 +28,7 @@ const RejectSubmissionDialog = ({submissionId, taskId}: {submissionId: number, t
             if (error) {
                 console.error('Error rejecting submission:', error)
                 toast.error('Failed to reject submission');
-                return;
+                throw error;
             }
 
             toast.success('Submission rejected successfully');
