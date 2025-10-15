@@ -141,7 +141,7 @@ const Submissions = () => {
       {/* Submissions List */}
       <div className="space-y-2">
         {filteredSubmissions.map((submission) => (
-            <Link to={`./${submission.id}`} className="block">
+            <Link to={`./${submission.id}`} key={submission.id} className="block">
                 <Card key={submission.id.toString()} className="hover:shadow-sm transition-shadow p-4">
                     <div className="flex items-center justify-between gap-4">
                     {/* Left side - File Info */}
