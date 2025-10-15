@@ -22,12 +22,14 @@ const BarChartComponent = ({
     .map(member => {
       const assignedTasks = projectTasks.filter(task => task.assigned_to === member.user_id)
       const completedTasks = assignedTasks.filter(task => task.status === "finished").length
-      const remainingTasks = assignedTasks.filter(task => task.status !== "finished").length
+      const submittedTasks = assignedTasks.filter(task => task.is_submitted && task.status !== "finished").length
+      const remainingTasks = assignedTasks.filter(task => !task.is_submitted && task.status !== "finished").length
       
       return {
         name: member.full_name,
         completed: completedTasks,
         remaining: remainingTasks,
+        submitted: submittedTasks,
       }
   })
 
@@ -60,24 +62,38 @@ const BarChartComponent = ({
             <Tooltip 
               formatter={(value, name) => [
                 value, 
-                name === 'completed' ? 'Completed Tasks' : 'Remaining Tasks'
+                name === 'completed' 
+                ? 'Completed Tasks' 
+                : name === 'remaining' 
+                ? 'Not Started Tasks' 
+                : 'Submitted Tasks'
               ]}
               labelFormatter={(label) => `Member: ${label}`}
             />
             <Legend 
               formatter={(value) => 
-                value === 'completed' ? 'Completed Tasks' : 'Remaining Tasks'
+                value === 'completed' 
+                ? 'Completed Tasks' 
+                : value === 'remaining' 
+                ? 'Not Started Tasks' 
+                : 'Submitted Tasks'
               }
             />
             <Bar 
               dataKey="completed" 
-              fill="#4ade80" 
+              fill="#22c55e" 
               name="completed"
               radius={[2, 2, 0, 0]}
             />
             <Bar 
-              dataKey="remaining" 
+              dataKey="submitted" 
               fill="#f59e0b" 
+              name="submitted"
+              radius={[2, 2, 0, 0]}
+            />
+            <Bar 
+              dataKey="remaining" 
+              fill="#ef4444" 
               name="remaining"
               radius={[2, 2, 0, 0]}
             />
