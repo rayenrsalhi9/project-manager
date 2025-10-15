@@ -120,7 +120,10 @@ const Submission = () => {
             Review and manage this submission
           </p>
         </div>
-        <Badge variant={getStatusBadgeVariant(submission.status)} className="text-sm px-3 py-1">
+        <Badge
+          variant={getStatusBadgeVariant(submission.status)}
+          className={`text-sm px-3 py-1 ${submission.status === 'rejected' || submission.status === 'approved' ? 'text-white' : ''}`}
+        >
           {getStatusIcon(submission.status)}
           <span className="ml-2">{getStatusText(submission.status)}</span>
         </Badge>
@@ -242,8 +245,7 @@ const Submission = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <ApproveSubmissionDialog />
-                <RejectSubmissionDialog />
-                
+                <RejectSubmissionDialog submissionId={submission.id} taskId={submission.task_id} />  
               </CardContent>
             </Card>
           )}

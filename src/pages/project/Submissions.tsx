@@ -178,7 +178,7 @@ const Submissions = () => {
                     <div className="flex items-center gap-3">
                         <Badge 
                         variant={getStatusBadgeVariant(submission.status)}
-                        className="flex-shrink-0"
+                        className={`flex-shrink-0 ${submission.status === 'approved' || submission.status === 'rejected' ? 'text-white' : ''}`}
                         >
                         <span className={`w-2 h-2 rounded-full ${getStatusColor(submission.status)} mr-1`}></span>
                         {getStatusText(submission.status)}

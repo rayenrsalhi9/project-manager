@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { supabase } from '@/supabase'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { 
     Dialog, 
     DialogContent, 
@@ -11,10 +14,31 @@ import {
 import { Button } from '../ui/button'
 import { XCircle } from 'lucide-react'
 
-const RejectSubmissionDialog = () => {
+const RejectSubmissionDialog = ({submissionId, taskId}: {submissionId: number, taskId: number}) => {
+
+    const navigate = useNavigate()
 
     const [showRejectDialog, setShowRejectDialog] = useState(false)
-    const handleRejectClick = () => setShowRejectDialog(true)
+    
+    const handleRejectClick = async() => {
+        try {
+            const { error } = await supabase
+                .rpc('reject_submission', { submission_id_param: submissionId, task_id_param: taskId })
+
+            if (error) {
+                console.error('Error rejecting submission:', error)
+                toast.error('Failed to reject submission');
+                return;
+            }
+
+            toast.success('Submission rejected successfully');
+            navigate(`..`, {replace: true, relative: 'path'})
+
+        } catch (error) {
+            console.error('Error rejecting submission:', error)
+        }
+    }
+
     const handleCloseClick = () => setShowRejectDialog(false)
 
     return (
