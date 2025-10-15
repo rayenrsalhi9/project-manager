@@ -16,6 +16,8 @@ const pieChart = ({
   dueTodayTasks,
   dueTomorrowTasks,
   remainingTasks,
+  submittedTasks,
+  totalTasks,
 }: PieChartProps) => {
 
   const completionRateData = [
@@ -24,15 +26,19 @@ const pieChart = ({
   ]
 
   const statusData = [
-    { name: "Overdue", value: overdueTasks, color: "#f43f5e" },
-    { name: "Due Today", value: dueTodayTasks, color: "#eab308" },
-    { name: "Due Tomorrow", value: dueTomorrowTasks, color: "#3b82f6" },
-    { name: "Remaining", value: remainingTasks, color: "#93c5fd" },
+    { name: "Overdue", value: overdueTasks, color: "#dc2626" },
+    { name: "Due Today", value: dueTodayTasks, color: "#f59e0b" },
+    { name: "Due Tomorrow", value: dueTomorrowTasks, color: "#2563eb" },
+    { name: "Remaining", value: remainingTasks, color: "#60a5fa" },
+  ]
+
+  const submissionRateData = [
+    { name: "Submitted", value: submittedTasks, color: "#3b82f6" },
+    { name: "Not Submitted", value: totalTasks - submittedTasks, color: "#ef4444" },
   ]
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+    <section className="flex flex-col gap-4">
       {/* Task Completion Rate */}
       <Card className="my-6">
         <CardHeader>
@@ -60,7 +66,6 @@ const pieChart = ({
           </ResponsiveContainer>
         </CardContent>
       </Card>
-
       {/* Task Status */}
       <Card className="my-6">
         <CardHeader>
@@ -86,6 +91,38 @@ const pieChart = ({
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+        </CardContent>
+      </Card>
+      {/* Task Submission Rate */}
+      <Card className="my-6">
+        <CardHeader>
+          <CardTitle>Task Submission Rate</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Legend />
+              <Pie
+                data={submissionRateData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={75}
+                innerRadius={35}
+                label={({ percent }: any) => `${(percent * 100).toFixed(1)}%`}
+              >
+                {submissionRateData.map((entry) => (
+                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="text-center mt-4">
+            <p className="text-sm text-muted-foreground">
+              {submittedTasks} out of {totalTasks} tasks submitted
+            </p>
+          </div>
         </CardContent>
       </Card>
       

@@ -6,7 +6,9 @@ export type StatsProps = {
     finishedTasks: number
     inProgressTasks: number
     completionRate: number
+    submissionRate: number
     overdueTasks: number
+    submittedTasks: number
 }
 
 export type PieChartProps = {
@@ -16,6 +18,8 @@ export type PieChartProps = {
     dueTodayTasks: number
     dueTomorrowTasks: number
     remainingTasks: number
+    submittedTasks: number
+    totalTasks: number
 }
 
 export type BarChartProps = {

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, TrendingUp, Clock, Calendar as CalendarIcon } from "lucide-react"
+import { CheckCircle2, Clock, Calendar as CalendarIcon, Percent } from "lucide-react"
 import type { StatsProps } from "./types"
 import { cn } from "@/lib/utils"
 
@@ -8,39 +8,50 @@ const Stats = ({
     finishedTasks,
     inProgressTasks,
     completionRate,
+    submissionRate,
     overdueTasks,
+    submittedTasks,
 }: StatsProps) => {
 
     const cards = [
         {
             title: "Total Tasks",
             value: totalTasks,
-            description: `${finishedTasks} task${finishedTasks === 1 ? "" : "s"} completed`,
-            descriptionStyle: "text-green-700 dark:text-green-200",
+            description: `${submittedTasks} submitted out of ${totalTasks} total`,
+            descriptionStyle: "text-gray-700 dark:text-gray-300",
             icon: CheckCircle2,
+            progress: totalTasks > 0 ? Math.round((submittedTasks / totalTasks) * 100) : 0,
         },
         {
             title: "In Progress",
             value: inProgressTasks,
             description: "Currently in progress",
             icon: Clock,
-            className: "border-amber-500 bg-amber-50 text-amber-900 dark:bg-transparent dark:text-amber-200",
+            className: "border-gray-300 bg-white text-black dark:bg-black dark:text-white",
         },
         {
             title: "Overdue",
             value: overdueTasks,
             description: "Past deadline",
             icon: CalendarIcon,
-            className: "border-red-500 bg-red-50 text-red-900 dark:bg-transparent dark:text-red-200",
+            className: "border-gray-300 bg-white text-black dark:bg-black dark:text-white",
         },
         {
             title: "Completion Rate",
             value: `${completionRate}%`,
             description: `${finishedTasks} of ${totalTasks} tasks finished`,
-            icon: TrendingUp,
+            icon: Percent,
             progress: completionRate,
-            className: "border-green-500 bg-green-50 text-green-900 dark:bg-transparent dark:text-green-200",
-        }
+            className: "border-gray-300 bg-white text-black dark:bg-black dark:text-white",
+        }, 
+        {
+            title: "Submission Rate",
+            value: `${submissionRate}%`,
+            description: `${submittedTasks} of ${totalTasks} tasks submitted`,
+            icon: Percent,
+            progress: submissionRate,
+            className: "border-gray-300 bg-white text-black dark:bg-black dark:text-white",
+        }, 
     ];
 
     return (
@@ -54,19 +65,19 @@ const Stats = ({
                     )}
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                        <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-                        <card.icon className="h-4 w-4 text-black dark:text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium text-black dark:text-white">{card.title}</CardTitle>
+                        <card.icon className="h-4 w-4 text-black dark:text-gray-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{card.value}</div>
+                        <div className="text-2xl font-bold text-black dark:text-white">{card.value}</div>
                         <p className={cn(
-                            "text-xs text-muted-foreground",
+                            "text-xs text-gray-600 dark:text-gray-400",
                             card.descriptionStyle
                         )}>{card.description}</p>
                         {card.progress ? (
-                            <div className="w-full bg-muted-foreground/20 rounded-full h-2.5 mt-4">
+                            <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2.5 mt-4">
                                 <div
-                                    className="bg-green-900 h-2.5 rounded-full dark:bg-green-200"
+                                    className="h-2.5 rounded-full bg-black dark:bg-white"
                                     style={{ width: `${card.progress}%` }}
                                 ></div>
                             </div>

@@ -15,7 +15,9 @@ const Progress = () => {
     const totalTasks = tasks.length
     const finishedTasks = tasks.filter(task => task.status === "finished").length
     const inProgressTasks = tasks.filter(task => task.status === "in_progress").length
+    const submittedTasks = tasks.filter(task => task.is_submitted).length
     const completionRate = totalTasks > 0 ? Math.round((finishedTasks / totalTasks) * 100) : 0
+    const submissionRate = totalTasks > 0 ? Math.round((submittedTasks / totalTasks) * 100) : 0
 
     // calculate task status
     const overdueTasks = tasks.filter(task => {
@@ -54,7 +56,9 @@ const Progress = () => {
                 finishedTasks={finishedTasks}
                 inProgressTasks={inProgressTasks}
                 completionRate={completionRate}
+                submissionRate={submissionRate}
                 overdueTasks={overdueTasks}
+                submittedTasks={submittedTasks}
             />
 
             {/* Pie Chart Visualization */}
@@ -65,6 +69,8 @@ const Progress = () => {
                 dueTodayTasks={dueTodayTasks}
                 dueTomorrowTasks={dueTomorrowTasks}
                 remainingTasks={remainingTasks}
+                submittedTasks={submittedTasks}
+                totalTasks={totalTasks}
             />
 
             {/* Bar Chart Visualization */}
