@@ -1,4 +1,4 @@
-import icon from '/icon.png'
+import icon from '/src/favicon/android-chrome-192x192.png'
 import about1 from '/about-1.jpg'
 import about2 from '/about-2.jpg'
 import { Button } from "@/components/ui/button";
