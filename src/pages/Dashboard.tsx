@@ -75,9 +75,9 @@ export default function Dashboard() {
     return userProjects.filter(project => {
       switch (filter) {
         case 'created':
-          return project.role[0] === 'admin'
+          return project.role === 'admin'
         case 'joined':
-          return project.role[0] !== 'admin'
+          return project.role === 'member'
         default:
           return true
       }
@@ -85,12 +85,12 @@ export default function Dashboard() {
   }, [userProjects, filter])
 
   const createdProjectCount = useMemo(() => {
-    return filteredProjects.filter(project => project.role === 'admin').length
-  }, [filteredProjects])
+    return userProjects.filter(project => project.role === 'admin').length
+  }, [userProjects])
 
   const joinedProjectCount = useMemo(() => {
-    return filteredProjects.filter(project => project.role === 'member').length
-  }, [filteredProjects])
+    return userProjects.filter(project => project.role === 'member').length
+  }, [userProjects])
 
   if (!session) throw new Error('No active session found. Please login to continue.')
   if (!user) return <DashboardSkeleton />
