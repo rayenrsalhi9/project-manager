@@ -1,4 +1,4 @@
-import icon from '/icon.png'
+import icon from '/src/favicon/android-chrome-192x192.png'
 import { MenuIcon, LogOut, User, Settings, CreditCard, HelpCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from '@/lib/utils';
