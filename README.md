@@ -2,39 +2,336 @@
 
 A modern React-based project management platform built for teams, students, and startups to organize projects, track tasks, and collaborate effectively. ProjectRoom provides a comprehensive suite of tools for project management, team collaboration, and progress tracking.
 
-## 🚀 Technical Stack
+## 🎯 Project Overview
 
-**Frontend Framework:**
-• React 19.1.1 with TypeScript for type-safe development
-• Vite 7.1.6 for fast development and optimized builds
-• React Router DOM 7.9.1 for client-side routing
+ProjectRoom is designed to streamline team collaboration and project management through an intuitive, feature-rich platform. The application addresses common pain points in team coordination by providing:
 
-**UI/UX:**
-• Tailwind CSS 4.1.13 for utility-first styling
-• shadcn/ui components for consistent design system
-• Radix UI primitives for accessible components (Avatar, Dialog, Dropdown, Label, Popover, ScrollArea, Select, Slot)
-• Lucide React 0.544.0 for consistent iconography
-• next-themes 0.4.6 for theme management (light/dark modes)
-• React Day Picker 9.11.0 for date selection components
-• Sonner 2.0.7 for toast notifications
-• Recharts 3.2.1 for data visualization and charts
+- **Centralized Project Management**: Organize all your team's projects in one accessible location
+- **Intelligent Task Assignment**: AI-powered task generation and smart assignment capabilities
+- **Real-time Collaboration**: Live updates and notifications keep teams synchronized
+- **Progress Visualization**: Comprehensive charts and statistics for project monitoring
+- **Flexible Access Control**: Role-based permissions ensuring appropriate access levels
+- **Modern User Experience**: Clean, responsive design with dark/light theme support
 
-**Backend Integration:**
-• Supabase 2.57.4 for authentication, database, and real-time subscriptions
-• OpenAI API integration (v6.1.0) for AI-powered task generation
-• Environment-based configuration for secure API keys
+The platform serves as a complete solution for teams looking to improve their project workflow, from initial project creation through task completion and progress tracking.
 
-**Development Tools:**
-• TypeScript with strict mode and path aliases (@/)
-• ESLint with React-specific configurations
-• DnD Kit (@dnd-kit) for drag-and-drop functionality (Core, Sortable, Utilities)
-• date-fns 4.1.0 for date manipulation and formatting
-• DOMPurify 3.2.7 for XSS protection and input sanitization
-• class-variance-authority 0.7.1 and tailwind-merge 3.3.1 for component styling
+## 📸 Visual Showcase
 
-## 📋 Features
+### Landing & Authentication
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/home-page.png" alt="Home Page" width="400"/>
+        <br />
+        <em>Modern landing page with hero section and feature highlights</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/home-page-dark.png" alt="Home Page Dark Mode" width="400"/>
+        <br />
+        <em>Home page in dark mode showing theme consistency</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/login.png" alt="Login Page" width="400"/>
+        <br />
+        <em>Clean and intuitive login interface</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/signup.png" alt="Signup Page" width="400"/>
+        <br />
+        <em>User registration with validation and error handling</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Dashboard & Project Management
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/dashboard.png" alt="Dashboard" width="400"/>
+        <br />
+        <em>User dashboard showing all projects with filtering capabilities</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/create-project.png" alt="Create Project" width="400"/>
+        <br />
+        <em>Project creation dialog with auto-generated invite codes</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/join-project.png" alt="Join Project" width="400"/>
+        <br />
+        <em>Join existing projects using secure invite codes</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/project-details.png" alt="Project Details" width="400"/>
+        <br />
+        <em>Project overview with member management and settings</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Task Management & Assignment
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/create-tasks.png" alt="Create Tasks" width="400"/>
+        <br />
+        <em>AI-powered task generation from project descriptions</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/assign-task.png" alt="Assign Tasks" width="400"/>
+        <br />
+        <em>Intuitive drag-and-drop task assignment interface</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/tasks-assignment.png" alt="Task Assignment" width="400"/>
+        <br />
+        <em>Visual task assignment with member avatars and status indicators</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/task-deadline.png" alt="Task Deadline" width="400"/>
+        <br />
+        <em>Color-coded deadline management with urgency indicators</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Progress Tracking & Analytics
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/progress.png" alt="Progress Tracking" width="400"/>
+        <br />
+        <em>Comprehensive progress dashboard with task statistics</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/bar-chart.png" alt="Bar Chart" width="400"/>
+        <br />
+        <em>Task completion analytics with visual bar charts</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/pie-chart.png" alt="Pie Chart" width="400"/>
+        <br />
+        <em>Task distribution visualization with interactive pie charts</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/pie-chart-dark.png" alt="Pie Chart Dark" width="400"/>
+        <br />
+        <em>Analytics dashboard seamlessly adapted for dark mode</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Notifications & Communication
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/notifications.png" alt="Notifications" width="400"/>
+        <br />
+        <em>Centralized notification center with task assignments and deadlines</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/notification.png" alt="Notification Detail" width="400"/>
+        <br />
+        <em>Detailed notification view with direct links to tasks</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/notifications-bell.png" alt="Notification Bell" width="400"/>
+        <br />
+        <em>Smart notification bell with unread count and urgency indicators</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/project-timeline.png" alt="Project Timeline" width="400"/>
+        <br />
+        <em>Activity timeline showing all project updates and member activities</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Task Submission & Review
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/task-submission.png" alt="Task Submission" width="400"/>
+        <br />
+        <em>Structured task submission form with file upload capabilities</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/submissions.png" alt="Submissions" width="400"/>
+        <br />
+        <em>Submission management interface for reviewing team submissions</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/submission-review.png" alt="Submission Review" width="400"/>
+        <br />
+        <em>Detailed submission review with approval/rejection capabilities</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/upload-file.png" alt="File Upload" width="400"/>
+        <br />
+        <em>Drag-and-drop file upload with progress indicators</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Mobile & Responsive Design
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/mobile-screen.png" alt="Mobile View" width="400"/>
+        <br />
+        <em>Fully responsive mobile interface with touch-friendly interactions</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/mobile-navbar.png" alt="Mobile Navigation" width="400"/>
+        <br />
+        <em>Optimized mobile navigation with collapsible menu</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/member-dashboard.png" alt="Member Dashboard" width="400"/>
+        <br />
+        <em>Member view dashboard with limited but focused functionality</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/about.png" alt="About Page" width="400"/>
+        <br />
+        <em>About page showcasing platform features and capabilities</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Dark Mode Implementation
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/dashboard-filters.png" alt="Dashboard Filters Dark" width="400"/>
+        <br />
+        <em>Dashboard filters and search in dark mode</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/members-dark.png" alt="Members Dark" width="400"/>
+        <br />
+        <em>Team member management interface in dark theme</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/project-assets/timeline-dark.png" alt="Timeline Dark" width="400"/>
+        <br />
+        <em>Project activity timeline with consistent dark mode styling</em>
+      </td>
+      <td align="center">
+        <img src="public/project-assets/progress-dark.png" alt="Progress Dark" width="400"/>
+        <br />
+        <em>Progress analytics maintaining readability in dark mode</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
+## 🚀 Technologies Used
+
+### Frontend Framework & Core Technologies
+**React Ecosystem:**
+• **React 19.1.1** - Latest version with improved performance and concurrent features
+• **TypeScript 5.8.3** - Full type safety with strict mode enabled
+• **Vite 7.1.6** - Ultra-fast build tool with HMR and optimized production builds
+• **React Router DOM 7.9.1** - Declarative routing with nested routes and data loading
+
+### UI/UX Design System
+**Styling & Components:**
+• **Tailwind CSS 4.1.13** - Utility-first CSS framework for rapid UI development
+• **shadcn/ui** - Modern, accessible component library with customizable themes
+• **Radix UI Primitives** - Unstyled, accessible components including:
+  - Avatar, Dialog, Dropdown Menu, Label, Popover
+  - ScrollArea, Select, Slot for advanced component composition
+• **Lucide React 0.544.0** - Beautiful, consistent icon library
+• **next-themes 0.4.6** - Seamless light/dark theme switching with system preference detection
+
+### Interactive Features & Animations
+**User Interactions:**
+• **@dnd-kit** - Complete drag-and-drop ecosystem:
+  - Core: Foundation for drag-and-drop interactions
+  - Sortable: Sortable lists and grids
+  - Utilities: Helper functions and accessibility features
+• **Sonner 2.0.7** - Elegant toast notifications with promise handling
+
+### Data Visualization & Analytics
+**Charts & Graphs:**
+• **Recharts 3.2.1** - Composable charting library with React components
+• Custom chart components for task statistics and progress tracking
+• Responsive design that adapts to different screen sizes
+
+### Backend & Data Management
+**Database & Authentication:**
+• **Supabase 2.57.4** - Complete backend solution providing:
+  - PostgreSQL database with real-time subscriptions
+  - Authentication with multiple providers (email/password, OAuth)
+  - Row-level security and database policies
+  - File storage and CDN integration
+  - Edge functions for serverless computing
+
+### AI Integration
+**Intelligent Features:**
+• **OpenAI API 6.1.0** - Advanced AI capabilities for:
+  - Task generation from project descriptions
+  - Smart task categorization and prioritization
+  - Natural language processing for user inputs
+• Environment-based configuration for secure API key management
+
+### Security & Data Protection
+**Security Measures:**
+• **DOMPurify 3.2.7** - XSS protection and HTML sanitization
+• **Environment Variables** - Secure configuration management
+• **Input Validation** - Comprehensive form validation with custom rules
+• **TypeScript Strict Mode** - Compile-time error detection and type safety
+
+### Development & Build Tools
+**Development Experience:**
+• **ESLint 9.35.0** - Code linting with React-specific rules
+• **TypeScript ESLint** - Type-aware linting for better code quality
+• **@vitejs/plugin-react** - React fast refresh and JSX transform
+• **Path Aliases** - Clean imports with `@/` prefix for better organization
+
+### Utility Libraries
+**Helper Functions:**
+• **date-fns 4.1.0** - Modern date utility library for parsing, formatting, and manipulation
+• **clsx & tailwind-merge** - Conditional className utility with Tailwind CSS support
+• **class-variance-authority 0.7.1** - Type-safe component variants and styling
+
+## 🔧 Main Functionalities
 
 ### Authentication & User Management
+**How it works:** Users create accounts with full name, email, and password validation. The system implements secure authentication using Supabase Auth with JWT tokens and automatic session management.
+
 • **User Registration**: Complete signup with full name, email, and password validation
 • **Secure Login**: Email/password authentication with session management
 • **Protected Routes**: Route-level authentication protection
@@ -42,6 +339,8 @@ A modern React-based project management platform built for teams, students, and 
 • **Session Management**: Automatic token handling and persistent sessions
 
 ### Project Management
+**How it works:** Users can create projects with auto-generated invite codes or join existing projects. Each project has a dedicated workspace with role-based access control.
+
 • **Create Projects**: Users can create new projects with names, descriptions, and auto-generated invite codes
 • **Join Projects**: Join existing projects using secure invite codes
 • **Project Dashboard**: Visual grid layout showing all user projects with filtering options
@@ -50,6 +349,8 @@ A modern React-based project management platform built for teams, students, and 
 • **Project Settings**: Manage project details and team membership
 
 ### 🎯 Task Management
+**How it works:** Admins can create tasks manually or use AI to generate tasks from project descriptions. Tasks are assigned via drag-and-drop interface with real-time status tracking and deadline management.
+
 • **AI-Powered Task Generation**: Generate tasks from project descriptions using OpenAI
 • **Drag-and-Drop Interface**: Intuitive task assignment with visual feedback using DnD Kit
 • **Task Assignment**: Assign tasks to team members with status tracking
@@ -61,6 +362,8 @@ A modern React-based project management platform built for teams, students, and 
 • **Statistics Dashboard**: Real-time task completion rates and progress visualization
 
 ### Team Collaboration
+**How it works:** Team members can view project progress, receive notifications for assigned tasks, and collaborate through the centralized platform with real-time updates.
+
 • **Member Management**: Add/remove team members and manage roles
 • **Real-time Updates**: Live project timeline with member activities
 • **Progress Tracking**: Visual progress indicators and status updates
@@ -68,6 +371,8 @@ A modern React-based project management platform built for teams, students, and 
 • **Task Submission Workflow**: Structured notification-to-submission process for assigned tasks
 
 ### 🔔 Notification System
+**How it works:** The system automatically generates notifications when tasks are assigned or deadlines approach. Users can access a centralized notification center with direct links to relevant tasks.
+
 • **Task Assignment Notifications**: Automatic notifications when tasks are assigned
 • **Deadline Reminders**: Urgency-based notifications for approaching deadlines
 • **Notification Center**: Centralized view of all notifications with detailed information
@@ -75,19 +380,26 @@ A modern React-based project management platform built for teams, students, and 
 • **Direct Links**: Quick navigation from notifications to task submission forms
 
 ### 📤 Task Submission Workflow
-• **Structured Process**: Notification → Task Details → Submission Form workflow
-• **Current Implementation**: Basic form structure with task information display
-• **Under Development**: File upload, rich text editor, validation, and progress tracking
-• **Next Steps**: Comprehensive submission system with admin review capabilities
+**How it works:** Users receive notifications about assigned tasks, view task details, and submit their work through a structured submission process. The system supports file uploads and tracks submission status.
 
-### User Interface
+• **Structured Process**: Notification → Task Details → Submission Form workflow
+• **File Upload Support**: Upload documents, images, and other file types
+• **Submission Tracking**: Monitor submission status and review feedback
+• **Admin Review**: Project admins can review and approve/reject submissions
+• **Progress Monitoring**: Track submission history and completion rates
+
+### User Interface & Experience
+**How it works:** The application features a modern, responsive design with consistent UI components, smooth animations, and intuitive navigation across all devices.
+
 • **Responsive Design**: Mobile-first, fully responsive interface
 • **Modern UI Components**: Consistent design system with shadcn/ui
 • **Loading States**: Skeleton loaders and spinners for better UX
 • **Error Handling**: Graceful error boundaries and user-friendly messages
 • **Theme Support**: Light and dark mode with system preference detection
 
-### Security Features
+### Security & Data Protection
+**How it works:** The platform implements comprehensive security measures including input sanitization, secure authentication, and data validation to protect user information.
+
 • **Input Sanitization**: DOMPurify integration for XSS protection
 • **Form Validation**: Comprehensive validation with custom rules
 • **Environment Variables**: Secure configuration management
@@ -123,20 +435,80 @@ VITE_SUPABASE_API_KEY=your_supabase_anon_key
 VITE_OPENAI_API_KEY=your_openai_api_key
 VITE_BASE_URL=your_openai_base_url
 
-# Optional: File Upload Configuration
-VITE_MAX_FILE_SIZE=10485760  # 10MB in bytes
-VITE_ALLOWED_FILE_TYPES=pdf,doc,docx,png,jpg,jpeg
-
-# Optional: Notification Settings
-VITE_NOTIFICATION_REFRESH_INTERVAL=30000  # 30 seconds in milliseconds
-```
-
 4. **Start Development Server**
 ```bash
 npm run dev
 ```
 
 The application will be available at `http://localhost:5173`
+
+## 🤝 Contributing
+
+We welcome contributions to ProjectRoom! Here's how you can help:
+
+1. **Fork the repository** and create your feature branch
+2. **Follow the coding standards** established in the project
+3. **Write tests** for new features and ensure all tests pass
+4. **Update documentation** for any new functionality
+5. **Submit a pull request** with a clear description of changes
+
+### Development Guidelines
+- Use TypeScript strict mode for type safety
+- Follow the established component structure and naming conventions
+- Implement proper error handling and user feedback
+- Ensure responsive design for all screen sizes
+- Test both light and dark themes
+- Validate forms and sanitize user inputs
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **shadcn/ui** for the excellent component library
+- **Supabase** for the powerful backend services
+- **OpenAI** for AI-powered task generation capabilities
+- **React Community** for the amazing ecosystem of tools and libraries
+- **Contributors** who have helped improve this project
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+1. **Check the documentation** in this README
+2. **Search existing issues** in the repository
+3. **Create a new issue** with detailed information
+4. **Include screenshots** and error messages when applicable
+
+## 🚀 Future Roadmap
+
+- **Enhanced AI Features**: More sophisticated task generation and project planning
+- **Mobile App**: Native mobile applications for iOS and Android
+- **Advanced Analytics**: Detailed project insights and team performance metrics
+- **Integration Hub**: Connect with popular tools like Slack, GitHub, and Google Workspace
+- **Custom Workflows**: Configurable project templates and automation rules
+- **Team Communication**: Built-in messaging and video conferencing features
+
+## 🎯 Key Features & Value Proposition
+
+### For Project Managers
+- **Comprehensive Project Oversight**: Complete visibility into all project aspects from a single dashboard
+- **AI-Assisted Planning**: Leverage OpenAI to generate structured tasks from project descriptions
+- **Real-time Progress Tracking**: Live updates on task completion and team performance
+- **Data-Driven Decisions**: Visual analytics and reports for informed project management
+
+### For Team Members
+- **Clear Task Assignment**: Intuitive interface showing assigned tasks with deadlines and priorities
+- **Seamless Collaboration**: Easy communication through notifications and project timelines
+- **Progress Visibility**: Transparent view of project status and individual contributions
+- **Mobile Accessibility**: Full functionality on mobile devices for on-the-go productivity
+
+### For Teams & Organizations
+- **Scalable Architecture**: Handles multiple projects and team members efficiently
+- **Role-Based Security**: Appropriate access levels for different team roles
+- **Integration Ready**: Built with modern APIs for future integrations
+- **Cost-Effective**: Open-source technology stack reducing licensing costs
 
 ## 📁 Project Structure
 
@@ -423,43 +795,6 @@ assigned → in_progress → submitted → reviewed → finished
 - **API Endpoints**: New endpoints for submission and review operations
 - **Real-time Updates**: Live status updates using Supabase subscriptions
 - **Security**: File upload validation, access control, data sanitization
-
-## 📚 API Documentation
-
-### Authentication Endpoints
-- `POST /auth/signup` - User registration
-- `POST /auth/signin` - User login
-- `POST /auth/signout` - User logout
-- `GET /auth/session` - Get current user session
-
-### Project Endpoints
-- `GET /projects` - List user projects
-- `POST /projects` - Create new project
-- `GET /projects/:id` - Get project details
-- `PUT /projects/:id` - Update project
-- `DELETE /projects/:id` - Delete project
-- `POST /projects/:id/join` - Join project with invite code
-
-### Task Endpoints
-- `GET /projects/:id/tasks` - List project tasks
-- `POST /projects/:id/tasks` - Create project tasks (AI-powered)
-- `PUT /tasks/:id` - Update task
-- `DELETE /tasks/:id` - Delete task
-- `POST /tasks/:id/assign` - Assign task to member
-
-### Notification Endpoints
-- `GET /notifications` - Get user notifications
-- `GET /notifications/:id` - Get notification details
-- `PUT /notifications/:id/read` - Mark notification as read
-- `DELETE /notifications/:id` - Delete notification
-
-### Task Submission Endpoints (Planned)
-- `POST /tasks/:id/submissions` - Submit task completion
-- `GET /tasks/:id/submissions` - Get task submissions
-- `PUT /submissions/:id` - Update submission
-- `DELETE /submissions/:id` - Delete submission
-- `POST /submissions/:id/review` - Review submission (accept/reject)
-- `GET /submissions/review-queue` - Get pending review submissions
 
 ### Supabase Integration
 The application uses Supabase for:
