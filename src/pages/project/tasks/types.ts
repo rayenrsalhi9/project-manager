@@ -6,7 +6,7 @@ export type Task = {
   assigned_to?: string
   task_index?: number
   status?: 'in_progress' | 'finished'
-  is_submitted: boolean
+  is_submitted?: boolean
 }
 
 export type SortableTaskItemProps = {
